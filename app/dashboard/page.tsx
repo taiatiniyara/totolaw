@@ -36,9 +36,9 @@ export default function DashboardPage() {
 
   const handleLogout = async () => {
     try {
-      await authClient.signOut();
+      const { logoutAction } = await import("./actions");
+      await logoutAction();
       toast.success("Logged out successfully");
-      router.push("/auth/login");
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Failed to logout");

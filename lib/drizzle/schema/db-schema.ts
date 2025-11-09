@@ -1,5 +1,6 @@
 import {
   integer,
+  json,
   pgTable,
   text,
   timestamp,
@@ -115,3 +116,20 @@ export const enforcement = pgTable("enforcement", {
 });
 export type Enforcement = typeof enforcement.$inferSelect;
 export type NewEnforcement = typeof enforcement.$inferInsert;
+
+interface ManagedListItem {
+  id: string;
+  name: string;
+  details?: string;
+}
+
+export const managedLists = pgTable("managed_lists", {
+  id: text().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  list: json("list").notNull().$type<ManagedListItem[]>(), // Storing as JSON array
+  createdBy: text("created_by").references(() => user.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+export type ManagedList = typeof managedLists.$inferSelect;
+export type NewManagedList = typeof managedLists.$inferInsert;

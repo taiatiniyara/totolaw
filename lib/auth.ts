@@ -28,6 +28,10 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }) => {
+        console.log("Magic link generated:", url);
+        console.log("Token:", token);
+        console.log("Email:", email);
+        
         await sendEmail(email, "Your Magic Login Link", [
           `Bula vinaka,`,
           `You requested a magic login link. Use the link below to log in:`,
@@ -42,5 +46,9 @@ export const auth = betterAuth({
     }),
     nextCookies(),
   ],
-  trustedOrigins: [process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3224"],
+  trustedOrigins: [
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3441",
+    "http://localhost:3441",
+    "https://totolaw.org",
+  ],
 });

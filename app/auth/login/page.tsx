@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,42 +11,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { sendMagicLinkAction, type ActionState } from "../actions";
+import SubmitButton from "@/components/submitButton";
+
+const initialState: ActionState = {
+  success: undefined,
+  message: undefined,
+  error: undefined,
+};
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [state, formAction] = useFormState(sendMagicLinkAction, initialState);
 
-  const handleMagicLinkLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email) {
-      toast.error("Please enter your email address");
-      return;
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message || "Magic link sent!");
+    } else if (state.error) {
+      toast.error(state.error);
     }
-
-    setIsLoading(true);
-    
-    try {
-      const response = await authClient.signIn.magicLink({
-        email,
-        callbackURL: "/dashboard",
-      });
-
-      if (response.error) {
-        toast.error(response.error.message || "Failed to send magic link");
-      } else {
-        setEmailSent(true);
-        toast.success("Magic link sent! Check your email.");
-      }
-    } catch (error) {
-      console.error("Magic link error:", error);
-      toast.error("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [state]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
@@ -61,11 +45,11 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {emailSent ? (
+          {state.success ? (
             <div className="space-y-4">
               <div className="rounded-lg bg-green-50 p-4 text-center">
                 <p className="text-sm text-green-800">
-                  We've sent a magic link to <strong>{email}</strong>
+                  We've sent a magic link to <strong>{state.email}</strong>
                 </p>
                 <p className="mt-2 text-xs text-green-700">
                   Click the link in your email to log in.
@@ -74,31 +58,28 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => {
-                  setEmailSent(false);
-                  setEmail("");
-                }}
+                onClick={() => window.location.reload()}
               >
                 Send to a different email
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleMagicLinkLogin} className="space-y-4">
+            <form action={formAction} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={isLoading}
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Sending..." : "Send Magic Link"}
-              </Button>
+              <SubmitButton 
+                text="Send Magic Link" 
+                loadingText="Sending..."
+                className="w-full"
+              />
             </form>
           )}
         </CardContent>
