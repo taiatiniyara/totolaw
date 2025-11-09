@@ -38,7 +38,7 @@ function htmlTemplate(paragraphs: string[]): string {
       <body>
         ${paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("")}
         <footer>
-          <p>Loloma levu,<br />The Totolaw Team</p>
+          <p>Kind regards,<br />The Totolaw Team</p>
         </footer>
       </body>
     </html>
@@ -53,7 +53,7 @@ export async function sendEmail(
   const htmlContent = htmlTemplate(paragraphs);
   try {
     await transporter.sendMail({
-      from: user,
+      from: `Totolaw <${user}>`,
       to,
       subject,
       html: htmlContent,
