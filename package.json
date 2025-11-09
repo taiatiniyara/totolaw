@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3224",
+    "dev": "next dev -p 3441",
     "build": "next build",
-    "start": "next start -p 3220",
+    "start": "next start -p 3440",
     "lint": "eslint",
-    "db-push": "rm -rf ./auth-schema.ts && npx @better-auth/cli generate && mv ./auth-schema.ts ./lib/drizzle/schema/auth-schema.ts && drizzle-kit push --config ./lib/drizzle/config.ts"
+    "db-push": "rm -rf ./auth-schema.ts && npx @better-auth/cli generate && mv ./auth-schema.ts ./lib/drizzle/schema/auth-schema.ts && drizzle-kit push --config ./lib/drizzle/config.ts",
+    "deploy": "next build && pm2 restart totolaw || pm2 start 'npm start' --name totolaw"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
