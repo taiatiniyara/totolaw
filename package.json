@@ -8,7 +8,7 @@
     "start": "next start -p 3440",
     "lint": "eslint",
     "db-push": "drizzle-kit push --config ./lib/drizzle/config.ts",
-    "deploy": "next build && pm2 restart totolaw",
+    "deploy": "next build && pm2 restart totolaw && git add . && git commit -m 'deploy' && git push",
     "admin:list": "tsx scripts/manage-admins.ts list",
     "admin:add": "tsx scripts/manage-admins.ts add",
     "admin:remove": "tsx scripts/manage-admins.ts remove",
