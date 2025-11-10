@@ -12,6 +12,7 @@ import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
 import { ArrowLeft, UserPlus, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -35,7 +36,7 @@ export default async function InviteUserPage() {
             </Link>
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold tracking-tight">Invite User</h1>
+            <Heading as="h1">Invite User</Heading>
             <p className="text-muted-foreground">
               Add a new member to your organization
             </p>
@@ -66,7 +67,7 @@ export default async function InviteUserPage() {
           <CardContent>
             <div className="text-center py-12 text-muted-foreground">
               <UserPlus className="h-16 w-16 mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-semibold mb-2">Feature In Development</h3>
+              <Heading as="h3" className="mb-2">Feature In Development</Heading>
               <p className="mb-4">
                 User invitation functionality will be available soon.
               </p>

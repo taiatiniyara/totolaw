@@ -13,6 +13,7 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getUserById } from "../actions";
 import { ArrowLeft, Mail, User, Shield } from "lucide-react";
@@ -71,7 +72,7 @@ export default async function UserDetailPage({ params }: PageProps) {
             </Link>
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold tracking-tight">User Details</h1>
+            <Heading as="h1">User Details</Heading>
             <p className="text-muted-foreground">View user information and roles</p>
           </div>
         </div>

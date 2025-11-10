@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Heading } from "@/components/ui/heading";
 
 interface Hearing {
   id: string;
@@ -198,9 +199,9 @@ export function CalendarView({ hearings }: CalendarViewProps) {
       {/* Calendar Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold">
+          <Heading as="h2">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h2>
+          </Heading>
           <Button variant="outline" size="sm" onClick={goToToday}>
             Today
           </Button>

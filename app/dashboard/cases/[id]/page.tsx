@@ -11,6 +11,7 @@ import { PermissionGate } from "@/components/auth/permission-gate";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { getCaseById, deleteCase } from "../actions";
 import { getEvidenceForCase } from "../../evidence/actions";
 import { getHearings } from "../../hearings/actions";
@@ -88,7 +89,7 @@ export default async function CaseDetailsPage({ params }: CasePageProps) {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{caseItem.title}</h1>
+              <Heading as="h1">{caseItem.title}</Heading>
               <p className="text-muted-foreground">
                 {caseItem.type} • Created {new Date(caseItem.createdAt).toLocaleDateString()}
               </p>

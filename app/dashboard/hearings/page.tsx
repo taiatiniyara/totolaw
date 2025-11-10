@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { PermissionGate } from "@/components/auth/permission-gate";
 import { getHearings } from "./actions";
 import { Plus, Calendar, MapPin, Clock, CalendarDays } from "lucide-react";
@@ -36,7 +37,7 @@ export default async function HearingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Hearings</h1>
+          <Heading as="h1">Hearings</Heading>
           <p className="text-muted-foreground">
             Schedule and manage court hearings
           </p>
@@ -134,7 +135,7 @@ export default async function HearingsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No hearings scheduled</h3>
+            <Heading as="h3" className="mb-2">No hearings scheduled</Heading>
             <p className="text-sm text-muted-foreground mb-4">
               Schedule your first court hearing to get started
             </p>

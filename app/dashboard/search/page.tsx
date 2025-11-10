@@ -6,6 +6,7 @@ import { globalSearch, SearchResults } from "./actions";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { Spinner } from "@/components/ui/spinner";
 import { Search, FolderOpen, Calendar, FileText, AlertCircle } from "lucide-react";
 import Link from "next/link";
@@ -75,7 +76,7 @@ export default function SearchPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Search</h1>
+        <Heading as="h1">Search</Heading>
         <p className="text-muted-foreground mt-1">
           Search across cases, hearings, and evidence
         </p>
@@ -146,7 +147,7 @@ export default function SearchPage() {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium truncate">{caseItem.title}</h3>
+                          <Heading as="h3" className="truncate">{caseItem.title}</Heading>
                           <div className="flex items-center gap-3 mt-2">
                             <Badge variant="secondary">{caseItem.type}</Badge>
                             <Badge variant="outline">{caseItem.status}</Badge>
@@ -182,7 +183,7 @@ export default function SearchPage() {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium">{hearing.caseTitle}</h3>
+                          <Heading as="h3">{hearing.caseTitle}</Heading>
                           <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
                             <span>
                               {new Date(hearing.date).toLocaleDateString("en-US", {
@@ -228,7 +229,7 @@ export default function SearchPage() {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium truncate">{item.fileName}</h3>
+                          <Heading as="h3" className="truncate">{item.fileName}</Heading>
                           <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
                             <Badge variant="secondary">{item.fileType}</Badge>
                             <span>

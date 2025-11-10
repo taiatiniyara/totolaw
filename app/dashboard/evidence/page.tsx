@@ -3,6 +3,7 @@ import { PermissionGate } from "@/components/auth/permission-gate";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import Link from "next/link";
 import { FileText, Upload, Download } from "lucide-react";
 
@@ -23,7 +24,7 @@ export default async function EvidencePage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Evidence</h1>
+          <Heading as="h1">Evidence</Heading>
           <p className="text-muted-foreground">
             Manage case evidence and uploaded files
           </p>
@@ -56,7 +57,7 @@ export default async function EvidencePage() {
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-3">
                       <FileText className="w-5 h-5 text-muted-foreground" />
-                      <h3 className="font-semibold">{item.fileName}</h3>
+                      <Heading as="h3">{item.fileName}</Heading>
                     </div>
                     
                     {item.description && (

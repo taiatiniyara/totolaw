@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { getCaseStats } from "./cases/actions";
 import { getCurrentOrganization, getUpcomingHearings, getRecentCases } from "./actions";
 import { 
@@ -43,7 +44,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <Heading as="h1">Dashboard</Heading>
           <p className="text-muted-foreground mt-1">
             {org?.organizationName ? `${org.organizationName} - ${org.roleName}` : "Welcome to Totolaw"}
           </p>

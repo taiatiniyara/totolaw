@@ -1,6 +1,7 @@
 import { getHearings } from "../actions";
 import { CalendarView } from "@/components/calendar-view";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
 import { PermissionGate } from "@/components/auth/permission-gate";
 import { Calendar, Plus, List } from "lucide-react";
 import Link from "next/link";
@@ -24,7 +25,7 @@ export default async function HearingsCalendarPage() {
         <div className="flex items-center gap-3">
           <Calendar className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-3xl font-bold">Hearings Calendar</h1>
+            <Heading as="h1">Hearings Calendar</Heading>
             <p className="text-muted-foreground">
               View all scheduled hearings in calendar format
             </p>

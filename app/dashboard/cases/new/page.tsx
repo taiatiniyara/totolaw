@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Heading } from "@/components/ui/heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createCase } from "../actions";
 import { ArrowLeft } from "lucide-react";
@@ -60,7 +61,7 @@ export default async function NewCasePage() {
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create New Case</h1>
+            <Heading as="h1">Create New Case</Heading>
             <p className="text-muted-foreground">
               Enter the details for the new court case
             </p>

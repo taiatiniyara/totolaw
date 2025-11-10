@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -146,21 +147,21 @@ export default function EvidenceDetailPage({
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-1">
                 File Type
-              </h3>
+              </Heading>
               <Badge variant="outline">{evidence.fileType}</Badge>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-1">
                 File Size
-              </h3>
+              </Heading>
               <p>{(evidence.fileSize / 1024).toFixed(1)} KB</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-1">
                 Case ID
-              </h3>
+              </Heading>
               <Link
                 href={`/dashboard/cases/${evidence.caseId}`}
                 className="text-primary hover:underline"
@@ -169,27 +170,27 @@ export default function EvidenceDetailPage({
               </Link>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-1">
                 Uploaded Date
-              </h3>
+              </Heading>
               <p>{new Date(evidence.createdAt).toLocaleString()}</p>
             </div>
           </div>
 
           {evidence.description && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-2">
                 Description
-              </h3>
+              </Heading>
               <p className="text-sm">{evidence.description}</p>
             </div>
           )}
 
           {evidence.hearingId && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">
+              <Heading as="h3" className="text-sm font-medium text-muted-foreground mb-1">
                 Related Hearing
-              </h3>
+              </Heading>
               <Link
                 href={`/dashboard/hearings/${evidence.hearingId}`}
                 className="text-primary hover:underline"

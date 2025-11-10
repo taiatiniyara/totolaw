@@ -13,6 +13,7 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { getUsersForOrganization } from "./actions";
 import { Plus, Users as UsersIcon, Mail } from "lucide-react";
 
@@ -33,7 +34,7 @@ export default async function UsersPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+            <Heading as="h1">Users</Heading>
             <p className="text-muted-foreground">
               Manage organization members and roles
             </p>
@@ -98,7 +99,7 @@ export default async function UsersPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <UsersIcon className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No users found</h3>
+              <Heading as="h3" className="mb-2">No users found</Heading>
               <p className="text-sm text-muted-foreground mb-4">
                 Invite team members to your organization
               </p>

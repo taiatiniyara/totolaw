@@ -13,10 +13,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  LogOut,
   Menu,
   Bell,
 } from "lucide-react";
+import { LogoutButton } from "@/components/logout-button";
 
 interface Organization {
   id: string;
@@ -155,17 +155,7 @@ export default async function DashboardLayout({
                 )}
               </div>
             </div>
-            <form action="/api/auth/logout" method="POST">
-              <Button
-                type="submit"
-                variant="outline"
-                className="w-full justify-start"
-                size="sm"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            </form>
+            <LogoutButton variant="outline" size="sm" fullWidth />
           </div>
         </div>
       </aside>
@@ -232,12 +222,7 @@ export default async function DashboardLayout({
               </ScrollArea>
 
               <div className="border-t p-4">
-                <form action="/api/auth/logout" method="POST">
-                  <Button type="submit" variant="outline" className="w-full">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </Button>
-                </form>
+                <LogoutButton variant="outline" fullWidth />
               </div>
             </div>
           </SheetContent>

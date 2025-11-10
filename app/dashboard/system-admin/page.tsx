@@ -8,6 +8,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
 import Link from "next/link";
 import {
   Shield,
@@ -46,10 +47,10 @@ export default async function SystemAdminDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
+          <Heading as="h1" className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-purple-600" />
             Super Admin Dashboard
-          </h1>
+          </Heading>
           <p className="text-muted-foreground mt-1">
             System-wide configuration and management
           </p>

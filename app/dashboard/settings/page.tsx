@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth";
 import { getUserTenantContext } from "@/lib/services/tenant.service";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { 
   Settings as SettingsIcon, 
   Building2, 
@@ -36,7 +37,7 @@ export default async function SettingsPage() {
     <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <Heading as="h1">Settings</Heading>
           <p className="text-muted-foreground">
             Manage your account and organization preferences
           </p>
@@ -199,7 +200,7 @@ export default async function SettingsPage() {
           <CardContent>
             <div className="text-center py-8 text-muted-foreground">
               <SettingsIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-semibold mb-2">Settings Management</h3>
+              <Heading as="h3" className="mb-2">Settings Management</Heading>
               <p className="max-w-md mx-auto">
                 Full settings configuration interface is under development. 
                 Basic account information is displayed above.

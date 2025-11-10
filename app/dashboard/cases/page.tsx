@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
 import { PermissionGate } from "@/components/auth/permission-gate";
 import { getCases } from "./actions";
 import { Plus, FileText } from "lucide-react";
@@ -27,7 +28,7 @@ export default async function CasesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Cases</h1>
+          <Heading as="h1">Cases</Heading>
           <p className="text-muted-foreground">
             Manage and track all court cases
           </p>
@@ -88,7 +89,7 @@ export default async function CasesPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No cases found</h3>
+            <Heading as="h3" className="mb-2">No cases found</Heading>
             <p className="text-sm text-muted-foreground mb-4">
               Get started by creating your first case
             </p>

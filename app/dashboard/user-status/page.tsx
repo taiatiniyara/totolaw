@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, Shield, Mail, User } from "lucide-react";
+import { Heading } from "@/components/ui/heading";
 
 export default async function UserStatusPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -43,7 +44,7 @@ export default async function UserStatusPage() {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-6">User Status</h1>
+      <Heading as="h1" className="mb-6">User Status</Heading>
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Basic Info */}

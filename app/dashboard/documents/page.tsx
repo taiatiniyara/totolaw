@@ -13,6 +13,7 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { FileText, Upload, FolderOpen, Search } from "lucide-react";
 
 export default async function DocumentsPage() {
@@ -30,7 +31,7 @@ export default async function DocumentsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
+            <Heading as="h1">Documents</Heading>
             <p className="text-muted-foreground">
               Manage all case documents and evidence files
             </p>
@@ -152,21 +153,21 @@ export default async function DocumentsPage() {
           <CardContent>
             <div className="space-y-4 text-sm">
               <div>
-                <h4 className="font-medium mb-1">Uploading Documents</h4>
+                <Heading as="h4" className="font-medium mb-1">Uploading Documents</Heading>
                 <p className="text-muted-foreground">
                   All documents must be associated with a specific case. Upload evidence
                   through the evidence management section or directly from a case page.
                 </p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">Document Security</h4>
+                <Heading as="h4" className="font-medium mb-1">Document Security</Heading>
                 <p className="text-muted-foreground">
                   All documents are secured with organization-level access control.
                   Only members of your organization can view these files.
                 </p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">File Storage</h4>
+                <Heading as="h4" className="font-medium mb-1">File Storage</Heading>
                 <p className="text-muted-foreground">
                   File metadata is stored in the database. Ensure your storage system
                   is properly configured for file uploads.

@@ -11,6 +11,7 @@ import { PermissionGate } from "@/components/auth/permission-gate";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import { getHearingById, deleteHearing } from "../actions";
 import { ArrowLeft, Edit, Trash2, Calendar, MapPin, Clock, FileText } from "lucide-react";
 import Link from "next/link";
@@ -74,7 +75,7 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Hearing Details</h1>
+              <Heading as="h1">Hearing Details</Heading>
               <p className="text-muted-foreground">
                 {hearing.caseTitle}
               </p>

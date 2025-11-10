@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
 import {
   Dialog,
   DialogContent,
@@ -116,10 +117,10 @@ export default function ManageSystemAdminsClient() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
+          <Heading as="h1" className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-purple-600" />
             System Administrators
-          </h1>
+          </Heading>
           <p className="text-muted-foreground mt-1">
             Manage super admin team members
           </p>

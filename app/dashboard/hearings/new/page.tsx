@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Heading } from "@/components/ui/heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createHearing } from "../actions";
 import { getCases } from "../../cases/actions";
@@ -71,7 +72,7 @@ export default async function NewHearingPage() {
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Schedule Hearing</h1>
+            <Heading as="h1">Schedule Hearing</Heading>
             <p className="text-muted-foreground">
               Set up a new court hearing for a case
             </p>

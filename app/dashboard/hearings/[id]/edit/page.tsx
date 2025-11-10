@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Heading } from "@/components/ui/heading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getHearingById, updateHearing } from "../../actions";
 import { ArrowLeft } from "lucide-react";
@@ -85,7 +86,7 @@ export default async function EditHearingPage({ params }: EditHearingPageProps) 
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Hearing</h1>
+            <Heading as="h1">Edit Hearing</Heading>
             <p className="text-muted-foreground">
               Reschedule or update hearing details
             </p>
