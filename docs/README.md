@@ -49,6 +49,34 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
   - Post-deployment checklist
   - Maintenance procedures
 
+### Multi-Tenant & Access Control 🆕
+
+- [Multi-Tenant RBAC Summary](./MULTI_TENANT_SUMMARY.md) - **START HERE** for overview
+  - What has been created
+  - Key features and benefits
+  - Quick implementation overview
+  
+- [Multi-Tenant RBAC Architecture](./multi-tenant-rbac.md) - Complete architecture guide
+  - Organization structure
+  - Role-based access control
+  - Data isolation
+  - Security considerations
+  
+- [Permissions Reference](./permissions-reference.md) - Standard permissions and roles
+  - All permissions defined
+  - Standard role definitions
+  - Usage examples
+  
+- [Implementation Guide](./IMPLEMENTATION_GUIDE.md) - Step-by-step setup
+  - Database migration
+  - Code integration
+  - Testing procedures
+  
+- [Quick Reference](./QUICK_REFERENCE_RBAC.md) - Code patterns and SQL queries
+  - Common patterns
+  - SQL queries
+  - Troubleshooting tips
+
 ## 🎯 Quick Links
 
 ### For Developers

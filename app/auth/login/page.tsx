@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useEffect, useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -23,7 +22,7 @@ const initialState: ActionState = {
 };
 
 export default function LoginPage() {
-  const [state, formAction] = useFormState(sendMagicLinkAction, initialState);
+  const [state, formAction] = useActionState(sendMagicLinkAction, initialState);
 
   useEffect(() => {
     if (state.success) {

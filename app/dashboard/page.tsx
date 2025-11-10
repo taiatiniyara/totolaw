@@ -1,99 +1,149 @@
-"use client";
+/**
+ * Dashboard Page
+ * 
+ * Main dashboard showing statistics and quick access
+ */
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
+export const dynamic = 'force-dynamic';
+
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { getCaseStats } from "./cases/actions";
+import { getCurrentOrganization } from "./actions";
+import { FileText, Clock, CheckCircle, ArrowRight } from "lucide-react";
 
-export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export default async function DashboardPage() {
+  const statsResult = await getCaseStats();
+  const orgResult = await getCurrentOrganization();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const session = await authClient.getSession();
-        
-        if (!session?.data?.user) {
-          router.push("/auth/login");
-          return;
-        }
-        
-        setUser(session.data.user);
-      } catch (error) {
-        console.error("Session check error:", error);
-        router.push("/auth/login");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSession();
-  }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      const { logoutAction } = await import("./actions");
-      await logoutAction();
-      toast.success("Logged out successfully");
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Failed to logout");
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-      </div>
-    );
-  }
+  const stats = statsResult.data || { total: 0, active: 0, pending: 0, closed: 0 };
+  const org = orgResult.data;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <Button onClick={handleLogout} variant="outline">
-            Logout
-          </Button>
-        </div>
-        
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">
+          {org?.organizationName ? `${org.organizationName} - ${org.roleName}` : "Welcome to Totolaw"}
+        </p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Welcome to Totolaw!</CardTitle>
-            <CardDescription>
-              You're successfully authenticated via magic link
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Cases</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {user && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">Email:</span>
-                  <span className="text-muted-foreground">{user.email}</span>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">
+              All cases in your organization
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.active}</div>
+            <p className="text-xs text-muted-foreground">
+              Currently in progress
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Cases</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.pending}</div>
+            <p className="text-xs text-muted-foreground">
+              Awaiting action
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Closed Cases</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.closed}</div>
+            <p className="text-xs text-muted-foreground">
+              Completed cases
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Common tasks and shortcuts</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/dashboard/cases">
+                <FileText className="mr-2 h-4 w-4" />
+                View All Cases
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/dashboard/cases/new">
+                <FileText className="mr-2 h-4 w-4" />
+                Create New Case
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/dashboard/users">
+                <FileText className="mr-2 h-4 w-4" />
+                Manage Users
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Organization Info</CardTitle>
+            <CardDescription>Your current organization context</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {org ? (
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="font-medium">Organization:</span>
+                  <p className="text-muted-foreground">{org.organizationName}</p>
                 </div>
-                {user.name && (
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">Name:</span>
-                    <span className="text-muted-foreground">{user.name}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">User ID:</span>
-                  <span className="text-muted-foreground font-mono text-sm">{user.id}</span>
+                <div>
+                  <span className="font-medium">Your Role:</span>
+                  <p className="text-muted-foreground">{org.roleName || "Member"}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">Email Verified:</span>
-                  <span className={user.emailVerified ? "text-green-600" : "text-amber-600"}>
-                    {user.emailVerified ? "Yes" : "No"}
-                  </span>
+                <div>
+                  <span className="font-medium">Member Since:</span>
+                  <p className="text-muted-foreground">
+                    {org.memberSince ? new Date(org.memberSince).toLocaleDateString() : "N/A"}
+                  </p>
                 </div>
               </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No organization context available
+              </p>
             )}
           </CardContent>
         </Card>

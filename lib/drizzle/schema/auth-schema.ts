@@ -11,6 +11,9 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  // Multi-tenant RBAC fields
+  currentOrganizationId: text("current_organization_id"),
+  isSuperAdmin: boolean("is_super_admin").default(false).notNull(),
 });
 
 export const session = pgTable("session", {

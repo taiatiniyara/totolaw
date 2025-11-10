@@ -1,4 +1,4 @@
-export function UUID() {
+export function generateUUID() {
   // Generates a simple UUID (not RFC4122 compliant)
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
