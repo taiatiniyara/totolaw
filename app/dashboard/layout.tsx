@@ -22,6 +22,7 @@ import {
   FileText,
   Calendar,
   Bell,
+  Search,
 } from "lucide-react";
 import { logoutAction } from "./actions";
 
@@ -108,6 +109,9 @@ export default async function DashboardLayout({
               <NavLink href="/dashboard/documents" icon={FileText}>
                 Documents
               </NavLink>
+              <NavLink href="/dashboard/search" icon={Search}>
+                Search
+              </NavLink>
 
               <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
                 MANAGEMENT
@@ -192,6 +196,9 @@ export default async function DashboardLayout({
                   </NavLink>
                   <NavLink href="/dashboard/documents" icon={FileText}>
                     Documents
+                  </NavLink>
+                  <NavLink href="/dashboard/search" icon={Search}>
+                    Search
                   </NavLink>
                   <NavLink href="/dashboard/users" icon={Users}>
                     Users

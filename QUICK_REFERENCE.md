@@ -71,17 +71,29 @@ pm2 status           # Check status
 ```
 totolaw/
 ├── app/                  # Next.js App Router
-│   ├── api/auth/        # Auth API routes
+│   ├── api/             # API routes
+│   │   ├── auth/       # Auth endpoints
+│   │   └── organization/ # Org management
 │   ├── auth/            # Auth pages
-│   └── dashboard/       # Dashboard
+│   └── dashboard/       # Main application
+│       ├── cases/      # Case management
+│       ├── hearings/   # Hearing management
+│       ├── evidence/   # Evidence management
+│       ├── users/      # User management
+│       ├── search/     # Global search
+│       ├── documents/  # Document hub
+│       └── settings/   # Settings
 ├── components/          # React components
+│   ├── auth/           # Auth components
 │   └── ui/             # UI components
 ├── lib/                 # Utilities
 │   ├── drizzle/        # Database ORM
-│   ├── services/       # Services
+│   ├── services/       # Business logic
+│   ├── utils/          # Helper utilities
 │   ├── auth.ts         # Auth config
 │   └── auth-client.ts  # Client auth
 ├── docs/               # Documentation
+├── migrations/         # Database migrations
 └── public/             # Static files
 ```
 
@@ -277,11 +289,14 @@ sudo certbot --nginx -d totolaw.org
 ## 📚 Documentation Links
 
 - [Getting Started](./docs/getting-started.md)
+- [Development Summary](./DEVELOPMENT_SUMMARY.md) - **Current features & status**
 - [Authentication](./docs/authentication.md)
 - [Architecture](./docs/architecture.md)
 - [API Docs](./docs/api.md)
 - [Database](./docs/database.md)
 - [Deployment](./docs/deployment.md)
+- [Multi-Tenant RBAC](./docs/multi-tenant-rbac.md)
+- [Permissions Reference](./docs/permissions-reference.md)
 - [Troubleshooting](./docs/troubleshooting.md)
 
 ## 🆘 Support
@@ -294,11 +309,26 @@ sudo certbot --nginx -d totolaw.org
 
 1. ✅ Test magic link authentication
 2. ✅ Create test user account
-3. ✅ Explore dashboard
-4. ✅ Review documentation
-5. ✅ Configure production environment
-6. ✅ Setup monitoring
-7. ✅ Enable backups
+3. ✅ Setup organizations and assign users
+4. ✅ Configure roles and permissions
+5. ✅ Create test cases and hearings
+6. ✅ Upload evidence files
+7. ✅ Test search functionality
+8. ✅ Configure production environment
+9. ✅ Setup monitoring and backups
+
+## 🚀 Features Available
+
+- ✅ Multi-tenant organizations
+- ✅ Role-based access control (RBAC)
+- ✅ Case management (CRUD)
+- ✅ Hearing management with calendar
+- ✅ Evidence upload and management
+- ✅ User management and roles
+- ✅ Global search (cases, hearings, evidence)
+- ✅ Organization switching
+- ✅ Dashboard with statistics
+- ✅ Mobile-responsive design
 
 ---
 

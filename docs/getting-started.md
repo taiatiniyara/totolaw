@@ -266,11 +266,26 @@ If you encounter TypeScript or build errors:
 
 Once you have Totolaw running:
 
-1. 📖 Read the [Authentication Guide](./authentication.md)
-2. 🏗️ Learn about the [Architecture](./architecture.md)
-3. 🚀 Prepare for [Deployment](./deployment.md)
-4. 📚 Explore the [API Documentation](./api.md)
-5. 🗄️ Understand the [Database Schema](./database.md)
+1. 🎯 Check [Development Summary](../DEVELOPMENT_SUMMARY.md) for all available features
+2. 📖 Read the [Authentication Guide](./authentication.md)
+3. 🏗️ Learn about the [Architecture](./architecture.md)
+4. � Understand [Multi-Tenant RBAC](./multi-tenant-rbac.md)
+5. 📚 Explore the [API Documentation](./api.md)
+6. 🗄️ Review the [Database Schema](./database.md)
+7. 🚀 Prepare for [Deployment](./deployment.md)
+
+## Available Features
+
+All core features are implemented and ready to use:
+- ✅ Multi-tenant organizations with data isolation
+- ✅ Role-based access control (RBAC)
+- ✅ Case management (CRUD operations)
+- ✅ Hearing management with calendar
+- ✅ Evidence upload and file management
+- ✅ User management and role assignments
+- ✅ Global search functionality
+- ✅ Organization switching
+- ✅ Dashboard with statistics
 
 ## Getting Help
 

@@ -11,6 +11,7 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
   - Environment configuration
   - Database setup
   - Running the application
+- [Development Summary](../DEVELOPMENT_SUMMARY.md) - Current features and build status
 
 ### Core Documentation
 
@@ -49,13 +50,8 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
   - Post-deployment checklist
   - Maintenance procedures
 
-### Multi-Tenant & Access Control ✅
+### Multi-Tenant & Access Control
 
-- [Multi-Tenant RBAC Summary](./MULTI_TENANT_SUMMARY.md) - **START HERE** for overview
-  - Implemented features
-  - Key capabilities
-  - Quick usage guide
-  
 - [Multi-Tenant RBAC Architecture](./multi-tenant-rbac.md) - Complete architecture guide
   - Organization structure
   - Role-based access control
@@ -66,16 +62,6 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
   - All permissions defined
   - Standard role definitions
   - Usage examples
-  
-- [Implementation Guide](./IMPLEMENTATION_GUIDE.md) - Step-by-step implementation
-  - How it's built
-  - Service usage
-  - Best practices
-  
-- [Quick Reference RBAC](./QUICK_REFERENCE_RBAC.md) - Code patterns and SQL queries
-  - Common patterns
-  - SQL queries
-  - Troubleshooting tips
 
 ## 🎯 Quick Links
 
@@ -212,17 +198,9 @@ Need help? Here are your options:
 
 ## 🔄 Documentation Updates
 
-This documentation is regularly updated. Last update: November 2025
+This documentation is regularly updated. Last update: November 10, 2025
 
 Found an error or want to improve the docs? Submit a pull request!
-
----
-
-## Document Version History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | Nov 2024 | Initial comprehensive documentation |
 
 ---
 

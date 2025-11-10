@@ -63,29 +63,31 @@ Comprehensive documentation is available in the `/docs` folder:
 - 🏢 Organization-based isolation (Fiji, Samoa, Tonga, Vanuatu)
 - 🔐 Role-based access control with 8 standard roles per organization
 - 👥 Users can belong to multiple organizations
-- � Easy organization switching
+- 🔄 Easy organization switching
 - 📝 Complete audit trail for compliance
 
 ### Authentication & Security
-- �🔐 Passwordless magic link authentication
+- 🔐 Passwordless magic link authentication
 - ✉️ Email-based verification
-- �️ CSRF protection and rate limiting
-- � Data isolation enforced at database level
+- 🛡️ CSRF protection and rate limiting
+- 🔒 Data isolation enforced at database level
 - 📊 Permission-based UI rendering
 
 ### Case Management
 - 📁 Comprehensive case lifecycle tracking
 - ⚖️ Hearings, evidence, verdicts, sentences, and appeals
 - 🔄 Case status tracking and workflows
-- �‍⚖️ Judge and attorney assignments
-- � Document and evidence management
+- 👨‍⚖️ Judge and attorney assignments
+- 📄 Document and evidence management
+- 🔍 Global search across cases, hearings, and evidence
 
 ### User Experience
-- 🎨 Modern, responsive dashboard
+- 🎨 Modern, responsive dashboard with statistics
 - 🚀 Fast page loads with Next.js 16
 - 📱 Mobile-friendly interface
 - ♿ Accessible UI components
 - 🌐 Organization switcher in navigation
+- 📊 Real-time search with debouncing
 
 ## 🔧 Configuration
 
