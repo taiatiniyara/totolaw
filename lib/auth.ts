@@ -29,6 +29,12 @@ export const auth = betterAuth({
     updateAge: 24 * 60 * 60, // 24 hours
     expiresIn: 60 * 60 * 24 * 7, // 7 days
   },
+  rateLimit: {
+    window: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    storage: "database",
+    modelName: "rate_limit",
+  },
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }) => {
