@@ -71,13 +71,25 @@ export default async function TranscriptPage({ params }: TranscriptPageProps) {
   return (
     <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
         <Link href={`/dashboard/hearings/${transcript.hearingId}`}>
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Hearing
           </Button>
         </Link>
+        <div className="flex gap-2">
+          <Link href={`/dashboard/hearings/transcripts/${params.id}/manual`}>
+            <Button variant="outline">
+              Manual Transcription
+            </Button>
+          </Link>
+          <Link href={`/dashboard/hearings/transcripts/${params.id}/live`}>
+            <Button variant="outline">
+              Live Transcription
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Transcript Viewer */}

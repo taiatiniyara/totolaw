@@ -47,7 +47,8 @@ export async function getCases(filters?: {
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "cases:read-all"
+      "cases:read-all",
+      context.isSuperAdmin
     );
 
     if (!canView) {
@@ -55,7 +56,8 @@ export async function getCases(filters?: {
       const canViewOwn = await hasPermission(
         session.user.id,
         context.organizationId,
-        "cases:read-own"
+        "cases:read-own",
+        context.isSuperAdmin
       );
       
       if (!canViewOwn) {
@@ -143,7 +145,8 @@ export async function getCaseById(
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "cases:read-all"
+      "cases:read-all",
+      context.isSuperAdmin
     );
 
     if (!canView) {
@@ -151,7 +154,8 @@ export async function getCaseById(
       const canViewOwn = await hasPermission(
         session.user.id,
         context.organizationId,
-        "cases:read-own"
+        "cases:read-own",
+        context.isSuperAdmin
       );
       
       if (!canViewOwn || 
@@ -191,7 +195,8 @@ export async function createCase(data: {
     const canCreate = await hasPermission(
       session.user.id,
       context.organizationId,
-      "cases:create"
+      "cases:create",
+      context.isSuperAdmin
     );
 
     if (!canCreate) {
@@ -263,7 +268,8 @@ export async function updateCase(
     const canUpdate = await hasPermission(
       session.user.id,
       context.organizationId,
-      "cases:update"
+      "cases:update",
+      context.isSuperAdmin
     );
 
     if (!canUpdate) {
@@ -322,7 +328,8 @@ export async function deleteCase(caseId: string): Promise<ActionResult> {
     const canDelete = await hasPermission(
       session.user.id,
       context.organizationId,
-      "cases:delete"
+      "cases:delete",
+      context.isSuperAdmin
     );
 
     if (!canDelete) {

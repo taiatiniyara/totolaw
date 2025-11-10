@@ -51,7 +51,8 @@ export async function ProtectedRoute({
   const hasAccess = await hasPermission(
     session.user.id,
     context.organizationId,
-    requiredPermission
+    requiredPermission,
+    context.isSuperAdmin
   );
 
   if (!hasAccess) {

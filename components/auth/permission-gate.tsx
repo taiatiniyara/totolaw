@@ -67,7 +67,8 @@ export async function PermissionGate({
       hasAccess = await hasPermission(
         session.user.id,
         context.organizationId,
-        permission
+        permission,
+        context.isSuperAdmin
       );
     }
     // Check any of multiple permissions
@@ -75,7 +76,8 @@ export async function PermissionGate({
       hasAccess = await hasAnyPermission(
         session.user.id,
         context.organizationId,
-        anyPermissions
+        anyPermissions,
+        context.isSuperAdmin
       );
     }
     // Check all permissions
@@ -83,7 +85,8 @@ export async function PermissionGate({
       hasAccess = await hasAllPermissions(
         session.user.id,
         context.organizationId,
-        allPermissions
+        allPermissions,
+        context.isSuperAdmin
       );
     }
     // No permissions specified - allow access

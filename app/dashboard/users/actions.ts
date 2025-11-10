@@ -47,7 +47,8 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "users:read"
+      "users:read",
+      context.isSuperAdmin
     );
 
     if (!canView) {
@@ -116,7 +117,8 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "users:read"
+      "users:read",
+      context.isSuperAdmin
     );
 
     if (!canView) {

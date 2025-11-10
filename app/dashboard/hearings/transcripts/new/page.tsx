@@ -64,6 +64,7 @@ export default async function NewTranscriptPage({
 
     const title = formData.get("title") as string;
     const recordingUrl = formData.get("recordingUrl") as string;
+    const mode = formData.get("mode") as string;
 
     if (!title) {
       return;
@@ -96,7 +97,12 @@ export default async function NewTranscriptPage({
       });
     }
 
-    redirect(`/dashboard/hearings/transcripts/${result.transcript.id}/live`);
+    // Redirect based on selected mode
+    if (mode === "manual") {
+      redirect(`/dashboard/hearings/transcripts/${result.transcript.id}/manual`);
+    } else {
+      redirect(`/dashboard/hearings/transcripts/${result.transcript.id}/live`);
+    }
   }
 
   return (
@@ -125,6 +131,48 @@ export default async function NewTranscriptPage({
               required
               defaultValue={`${hearing.location || "Hearing"} - ${new Date(hearing.date).toLocaleDateString()}`}
             />
+          </div>
+
+          <div>
+            <Label>Transcription Mode</Label>
+            <div className="space-y-3 mt-2">
+              <label className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input
+                  type="radio"
+                  name="mode"
+                  value="manual"
+                  defaultChecked
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900">
+                    Manual Transcription (Recommended for Fiji)
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Type the proceedings as you hear them. Perfect for handling Fijian
+                    dialects, accents, and multiple languages. No audio processing required.
+                  </p>
+                </div>
+              </label>
+
+              <label className="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input
+                  type="radio"
+                  name="mode"
+                  value="live"
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900">
+                    Live Audio Transcription
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Automatically transcribe speech using AI. Works best with clear audio
+                    and standard English. May struggle with accents and local dialects.
+                  </p>
+                </div>
+              </label>
+            </div>
           </div>
 
           <div>
@@ -162,7 +210,7 @@ export default async function NewTranscriptPage({
 
           <div className="flex gap-2 pt-4">
             <Button type="submit" size="lg">
-              Create & Start Recording
+              Create Transcript
             </Button>
             <Link href={`/dashboard/hearings/${hearing.id}`}>
               <Button type="button" variant="outline" size="lg">

@@ -295,6 +295,132 @@ export async function searchTranscript(
 }
 
 /**
+ * Save manual transcript entries
+ */
+export async function saveManualTranscriptEntries(data: {
+  transcriptId: string;
+  entries: Array<{
+    id: string;
+    speakerId: string;
+    text: string;
+    timestamp: string;
+    notes?: string;
+  }>;
+}) {
+  const session = await auth.api.getSession({
+    headers: await import("next/headers").then((m) => m.headers()),
+  });
+
+  if (!session?.user) {
+    return { error: "Unauthorized" };
+  }
+
+  const context = await getUserTenantContext(session.user.id);
+  if (!context?.organizationId) {
+    return { error: "Organization context not found" };
+  }
+
+  try {
+    // Convert entries to segments with proper format
+    const segments = data.entries.map((entry, index) => ({
+      transcriptId: data.transcriptId,
+      speakerId: entry.speakerId,
+      segmentNumber: index + 1,
+      startTime: parseTimestampToMs(entry.timestamp),
+      endTime: parseTimestampToMs(entry.timestamp) + 1000, // Default 1 second duration
+      text: entry.text,
+      confidence: 1.0, // Manual entries have 100% confidence
+      metadata: entry.notes ? { notes: entry.notes, manualEntry: true } : { manualEntry: true },
+    }));
+
+    // Add segments to transcript
+    await transcriptService.addSegmentsBatch(context.organizationId, segments);
+
+    // Update transcript status if it was draft
+    const transcript = await transcriptService.getTranscript(
+      data.transcriptId,
+      context.organizationId
+    );
+
+    if (transcript?.status === "draft") {
+      await transcriptService.updateTranscriptStatus(
+        data.transcriptId,
+        context.organizationId,
+        "completed",
+        session.user.id
+      );
+    }
+
+    revalidatePath(`/dashboard/hearings/transcripts/${data.transcriptId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error saving manual transcript:", error);
+    return { error: "Failed to save manual transcript" };
+  }
+}
+
+/**
+ * Auto-save manual transcript entries (partial save)
+ */
+export async function autoSaveManualTranscript(data: {
+  transcriptId: string;
+  entries: Array<{
+    id: string;
+    speakerId: string;
+    text: string;
+    timestamp: string;
+    notes?: string;
+  }>;
+}) {
+  // Reuse the same logic as saveManualTranscriptEntries but don't mark as completed
+  const session = await auth.api.getSession({
+    headers: await import("next/headers").then((m) => m.headers()),
+  });
+
+  if (!session?.user) {
+    return { error: "Unauthorized" };
+  }
+
+  const context = await getUserTenantContext(session.user.id);
+  if (!context?.organizationId) {
+    return { error: "Organization context not found" };
+  }
+
+  try {
+    // Just update the status to in-progress to indicate work is being done
+    await transcriptService.updateTranscriptStatus(
+      data.transcriptId,
+      context.organizationId,
+      "in-progress"
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error auto-saving transcript:", error);
+    return { error: "Failed to auto-save" };
+  }
+}
+
+/**
+ * Helper function to parse timestamp string (MM:SS or HH:MM:SS) to milliseconds
+ */
+function parseTimestampToMs(timestamp: string): number {
+  const parts = timestamp.split(":").map(Number);
+  
+  if (parts.length === 2) {
+    // MM:SS format
+    const [minutes, seconds] = parts;
+    return (minutes * 60 + seconds) * 1000;
+  } else if (parts.length === 3) {
+    // HH:MM:SS format
+    const [hours, minutes, seconds] = parts;
+    return (hours * 3600 + minutes * 60 + seconds) * 1000;
+  }
+  
+  return 0;
+}
+
+/**
  * Get transcript statistics
  */
 export async function getTranscriptStats(transcriptId: string) {

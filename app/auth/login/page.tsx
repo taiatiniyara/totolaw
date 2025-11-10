@@ -8,7 +8,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -40,9 +39,6 @@ export default function LoginPage() {
           <div className="flex justify-center">
             <Logo width={160} height={55} />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">
-            Welcome to Totolaw
-          </CardTitle>
           <CardDescription className="text-center">
             Enter your email to receive a secure magic login link
             <br />
@@ -83,7 +79,7 @@ export default function LoginPage() {
                 />
               </div>
               <SubmitButton 
-                text="Send Magic Link" 
+                text="Send Magic Login Link" 
                 loadingText="Sending..."
                 className="w-full"
               />

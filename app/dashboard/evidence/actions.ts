@@ -62,7 +62,8 @@ export async function uploadEvidence(
     const canCreate = await hasPermission(
       session.user.id,
       context.organizationId,
-      "evidence:create"
+      "evidence:create",
+      context.isSuperAdmin
     );
 
     if (!canCreate) {
@@ -168,7 +169,8 @@ export async function getEvidenceForCase(
     const canRead = await hasPermission(
       session.user.id,
       context.organizationId,
-      "evidence:read"
+      "evidence:read",
+      context.isSuperAdmin
     );
 
     if (!canRead) {
@@ -217,7 +219,8 @@ export async function getEvidenceById(
     const canRead = await hasPermission(
       session.user.id,
       context.organizationId,
-      "evidence:read"
+      "evidence:read",
+      context.isSuperAdmin
     );
 
     if (!canRead) {
@@ -270,7 +273,8 @@ export async function deleteEvidence(
     const canDelete = await hasPermission(
       session.user.id,
       context.organizationId,
-      "evidence:delete"
+      "evidence:delete",
+      context.isSuperAdmin
     );
 
     if (!canDelete) {
@@ -338,7 +342,8 @@ export async function getAllEvidence(options?: {
     const canRead = await hasPermission(
       session.user.id,
       context.organizationId,
-      "evidence:read"
+      "evidence:read",
+      context.isSuperAdmin
     );
 
     if (!canRead) {

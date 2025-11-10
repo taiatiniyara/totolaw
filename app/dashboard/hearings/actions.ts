@@ -56,7 +56,8 @@ export async function getHearings(options?: {
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "hearings:read"
+      "hearings:read",
+      context.isSuperAdmin
     );
 
     if (!canView) {
@@ -118,7 +119,8 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
     const canView = await hasPermission(
       session.user.id,
       context.organizationId,
-      "hearings:read"
+      "hearings:read",
+      context.isSuperAdmin
     );
 
     if (!canView) {
@@ -181,7 +183,8 @@ export async function createHearing(data: {
     const canCreate = await hasPermission(
       session.user.id,
       context.organizationId,
-      "hearings:create"
+      "hearings:create",
+      context.isSuperAdmin
     );
 
     if (!canCreate) {
@@ -257,7 +260,8 @@ export async function updateHearing(
     const canUpdate = await hasPermission(
       session.user.id,
       context.organizationId,
-      "hearings:update"
+      "hearings:update",
+      context.isSuperAdmin
     );
 
     if (!canUpdate) {
@@ -314,7 +318,8 @@ export async function deleteHearing(hearingId: string): Promise<ActionResult> {
     const canDelete = await hasPermission(
       session.user.id,
       context.organizationId,
-      "hearings:delete"
+      "hearings:delete",
+      context.isSuperAdmin
     );
 
     if (!canDelete) {

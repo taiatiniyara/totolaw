@@ -67,7 +67,8 @@ export async function RoleGate({
       hasAccess = await hasRole(
         session.user.id,
         context.organizationId,
-        role
+        role,
+        context.isSuperAdmin
       );
     }
     // Check any of multiple roles
@@ -75,7 +76,8 @@ export async function RoleGate({
       hasAccess = await hasAnyRole(
         session.user.id,
         context.organizationId,
-        anyRoles
+        anyRoles,
+        context.isSuperAdmin
       );
     }
     // Check all roles
@@ -83,7 +85,8 @@ export async function RoleGate({
       hasAccess = await hasAllRoles(
         session.user.id,
         context.organizationId,
-        allRoles
+        allRoles,
+        context.isSuperAdmin
       );
     }
     // No roles specified - allow access
