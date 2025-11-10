@@ -40,13 +40,18 @@ export const evidence = pgTable("evidence", {
   caseId: text("case_id")
     .references(() => cases.id)
     .notNull(),
+  hearingId: text("hearing_id").references(() => hearings.id),
+  fileName: text("file_name").notNull(),
+  fileSize: integer("file_size").notNull(), // in bytes
+  fileType: varchar("file_type", { length: 100 }).notNull(), // MIME type
+  filePath: text("file_path").notNull(), // storage path
   description: text("description"),
-  fileUrl: text("file_url"),
   submittedBy: text("submitted_by").references(() => user.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
   orgIdx: index("evidence_org_idx").on(table.organizationId),
   caseIdx: index("evidence_case_idx").on(table.caseId),
+  hearingIdx: index("evidence_hearing_idx").on(table.hearingId),
   submittedByIdx: index("evidence_submitted_by_idx").on(table.submittedBy),
 }));
 export type Evidence = typeof evidence.$inferSelect;

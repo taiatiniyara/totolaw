@@ -8,10 +8,12 @@ Totolaw is a modern, secure web application designed to streamline court case ma
 
 Totolaw ("toto" meaning "write/record" in many Pacific languages) is purpose-built to serve the unique needs of Pacific Island court systems, providing:
 
+- **Multi-Tenant Architecture** - Separate organizations for each court system (Fiji, Samoa, Tonga, Vanuatu)
+- **Role-Based Access Control** - Granular permissions for judges, magistrates, clerks, prosecutors, and administrators
 - **Secure Authentication** - Passwordless magic link authentication for easy, secure access
-- **Case Management** - Comprehensive tracking of legal cases and proceedings
-- **Proceeding Templates** - Standardized workflows for common legal procedures
-- **User-Friendly Interface** - Clean, modern UI built with shadcn/ui components
+- **Case Management** - Comprehensive tracking of legal cases, hearings, evidence, and proceedings
+- **Data Isolation** - Each organization's data is completely isolated and secure
+- **User-Friendly Interface** - Modern, responsive dashboard built with shadcn/ui components
 - **Scalable Architecture** - Built on Next.js 16 with PostgreSQL for reliability
 
 ## 🚀 Quick Start
@@ -57,23 +59,33 @@ Comprehensive documentation is available in the `/docs` folder:
 
 ## ✨ Key Features
 
-### Authentication
-- 🔐 Passwordless magic link authentication
+### Multi-Tenant & RBAC
+- 🏢 Organization-based isolation (Fiji, Samoa, Tonga, Vanuatu)
+- 🔐 Role-based access control with 8 standard roles per organization
+- 👥 Users can belong to multiple organizations
+- � Easy organization switching
+- 📝 Complete audit trail for compliance
+
+### Authentication & Security
+- �🔐 Passwordless magic link authentication
 - ✉️ Email-based verification
-- 🔄 Automatic session management
-- 🛡️ CSRF protection and rate limiting
+- �️ CSRF protection and rate limiting
+- � Data isolation enforced at database level
+- 📊 Permission-based UI rendering
 
 ### Case Management
-- 📁 Comprehensive case tracking
-- 📋 Proceeding templates for standardized workflows
-- 👥 User role management
-- 📊 Case status tracking
+- 📁 Comprehensive case lifecycle tracking
+- ⚖️ Hearings, evidence, verdicts, sentences, and appeals
+- 🔄 Case status tracking and workflows
+- �‍⚖️ Judge and attorney assignments
+- � Document and evidence management
 
 ### User Experience
-- 🎨 Modern, responsive design
-- 🚀 Fast page loads with Next.js optimization
+- 🎨 Modern, responsive dashboard
+- 🚀 Fast page loads with Next.js 16
 - 📱 Mobile-friendly interface
 - ♿ Accessible UI components
+- 🌐 Organization switcher in navigation
 
 ## 🔧 Configuration
 

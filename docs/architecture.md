@@ -17,16 +17,24 @@ Totolaw is built as a modern, server-side rendered web application using the Nex
 │  ┌──────────────────────────────────────────┐  │
 │  │   Server Components (RSC)                │  │
 │  │   - Page rendering                       │  │
-│  │   - Data fetching                        │  │
+│  │   - Data fetching with org context       │  │
+│  │   - Permission-based rendering           │  │
 │  └──────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────┐  │
 │  │   Client Components                      │  │
 │  │   - Interactive UI                       │  │
 │  │   - Form handling                        │  │
+│  │   - Organization switcher                │  │
 │  └──────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────┐  │
 │  │   API Routes                             │  │
 │  │   - /api/auth/* (Better Auth)            │  │
+│  │   - /api/organization/* (Org switching)  │  │
+│  └──────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────┐  │
+│  │   Server Actions                         │  │
+│  │   - Case management with permissions     │  │
+│  │   - Organization switching               │  │
 │  └──────────────────────────────────────────┘  │
 └─────────────────┬───────────────────────────────┘
                   │
@@ -34,9 +42,16 @@ Totolaw is built as a modern, server-side rendered web application using the Nex
 │          Business Logic Layer                   │
 │  ┌──────────────────────────────────────────┐  │
 │  │   Services                               │  │
+│  │   - Tenant Service (org context)         │  │
+│  │   - Authorization Service (RBAC)         │  │
 │  │   - Email Service                        │  │
 │  │   - UUID Service                         │  │
 │  │   - Auth Service (Better Auth)           │  │
+│  └──────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────┐  │
+│  │   Utilities                              │  │
+│  │   - Query helpers (org filtering)        │  │
+│  │   - Permission guards                    │  │
 │  └──────────────────────────────────────────┘  │
 └─────────────────┬───────────────────────────────┘
                   │
@@ -47,15 +62,18 @@ Totolaw is built as a modern, server-side rendered web application using the Nex
 │  │   - Query builder                        │  │
 │  │   - Type-safe queries                    │  │
 │  │   - Schema definitions                   │  │
+│  │   - Organization-filtered queries        │  │
 │  └──────────────────────────────────────────┘  │
 └─────────────────┬───────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────┐
 │          PostgreSQL Database                    │
-│  - User data                                    │
-│  - Session management                           │
-│  - Case management                              │
-│  - Proceeding templates                         │
+│  - Multi-tenant data (organizationId)           │
+│  - User accounts & sessions                     │
+│  - Organizations & memberships                  │
+│  - Roles, permissions, RBAC                     │
+│  - Cases, hearings, evidence (multi-tenant)     │
+│  - Audit logs                                   │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -222,25 +240,45 @@ export default function LoginForm() {
 - Automatic code splitting
 - Better performance
 
-### 2. Server Actions
+### 2. Server Actions with Permission Checks
 
-Type-safe mutations using Server Actions:
+Type-safe mutations using Server Actions with RBAC:
 
 ```typescript
-// app/dashboard/actions.ts
+// app/dashboard/cases/actions.ts
 "use server";
 
-export async function logoutAction() {
-  await auth.signOut();
-  redirect("/auth/login");
+export async function createCase(data: CreateCaseData) {
+  const session = await auth.api.getSession();
+  const context = await getUserTenantContext(session.user.id);
+  
+  // Check permission
+  const canCreate = await hasPermission(
+    session.user.id,
+    context.organizationId,
+    "cases:create"
+  );
+  
+  if (!canCreate) {
+    return { success: false, error: "Permission denied" };
+  }
+  
+  // Create with organization context
+  const caseId = await db.insert(cases).values({
+    ...data,
+    organizationId: context.organizationId
+  });
+  
+  return { success: true, data: caseId };
 }
 ```
 
 **Benefits:**
 - No API routes needed
 - Type-safe
+- Permission-checked at action level
+- Organization context enforced
 - Automatic revalidation
-- Progressive enhancement
 
 ### 3. Colocation
 
@@ -263,13 +301,31 @@ dashboard/
 Business logic isolated in services:
 
 ```typescript
-// lib/services/email.service.ts
-export async function sendEmail(
-  to: string,
-  subject: string,
-  messages: string[]
+// lib/services/tenant.service.ts
+export async function getUserTenantContext(userId: string) {
+  const user = await db.query.user.findFirst({
+    where: eq(user.id, userId),
+    with: {
+      memberships: {
+        with: { organization: true }
+      }
+    }
+  });
+  
+  return {
+    organizationId: user.currentOrganizationId,
+    userId: user.id,
+    isSuperAdmin: user.isSuperAdmin
+  };
+}
+
+// lib/services/authorization.service.ts
+export async function hasPermission(
+  userId: string,
+  organizationId: string,
+  permission: string
 ) {
-  // Email logic
+  // Permission resolution logic
 }
 ```
 
@@ -277,6 +333,7 @@ export async function sendEmail(
 - Reusable logic
 - Testable functions
 - Clear boundaries
+- Centralized RBAC logic
 
 ### 5. Schema-First Database
 

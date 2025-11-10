@@ -99,17 +99,88 @@ totolaw/
 - `account` - OAuth accounts
 - `verification` - Magic link tokens
 
-### Application
-- `proceeding_templates` - Workflow templates
-- `proceeding_steps` - Workflow steps
+### Multi-Tenant & RBAC
+- `organizations` - Court organizations (Fiji, Samoa, Tonga, Vanuatu)
+- `organization_members` - User memberships
+- `roles` - Organization-specific roles
+- `permissions` - System-wide permissions
+- `role_permissions` - Role-permission mappings
+- `user_roles` - User role assignments
+- `user_permissions` - Direct user permissions
+- `rbac_audit_log` - Audit trail
+
+### Case Management
+- `cases` - Court cases (with organizationId)
+- `hearings` - Court hearings
+- `evidence` - Case evidence
+- `pleas` - Defendant pleas
+- `trials` - Trial information
+- `sentences` - Sentencing records
+- `appeals` - Appeals
+- `enforcement` - Enforcement actions
+- `managed_lists` - Custom lists
 
 ## 🌐 API Endpoints
 
+### Authentication
 ```
 POST   /api/auth/sign-in/magic-link  # Request magic link
 GET    /api/auth/magic-link/verify   # Verify token
 GET    /api/auth/get-session         # Get session
 POST   /api/auth/sign-out            # Sign out
+```
+
+### Organization Management
+```
+POST   /api/organization/switch       # Switch active organization
+GET    /api/organization/list         # Get user's organizations
+```
+
+## 🔐 Standard Roles (Per Organization)
+
+- **judge** - Full case authority, can issue verdicts and sentences
+- **magistrate** - Lower court cases, limited verdicts
+- **prosecutor** - Government prosecutor, submit evidence
+- **public-defender** - Defense attorney
+- **court-clerk** - Day-to-day case administration
+- **senior-clerk** - Clerk + user management
+- **administrator** - System and user administration
+- **viewer** - Read-only access to all cases
+
+## 🛡️ Permission Format
+
+Permissions follow the `resource:action` pattern:
+- `cases:create` - Create new cases
+- `cases:read` - View cases
+- `cases:update` - Edit cases
+- `cases:delete` - Delete cases
+- `verdicts:create` - Issue verdicts (judges only)
+- `users:manage` - Manage users (admins)
+
+## 🏢 Using Services
+
+### Get Tenant Context
+```typescript
+import { getUserTenantContext } from '@/lib/services/tenant.service';
+
+const context = await getUserTenantContext(userId);
+// { organizationId, userId, isSuperAdmin }
+```
+
+### Check Permissions
+```typescript
+import { hasPermission } from '@/lib/services/authorization.service';
+
+const canCreate = await hasPermission(userId, orgId, 'cases:create');
+```
+
+### Query with Organization Filter
+```typescript
+import { withOrgFilter } from '@/lib/utils/query-helpers';
+
+const cases = await db.select()
+  .from(casesTable)
+  .where(withOrgFilter(casesTable, organizationId));
 ```
 
 ## 🐛 Quick Troubleshooting

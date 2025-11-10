@@ -124,3 +124,92 @@ export async function switchOrganization(
     };
   }
 }
+
+/**
+ * Get upcoming hearings for dashboard
+ */
+export async function getUpcomingHearings(limit: number = 5): Promise<ActionResult> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organizationId) {
+      return { success: false, error: "Organization context not found" };
+    }
+
+    const { db } = await import("@/lib/drizzle/connection");
+    const { hearings, cases } = await import("@/lib/drizzle/schema/db-schema");
+    const { withOrgFilter } = await import("@/lib/utils/query-helpers");
+    const { gte, asc, eq } = await import("drizzle-orm");
+
+    const results = await db
+      .select({
+        id: hearings.id,
+        caseId: hearings.caseId,
+        caseTitle: cases.title,
+        date: hearings.date,
+        location: hearings.location,
+      })
+      .from(hearings)
+      .innerJoin(cases, eq(hearings.caseId, cases.id))
+      .where(withOrgFilter(context.organizationId, hearings, [
+        gte(hearings.date, new Date())
+      ]))
+      .orderBy(asc(hearings.date))
+      .limit(limit);
+
+    return { success: true, data: results };
+  } catch (error) {
+    console.error("Error fetching upcoming hearings:", error);
+    return { success: false, error: "Failed to fetch upcoming hearings" };
+  }
+}
+
+/**
+ * Get recent cases for dashboard
+ */
+export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organizationId) {
+      return { success: false, error: "Organization context not found" };
+    }
+
+    const { db } = await import("@/lib/drizzle/connection");
+    const { cases } = await import("@/lib/drizzle/schema/db-schema");
+    const { withOrgFilter } = await import("@/lib/utils/query-helpers");
+    const { desc } = await import("drizzle-orm");
+
+    const results = await db
+      .select({
+        id: cases.id,
+        title: cases.title,
+        type: cases.type,
+        status: cases.status,
+        createdAt: cases.createdAt,
+      })
+      .from(cases)
+      .where(withOrgFilter(context.organizationId, cases))
+      .orderBy(desc(cases.createdAt))
+      .limit(limit);
+
+    return { success: true, data: results };
+  } catch (error) {
+    console.error("Error fetching recent cases:", error);
+    return { success: false, error: "Failed to fetch recent cases" };
+  }
+}

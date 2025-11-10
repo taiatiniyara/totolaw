@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { sendMagicLinkAction, type ActionState } from "../actions";
 import SubmitButton from "@/components/submitButton";
+import Logo from "@/components/logo";
 
 const initialState: ActionState = {
   success: undefined,
@@ -35,7 +36,10 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
+        <CardHeader className="space-y-4">
+          <div className="flex justify-center">
+            <Logo width={160} height={55} />
+          </div>
           <CardTitle className="text-2xl font-bold text-center">
             Welcome to Totolaw
           </CardTitle>
