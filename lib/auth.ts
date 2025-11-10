@@ -25,6 +25,10 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
+  session: {
+    updateAge: 24 * 60 * 60, // 24 hours
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+  },
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }) => {

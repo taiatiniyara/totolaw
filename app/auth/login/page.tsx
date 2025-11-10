@@ -44,7 +44,11 @@ export default function LoginPage() {
             Welcome to Totolaw
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your email to receive a magic login link
+            Enter your email to receive a secure magic login link
+            <br />
+            <span className="text-xs mt-1 block">
+              No passwords required - we'll send you a one-time login link
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>

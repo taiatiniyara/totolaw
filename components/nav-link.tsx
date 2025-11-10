@@ -3,18 +3,41 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  FolderOpen, 
+  Calendar, 
+  FileText, 
+  Search, 
+  Users, 
+  Settings, 
+  Shield
+} from "lucide-react";
+
+const iconMap = {
+  LayoutDashboard,
+  FolderOpen,
+  Calendar,
+  FileText,
+  Search,
+  Users,
+  Settings,
+  Shield,
+};
+
+type IconName = keyof typeof iconMap;
 
 interface NavLinkProps {
   href: string;
-  icon: LucideIcon;
+  icon: IconName;
   children: React.ReactNode;
   badge?: string;
 }
 
-export function NavLink({ href, icon: Icon, children, badge }: NavLinkProps) {
+export function NavLink({ href, icon: iconName, children, badge }: NavLinkProps) {
   const pathname = usePathname();
   const isActive = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  const Icon = iconMap[iconName];
 
   return (
     <Link

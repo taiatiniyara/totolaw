@@ -13,18 +13,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  LayoutDashboard,
-  FolderOpen,
-  Users,
-  Settings,
   LogOut,
   Menu,
-  FileText,
-  Calendar,
   Bell,
-  Search,
 } from "lucide-react";
-import { logoutAction } from "./actions";
 
 interface Organization {
   id: string;
@@ -43,6 +35,7 @@ export default async function DashboardLayout({
   
   let organizations: Organization[] = [];
   let currentOrganizationId: string | null = null;
+  let isSuperAdmin = false;
   
   if (session?.user) {
     try {
@@ -56,6 +49,13 @@ export default async function DashboardLayout({
       }));
       const context = await getUserTenantContext(session.user.id);
       currentOrganizationId = context?.organizationId || null;
+      
+      // Check if user is super admin
+      const { user } = await import("@/lib/drizzle/schema/auth-schema");
+      const { db } = await import("@/lib/drizzle/connection");
+      const { eq } = await import("drizzle-orm");
+      const userData = await db.select().from(user).where(eq(user.id, session.user.id)).limit(1);
+      isSuperAdmin = userData[0]?.isSuperAdmin || false;
     } catch (error) {
       console.error("Error loading organization data:", error);
     }
@@ -97,31 +97,42 @@ export default async function DashboardLayout({
               <div className="mb-2 px-3 text-xs font-semibold text-muted-foreground">
                 MAIN MENU
               </div>
-              <NavLink href="/dashboard" icon={LayoutDashboard}>
+              <NavLink href="/dashboard" icon="LayoutDashboard">
                 Dashboard
               </NavLink>
-              <NavLink href="/dashboard/cases" icon={FolderOpen}>
+              <NavLink href="/dashboard/cases" icon="FolderOpen">
                 Cases
               </NavLink>
-              <NavLink href="/dashboard/hearings" icon={Calendar}>
+              <NavLink href="/dashboard/hearings" icon="Calendar">
                 Hearings
               </NavLink>
-              <NavLink href="/dashboard/documents" icon={FileText}>
+              <NavLink href="/dashboard/documents" icon="FileText">
                 Documents
               </NavLink>
-              <NavLink href="/dashboard/search" icon={Search}>
+              <NavLink href="/dashboard/search" icon="Search">
                 Search
               </NavLink>
 
               <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
                 MANAGEMENT
               </div>
-              <NavLink href="/dashboard/users" icon={Users}>
+              <NavLink href="/dashboard/users" icon="Users">
                 Users
               </NavLink>
-              <NavLink href="/dashboard/settings" icon={Settings}>
+              <NavLink href="/dashboard/settings" icon="Settings">
                 Settings
               </NavLink>
+              
+              {isSuperAdmin && (
+                <>
+                  <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
+                    SYSTEM ADMIN
+                  </div>
+                  <NavLink href="/dashboard/system-admin" icon="Shield">
+                    Super Admin
+                  </NavLink>
+                </>
+              )}
             </div>
           </ScrollArea>
 
@@ -144,7 +155,7 @@ export default async function DashboardLayout({
                 )}
               </div>
             </div>
-            <form action={logoutAction}>
+            <form action="/api/auth/logout" method="POST">
               <Button
                 type="submit"
                 variant="outline"
@@ -185,32 +196,43 @@ export default async function DashboardLayout({
 
               <ScrollArea className="flex-1 px-3 py-4">
                 <div className="space-y-1">
-                  <NavLink href="/dashboard" icon={LayoutDashboard}>
+                  <NavLink href="/dashboard" icon="LayoutDashboard">
                     Dashboard
                   </NavLink>
-                  <NavLink href="/dashboard/cases" icon={FolderOpen}>
+                  <NavLink href="/dashboard/cases" icon="FolderOpen">
                     Cases
                   </NavLink>
-                  <NavLink href="/dashboard/hearings" icon={Calendar}>
+                  <NavLink href="/dashboard/hearings" icon="Calendar">
                     Hearings
                   </NavLink>
-                  <NavLink href="/dashboard/documents" icon={FileText}>
+                  <NavLink href="/dashboard/documents" icon="FileText">
                     Documents
                   </NavLink>
-                  <NavLink href="/dashboard/search" icon={Search}>
+                  <NavLink href="/dashboard/search" icon="Search">
                     Search
                   </NavLink>
-                  <NavLink href="/dashboard/users" icon={Users}>
+                  <NavLink href="/dashboard/users" icon="Users">
                     Users
                   </NavLink>
-                  <NavLink href="/dashboard/settings" icon={Settings}>
+                  <NavLink href="/dashboard/settings" icon="Settings">
                     Settings
                   </NavLink>
+                  
+                  {isSuperAdmin && (
+                    <>
+                      <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
+                        SYSTEM ADMIN
+                      </div>
+                      <NavLink href="/dashboard/system-admin" icon="Shield">
+                        Super Admin
+                      </NavLink>
+                    </>
+                  )}
                 </div>
               </ScrollArea>
 
               <div className="border-t p-4">
-                <form action={logoutAction}>
+                <form action="/api/auth/logout" method="POST">
                   <Button type="submit" variant="outline" className="w-full">
                     <LogOut className="mr-2 h-4 w-4" />
                     Logout

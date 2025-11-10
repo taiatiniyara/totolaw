@@ -63,6 +63,18 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
   - Standard role definitions
   - Usage examples
 
+- [System Admin Team Setup](./system-admin-team.md) - Super admin management
+  - Initial setup guide
+  - Managing super admins
+  - Security best practices
+  - Troubleshooting
+
+- [Super Admin Quick Start](./super-admin-quickstart.md) - Quick reference guide
+  - 5-minute setup
+  - Common tasks
+  - Quick checks
+  - Troubleshooting
+
 ## 🎯 Quick Links
 
 ### For Developers
@@ -78,6 +90,8 @@ Welcome to the Totolaw documentation. This index provides an overview of all ava
 - [Backups](./deployment.md#backups)
 
 ### For System Administrators
+- [Super Admin Setup](./super-admin-quickstart.md) - **START HERE for initial setup**
+- [Managing Super Admins](./system-admin-team.md) - Complete admin guide
 - [Environment Variables](./getting-started.md#set-up-environment-variables)
 - [Database Configuration](./database.md#database-configuration)
 - [Security Checklist](./deployment.md#security-checklist)
