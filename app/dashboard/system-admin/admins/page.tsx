@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import {
   Dialog,
@@ -189,7 +188,7 @@ export default function ManageSystemAdminsClient() {
       {/* Active Admins */}
       <Card>
         <CardHeader>
-          <CardTitle>Active Administrators ({admins.filter(a => a.isActive).length})</CardTitle>
+          <CardTitle>Active Administrators ({admins.filter(a => a.isSuperAdmin).length})</CardTitle>
           <CardDescription>
             System admins with full platform access
           </CardDescription>
@@ -197,7 +196,7 @@ export default function ManageSystemAdminsClient() {
         <CardContent>
           <div className="space-y-3">
             {admins
-              .filter((admin) => admin.isActive)
+              .filter((admin) => admin.isSuperAdmin)
               .map((admin) => (
                 <div
                   key={admin.id}
@@ -229,15 +228,6 @@ export default function ManageSystemAdminsClient() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    {admin.userId ? (
-                      <Badge variant="outline" className="text-green-600 border-green-600">
-                        Linked
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-                        Pending Login
-                      </Badge>
-                    )}
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="outline" size="sm">
@@ -267,7 +257,7 @@ export default function ManageSystemAdminsClient() {
                   </div>
                 </div>
               ))}
-            {admins.filter((a) => a.isActive).length === 0 && (
+            {admins.filter((a) => a.isSuperAdmin).length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 No active system administrators
               </div>
@@ -277,10 +267,10 @@ export default function ManageSystemAdminsClient() {
       </Card>
 
       {/* Inactive Admins */}
-      {admins.filter((a) => !a.isActive).length > 0 && (
+      {admins.filter((a) => !a.isSuperAdmin).length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Inactive Administrators ({admins.filter(a => !a.isActive).length})</CardTitle>
+            <CardTitle>Inactive Administrators ({admins.filter(a => !a.isSuperAdmin).length})</CardTitle>
             <CardDescription>
               Deactivated system admins
             </CardDescription>
@@ -288,7 +278,7 @@ export default function ManageSystemAdminsClient() {
           <CardContent>
             <div className="space-y-3">
               {admins
-                .filter((admin) => !admin.isActive)
+                .filter((admin) => !admin.isSuperAdmin)
                 .map((admin) => (
                   <div
                     key={admin.id}
