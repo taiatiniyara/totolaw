@@ -37,6 +37,7 @@ export async function logoutAction() {
 
 /**
  * Get current organization context
+ * Super admins get special context with "*" organization ID for omnipotent access
  */
 export async function getCurrentOrganization(): Promise<ActionResult> {
   try {
@@ -127,6 +128,7 @@ export async function switchOrganization(
 
 /**
  * Get upcoming hearings for dashboard
+ * Super admins see hearings from all organizations
  */
 export async function getUpcomingHearings(limit: number = 5): Promise<ActionResult> {
   try {
@@ -148,6 +150,10 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
     const { withOrgFilter } = await import("@/lib/utils/query-helpers");
     const { gte, asc, eq } = await import("drizzle-orm");
 
+    const conditions = withOrgFilter(context.organizationId, hearings, [
+      gte(hearings.date, new Date())
+    ]);
+
     const results = await db
       .select({
         id: hearings.id,
@@ -155,12 +161,11 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
         caseTitle: cases.title,
         date: hearings.date,
         location: hearings.location,
+        organizationId: hearings.organizationId,
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
-      .where(withOrgFilter(context.organizationId, hearings, [
-        gte(hearings.date, new Date())
-      ]))
+      .where(conditions)
       .orderBy(asc(hearings.date))
       .limit(limit);
 
@@ -173,6 +178,7 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
 
 /**
  * Get recent cases for dashboard
+ * Super admins see cases from all organizations
  */
 export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
   try {
@@ -194,6 +200,8 @@ export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
     const { withOrgFilter } = await import("@/lib/utils/query-helpers");
     const { desc } = await import("drizzle-orm");
 
+    const conditions = withOrgFilter(context.organizationId, cases);
+
     const results = await db
       .select({
         id: cases.id,
@@ -201,9 +209,10 @@ export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
         type: cases.type,
         status: cases.status,
         createdAt: cases.createdAt,
+        organizationId: cases.organizationId,
       })
       .from(cases)
-      .where(withOrgFilter(context.organizationId, cases))
+      .where(conditions)
       .orderBy(desc(cases.createdAt))
       .limit(limit);
 

@@ -16,6 +16,7 @@ export interface TenantContext {
 
 /**
  * Get the user's current organization context
+ * Super admins get special context that bypasses organization restrictions
  */
 export async function getUserTenantContext(
     userId: string
@@ -24,6 +25,18 @@ export async function getUserTenantContext(
 
     if (!userRecord) {
         return null;
+    }
+
+    // Super admins get a special context with "*" organization ID
+    // This signals to query helpers and authorization checks to bypass org filtering
+    if (userRecord.isSuperAdmin) {
+        // If super admin has a current org set, use it (allows them to switch context)
+        // Otherwise, use "*" to indicate omnipotent access
+        return {
+            organizationId: userRecord.currentOrganizationId || "*",
+            userId: userRecord.id,
+            isSuperAdmin: true,
+        };
     }
 
     // If user has a current organization set, use that
@@ -68,6 +81,7 @@ export async function getUserTenantContext(
         };
     }
 
+    // Non-super-admin users without any organization membership
     return null;
 }
 
@@ -99,8 +113,35 @@ export async function verifyUserOrganizationAccess(
 
 /**
  * Get all organizations a user has access to
+ * Super admins get access to ALL organizations
  */
 export async function getUserOrganizations(userId: string) {
+    const [userRecord] = await db.select().from(user).where(eq(user.id, userId));
+
+    // Super admins have access to all organizations
+    if (userRecord?.isSuperAdmin) {
+        const allOrgs = await db
+            .select()
+            .from(organizations)
+            .where(eq(organizations.isActive, true));
+        
+        // Return in the same format as regular memberships
+        return allOrgs.map(org => ({
+            organization: org,
+            membership: {
+                id: `super-admin-${org.id}`,
+                userId: userId,
+                organizationId: org.id,
+                isPrimary: false,
+                isActive: true,
+                joinedAt: new Date(),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                leftAt: null,
+            },
+        }));
+    }
+
     const memberships = await db
         .select({
             organization: organizations,

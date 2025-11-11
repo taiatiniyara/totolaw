@@ -56,6 +56,21 @@ export default async function DashboardLayout({
       const { eq } = await import("drizzle-orm");
       const userData = await db.select().from(user).where(eq(user.id, session.user.id)).limit(1);
       isSuperAdmin = userData[0]?.isSuperAdmin || false;
+      
+      // Super admins see all organizations
+      if (isSuperAdmin && currentOrganizationId === "*") {
+        // Show a special "All Organizations" option for super admins
+        organizations = [
+          {
+            id: "*",
+            name: "All Organizations (Super Admin)",
+            code: "*",
+            type: "system",
+            isPrimary: true,
+          },
+          ...organizations,
+        ];
+      }
     } catch (error) {
       console.error("Error loading organization data:", error);
     }

@@ -30,6 +30,7 @@ interface UserWithRoles {
 
 /**
  * Get all users in the current organization
+ * Super admins see ALL users from ALL organizations
  */
 export async function getUsersForOrganization(): Promise<ActionResult<UserWithRoles[]>> {
   try {
@@ -55,32 +56,52 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
       return { success: false, error: "Permission denied" };
     }
 
-    // Get organization members
-    const members = await db
-      .select({
-        userId: organizationMembers.userId,
-        email: userTable.email,
-        name: userTable.name,
-      })
-      .from(organizationMembers)
-      .innerJoin(userTable, eq(organizationMembers.userId, userTable.id))
-      .where(eq(organizationMembers.organizationId, context.organizationId));
+    const isSuperAdmin = context.organizationId === "*";
+
+    // Get organization members (or all users for super admins)
+    const members = isSuperAdmin
+      ? await db
+          .select({
+            userId: userTable.id,
+            email: userTable.email,
+            name: userTable.name,
+          })
+          .from(userTable)
+      : await db
+          .select({
+            userId: organizationMembers.userId,
+            email: userTable.email,
+            name: userTable.name,
+          })
+          .from(organizationMembers)
+          .innerJoin(userTable, eq(organizationMembers.userId, userTable.id))
+          .where(eq(organizationMembers.organizationId, context.organizationId));
 
     // Get roles for each user
     const usersWithRoles: UserWithRoles[] = await Promise.all(
       members.map(async (member) => {
-        const userRolesData = await db
-          .select({
-            roleName: roles.name,
-          })
-          .from(userRoles)
-          .innerJoin(roles, eq(userRoles.roleId, roles.id))
-          .where(
-            and(
-              eq(userRoles.userId, member.userId),
-              eq(userRoles.organizationId, context.organizationId)
-            )
-          );
+        // For super admins, get roles from all organizations
+        // For regular users, get roles from current organization only
+        const userRolesData = isSuperAdmin
+          ? await db
+              .select({
+                roleName: roles.name,
+              })
+              .from(userRoles)
+              .innerJoin(roles, eq(userRoles.roleId, roles.id))
+              .where(eq(userRoles.userId, member.userId))
+          : await db
+              .select({
+                roleName: roles.name,
+              })
+              .from(userRoles)
+              .innerJoin(roles, eq(userRoles.roleId, roles.id))
+              .where(
+                and(
+                  eq(userRoles.userId, member.userId),
+                  eq(userRoles.organizationId, context.organizationId)
+                )
+              );
 
         return {
           id: member.userId,
@@ -100,6 +121,7 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
 
 /**
  * Get user details by ID
+ * Super admins can view any user regardless of organization
  */
 export async function getUserById(userId: string): Promise<ActionResult<UserWithRoles>> {
   try {
@@ -125,6 +147,8 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
       return { success: false, error: "Permission denied" };
     }
 
+    const isSuperAdmin = context.organizationId === "*";
+
     // Get user
     const [foundUser] = await db
       .select()
@@ -136,35 +160,45 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
       return { success: false, error: "User not found" };
     }
 
-    // Check if user is in the organization
-    const [membership] = await db
-      .select()
-      .from(organizationMembers)
-      .where(
-        and(
-          eq(organizationMembers.userId, userId),
-          eq(organizationMembers.organizationId, context.organizationId)
+    // Check if user is in the organization (skip for super admins)
+    if (!isSuperAdmin) {
+      const [membership] = await db
+        .select()
+        .from(organizationMembers)
+        .where(
+          and(
+            eq(organizationMembers.userId, userId),
+            eq(organizationMembers.organizationId, context.organizationId)
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    if (!membership) {
-      return { success: false, error: "User not in organization" };
+      if (!membership) {
+        return { success: false, error: "User not in organization" };
+      }
     }
 
-    // Get user roles
-    const userRolesData = await db
-      .select({
-        roleName: roles.name,
-      })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .where(
-        and(
-          eq(userRoles.userId, userId),
-          eq(userRoles.organizationId, context.organizationId)
-        )
-      );
+    // Get user roles (all orgs for super admin, current org for regular users)
+    const userRolesData = isSuperAdmin
+      ? await db
+          .select({
+            roleName: roles.name,
+          })
+          .from(userRoles)
+          .innerJoin(roles, eq(userRoles.roleId, roles.id))
+          .where(eq(userRoles.userId, userId))
+      : await db
+          .select({
+            roleName: roles.name,
+          })
+          .from(userRoles)
+          .innerJoin(roles, eq(userRoles.roleId, roles.id))
+          .where(
+            and(
+              eq(userRoles.userId, userId),
+              eq(userRoles.organizationId, context.organizationId)
+            )
+          );
 
     return {
       success: true,
@@ -183,6 +217,7 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
 
 /**
  * Get available roles for the organization
+ * Super admins see roles from all organizations
  */
 export async function getOrganizationRoles(): Promise<ActionResult<{ id: string; name: string; slug: string }[]>> {
   try {
@@ -196,14 +231,24 @@ export async function getOrganizationRoles(): Promise<ActionResult<{ id: string;
       return { success: false, error: "No organization context" };
     }
 
-    const orgRoles = await db
-      .select({
-        id: roles.id,
-        name: roles.name,
-        slug: roles.slug,
-      })
-      .from(roles)
-      .where(eq(roles.organizationId, context.organizationId));
+    const isSuperAdmin = context.organizationId === "*";
+
+    const orgRoles = isSuperAdmin
+      ? await db
+          .select({
+            id: roles.id,
+            name: roles.name,
+            slug: roles.slug,
+          })
+          .from(roles)
+      : await db
+          .select({
+            id: roles.id,
+            name: roles.name,
+            slug: roles.slug,
+          })
+          .from(roles)
+          .where(eq(roles.organizationId, context.organizationId));
 
     return { success: true, data: orgRoles };
   } catch (error) {

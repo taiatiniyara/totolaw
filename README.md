@@ -45,6 +45,7 @@ Comprehensive documentation is available in the `/docs` folder:
 - [API Documentation](./docs/api.md) - API routes and services
 - [Deployment](./docs/deployment.md) - Production deployment guide
 - [Database Schema](./docs/database.md) - Database structure and migrations
+- [Super Admin Access](./docs/super-admin-access.md) - Omnipotent access for system administrators
 
 ## 🛠️ Tech Stack
 
@@ -65,6 +66,7 @@ Comprehensive documentation is available in the `/docs` folder:
 - 👥 Users can belong to multiple organizations
 - 🔄 Easy organization switching
 - 📝 Complete audit trail for compliance
+- 🛡️ **System admins have omnipotent access** - Full access to all organizations without membership requirements
 
 ### Authentication & Security
 - 🔐 Passwordless magic link authentication

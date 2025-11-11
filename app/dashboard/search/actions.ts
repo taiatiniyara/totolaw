@@ -61,6 +61,7 @@ export async function globalSearch(
     }
 
     const searchPattern = `%${query.toLowerCase()}%`;
+    const isSuperAdmin = context.organizationId === "*";
 
     // Search cases
     const casesResults = await db
@@ -70,14 +71,21 @@ export async function globalSearch(
         type: cases.type,
         status: cases.status,
         createdAt: cases.createdAt,
+        organizationId: cases.organizationId,
       })
       .from(cases)
       .where(
-        sql`${cases.organizationId} = ${context.organizationId} AND (
-          LOWER(${cases.title}) LIKE ${searchPattern} OR
-          LOWER(${cases.type}) LIKE ${searchPattern} OR
-          LOWER(${cases.status}) LIKE ${searchPattern}
-        )`
+        isSuperAdmin
+          ? sql`(
+              LOWER(${cases.title}) LIKE ${searchPattern} OR
+              LOWER(${cases.type}) LIKE ${searchPattern} OR
+              LOWER(${cases.status}) LIKE ${searchPattern}
+            )`
+          : sql`${cases.organizationId} = ${context.organizationId} AND (
+              LOWER(${cases.title}) LIKE ${searchPattern} OR
+              LOWER(${cases.type}) LIKE ${searchPattern} OR
+              LOWER(${cases.status}) LIKE ${searchPattern}
+            )`
       )
       .limit(10);
 
@@ -89,14 +97,20 @@ export async function globalSearch(
         caseTitle: cases.title,
         date: hearings.date,
         location: hearings.location,
+        organizationId: hearings.organizationId,
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
       .where(
-        sql`${hearings.organizationId} = ${context.organizationId} AND (
-          LOWER(${hearings.location}) LIKE ${searchPattern} OR
-          LOWER(${cases.title}) LIKE ${searchPattern}
-        )`
+        isSuperAdmin
+          ? sql`(
+              LOWER(${hearings.location}) LIKE ${searchPattern} OR
+              LOWER(${cases.title}) LIKE ${searchPattern}
+            )`
+          : sql`${hearings.organizationId} = ${context.organizationId} AND (
+              LOWER(${hearings.location}) LIKE ${searchPattern} OR
+              LOWER(${cases.title}) LIKE ${searchPattern}
+            )`
       )
       .limit(10);
 
@@ -109,13 +123,19 @@ export async function globalSearch(
         fileType: evidence.fileType,
         fileSize: evidence.fileSize,
         createdAt: evidence.createdAt,
+        organizationId: evidence.organizationId,
       })
       .from(evidence)
       .where(
-        sql`${evidence.organizationId} = ${context.organizationId} AND (
-          LOWER(${evidence.fileName}) LIKE ${searchPattern} OR
-          LOWER(${evidence.description}) LIKE ${searchPattern}
-        )`
+        isSuperAdmin
+          ? sql`(
+              LOWER(${evidence.fileName}) LIKE ${searchPattern} OR
+              LOWER(${evidence.description}) LIKE ${searchPattern}
+            )`
+          : sql`${evidence.organizationId} = ${context.organizationId} AND (
+              LOWER(${evidence.fileName}) LIKE ${searchPattern} OR
+              LOWER(${evidence.description}) LIKE ${searchPattern}
+            )`
       )
       .limit(10);
 
