@@ -14,6 +14,11 @@ export const user = pgTable("user", {
   // Multi-tenant RBAC fields
   currentOrganizationId: text("current_organization_id"),
   isSuperAdmin: boolean("is_super_admin").default(false).notNull(),
+  // Super admin metadata
+  adminNotes: text("admin_notes"),
+  adminAddedBy: text("admin_added_by").references((): any => user.id, { onDelete: "set null" }),
+  adminAddedAt: timestamp("admin_added_at"),
+  lastLogin: timestamp("last_login"),
 });
 
 export const session = pgTable("session", {

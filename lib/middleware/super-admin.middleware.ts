@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { checkAndElevateSuperAdmin } from "@/lib/services/system-admin.service";
+import { updateSuperAdminLastLogin } from "@/lib/services/system-admin.service";
 import { headers } from "next/headers";
 import { db } from "@/lib/drizzle/connection";
 import { user } from "@/lib/drizzle/schema/auth-schema";
@@ -7,7 +7,10 @@ import { eq } from "drizzle-orm";
 
 /**
  * Super Admin Middleware
- * Automatically elevates authorized users to super admin status upon login
+ * Checks user's super admin status and updates last login
+ * 
+ * Note: Super admin privileges are now managed directly in the user table.
+ * Use grantSuperAdmin() or revokeSuperAdmin() from system-admin.service.ts to manage permissions.
  */
 
 export interface SessionWithAdmin {
@@ -21,7 +24,7 @@ export interface SessionWithAdmin {
 }
 
 /**
- * Get session and check if user should be elevated to super admin
+ * Get session and check super admin status
  */
 export async function getSessionWithAdminCheck(): Promise<SessionWithAdmin> {
   const session = await auth.api.getSession({
@@ -45,33 +48,9 @@ export async function getSessionWithAdminCheck(): Promise<SessionWithAdmin> {
 
   const fullUser = userData[0];
 
-  // Check if user should be elevated to super admin
-  if (!fullUser.isSuperAdmin && session.user.email) {
-    const wasElevated = await checkAndElevateSuperAdmin(
-      session.user.email,
-      session.user.id
-    );
-
-    if (wasElevated) {
-      // Get updated user data
-      const updatedUserData = await db
-        .select()
-        .from(user)
-        .where(eq(user.id, session.user.id))
-        .limit(1);
-
-      if (updatedUserData.length > 0) {
-        return {
-          session,
-          user: {
-            id: updatedUserData[0].id,
-            email: updatedUserData[0].email,
-            name: updatedUserData[0].name,
-            isSuperAdmin: updatedUserData[0].isSuperAdmin,
-          },
-        };
-      }
-    }
+  // Update last login for super admins
+  if (fullUser.isSuperAdmin) {
+    updateSuperAdminLastLogin(fullUser.id).catch(console.error);
   }
 
   return {

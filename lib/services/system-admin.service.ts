@@ -1,370 +1,161 @@
 import { db } from "../drizzle/connection";
-import { systemAdmins, systemAdminAuditLog } from "../drizzle/schema/system-admin-schema";
+import { systemAdminAuditLog } from "../drizzle/schema/system-admin-schema";
 import { user } from "../drizzle/schema/auth-schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { generateUUID } from "./uuid.service";
 
-/**
- * System Admin Service
- * Manages super admin team members who can set up and configure the entire system
- */
-
-export interface SystemAdminContext {
+export interface SuperAdminUser {
   id: string;
   email: string;
-  name?: string;
-  userId?: string;
-  isActive: boolean;
+  name: string;
+  isSuperAdmin: boolean;
+  adminNotes?: string | null;
+  adminAddedBy?: string | null;
+  adminAddedAt?: Date | null;
+  lastLogin?: Date | null;
 }
 
-/**
- * Check if an email is authorized as a system admin
- */
-export async function isAuthorizedSystemAdmin(email: string): Promise<boolean> {
-  const admin = await db
-    .select()
-    .from(systemAdmins)
-    .where(and(eq(systemAdmins.email, email.toLowerCase()), eq(systemAdmins.isActive, true)))
+export async function isSuperAdmin(userId: string): Promise<boolean> {
+  const result = await db
+    .select({ isSuperAdmin: user.isSuperAdmin })
+    .from(user)
+    .where(eq(user.id, userId))
     .limit(1);
-
-  return admin.length > 0;
+  return result.length > 0 && result[0].isSuperAdmin;
 }
 
-/**
- * Get system admin record by email
- */
-export async function getSystemAdminByEmail(
-  email: string
-): Promise<SystemAdminContext | null> {
-  const admin = await db
-    .select()
-    .from(systemAdmins)
-    .where(eq(systemAdmins.email, email.toLowerCase()))
+export async function isSuperAdminByEmail(email: string): Promise<boolean> {
+  const result = await db
+    .select({ isSuperAdmin: user.isSuperAdmin })
+    .from(user)
+    .where(eq(user.email, email.toLowerCase()))
     .limit(1);
+  return result.length > 0 && result[0].isSuperAdmin;
+}
 
-  if (admin.length === 0) return null;
-
+export async function getSuperAdminById(userId: string): Promise<SuperAdminUser | null> {
+  const result = await db.select().from(user).where(eq(user.id, userId)).limit(1);
+  if (result.length === 0 || !result[0].isSuperAdmin) return null;
   return {
-    id: admin[0].id,
-    email: admin[0].email,
-    name: admin[0].name || undefined,
-    userId: admin[0].userId || undefined,
-    isActive: admin[0].isActive,
+    id: result[0].id,
+    email: result[0].email,
+    name: result[0].name,
+    isSuperAdmin: result[0].isSuperAdmin,
+    adminNotes: result[0].adminNotes,
+    adminAddedBy: result[0].adminAddedBy,
+    adminAddedAt: result[0].adminAddedAt,
+    lastLogin: result[0].lastLogin,
   };
 }
 
-/**
- * Get system admin record by user ID
- */
-export async function getSystemAdminByUserId(
-  userId: string
-): Promise<SystemAdminContext | null> {
-  const admin = await db
-    .select()
-    .from(systemAdmins)
-    .where(eq(systemAdmins.userId, userId))
-    .limit(1);
-
-  if (admin.length === 0) return null;
-
+export async function getSuperAdminByEmail(email: string): Promise<SuperAdminUser | null> {
+  const result = await db.select().from(user).where(eq(user.email, email.toLowerCase())).limit(1);
+  if (result.length === 0 || !result[0].isSuperAdmin) return null;
   return {
-    id: admin[0].id,
-    email: admin[0].email,
-    name: admin[0].name || undefined,
-    userId: admin[0].userId || undefined,
-    isActive: admin[0].isActive,
+    id: result[0].id,
+    email: result[0].email,
+    name: result[0].name,
+    isSuperAdmin: result[0].isSuperAdmin,
+    adminNotes: result[0].adminNotes,
+    adminAddedBy: result[0].adminAddedBy,
+    adminAddedAt: result[0].adminAddedAt,
+    lastLogin: result[0].lastLogin,
   };
 }
 
-/**
- * Link a system admin record to a user account after they sign up/login
- * Also updates the user's isSuperAdmin flag
- */
-export async function linkSystemAdminToUser(
-  email: string,
-  userId: string
-): Promise<boolean> {
-  try {
-    console.log(`[linkSystemAdminToUser] Starting for email: ${email}, userId: ${userId}`);
-    
-    const admin = await getSystemAdminByEmail(email);
-    if (!admin) {
-      console.log(`[linkSystemAdminToUser] No system admin found for ${email}`);
-      return false;
-    }
-    
-    if (!admin.isActive) {
-      console.log(`[linkSystemAdminToUser] System admin ${email} is not active`);
-      return false;
-    }
-
-    console.log(`[linkSystemAdminToUser] Found active admin: ${admin.id}`);
-
-    // Update system admin record
-    await db
-      .update(systemAdmins)
-      .set({
-        userId,
-        lastLogin: new Date(),
-        updatedAt: new Date(),
-      })
-      .where(eq(systemAdmins.id, admin.id));
-
-    console.log(`[linkSystemAdminToUser] Updated system admin record`);
-
-    // Update user's super admin flag
-    await db
-      .update(user)
-      .set({
-        isSuperAdmin: true,
-        updatedAt: new Date(),
-      })
-      .where(eq(user.id, userId));
-
-    console.log(`[linkSystemAdminToUser] Updated user super admin flag`);
-
-    // Log the action
-    await logSystemAdminAction(
-      admin.id,
-      "login",
-      "system_admin",
-      admin.id,
-      `System admin ${email} logged in and linked to user account`
-    );
-
-    console.log(`[linkSystemAdminToUser] Successfully linked ${email} to user account`);
-    return true;
-  } catch (error) {
-    console.error(`[linkSystemAdminToUser] Error linking system admin:`, error);
-    throw error;
-  }
+export async function grantSuperAdmin(userId: string, grantedBy: string, notes?: string): Promise<void> {
+  const existingUser = await db.select().from(user).where(eq(user.id, userId)).limit(1);
+  if (existingUser.length === 0) throw new Error("User not found");
+  if (existingUser[0].isSuperAdmin) return;
+  
+  await db.update(user).set({
+    isSuperAdmin: true,
+    adminAddedBy: grantedBy,
+    adminAddedAt: new Date(),
+    adminNotes: notes,
+    updatedAt: new Date(),
+  }).where(eq(user.id, userId));
+  
+  await logSystemAdminAction(grantedBy, "granted_super_admin", "user", userId, 
+    `Super admin privileges granted to ${existingUser[0].email}`, 
+    { userId, email: existingUser[0].email, notes });
 }
 
-/**
- * Add a new system admin (can only be done by existing system admins)
- */
-export async function addSystemAdmin(
-  email: string,
-  name: string | null,
-  addedBy: string,
-  notes?: string
-): Promise<string> {
-  // Check if email already exists
-  const existing = await getSystemAdminByEmail(email);
-  if (existing) {
-    throw new Error("Email is already registered as a system admin");
-  }
+export async function revokeSuperAdmin(userId: string, revokedBy: string, reason?: string): Promise<void> {
+  const existingUser = await db.select().from(user).where(eq(user.id, userId)).limit(1);
+  if (existingUser.length === 0) throw new Error("User not found");
+  if (!existingUser[0].isSuperAdmin) return;
+  
+  const updateNotes = reason ? `${existingUser[0].adminNotes || ""}\nRevoked: ${reason}`.trim() : existingUser[0].adminNotes;
+  await db.update(user).set({
+    isSuperAdmin: false,
+    adminNotes: updateNotes,
+    updatedAt: new Date(),
+  }).where(eq(user.id, userId));
+  
+  await logSystemAdminAction(revokedBy, "revoked_super_admin", "user", userId,
+    `Super admin privileges revoked from ${existingUser[0].email}`,
+    { userId, email: existingUser[0].email, reason });
+}
 
-  const id = generateUUID();
-  await db.insert(systemAdmins).values({
-    id,
+export async function grantSuperAdminByEmail(email: string, name: string, grantedBy: string, notes?: string): Promise<string> {
+  const existingUser = await db.select().from(user).where(eq(user.email, email.toLowerCase())).limit(1);
+  if (existingUser.length > 0) {
+    await grantSuperAdmin(existingUser[0].id, grantedBy, notes);
+    return existingUser[0].id;
+  }
+  
+  const userId = generateUUID();
+  await db.insert(user).values({
+    id: userId,
     email: email.toLowerCase(),
     name,
-    isActive: true,
-    addedBy,
-    notes,
+    emailVerified: false,
+    isSuperAdmin: true,
+    adminAddedBy: grantedBy,
+    adminAddedAt: new Date(),
+    adminNotes: notes,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
-
-  // Log the action
-  await logSystemAdminAction(
-    id,
-    "created",
-    "system_admin",
-    id,
-    `New system admin added: ${email}`,
-    { email, name, notes }
-  );
-
-  return id;
+  
+  await logSystemAdminAction(grantedBy, "granted_super_admin", "user", userId,
+    `Super admin privileges granted to new user ${email}`,
+    { userId, email, name, notes });
+  return userId;
 }
 
-/**
- * Remove/deactivate a system admin
- */
-export async function removeSystemAdmin(
-  adminId: string,
-  removedBy: string
-): Promise<void> {
-  const admin = await db
-    .select()
-    .from(systemAdmins)
-    .where(eq(systemAdmins.id, adminId))
-    .limit(1);
-
-  if (admin.length === 0) {
-    throw new Error("System admin not found");
-  }
-
-  // Deactivate the admin
-  await db
-    .update(systemAdmins)
-    .set({
-      isActive: false,
-      updatedAt: new Date(),
-    })
-    .where(eq(systemAdmins.id, adminId));
-
-  // If linked to a user, remove super admin flag
-  if (admin[0].userId) {
-    await db
-      .update(user)
-      .set({
-        isSuperAdmin: false,
-        updatedAt: new Date(),
-      })
-      .where(eq(user.id, admin[0].userId));
-  }
-
-  // Log the action
-  await logSystemAdminAction(
-    adminId,
-    "deactivated",
-    "system_admin",
-    adminId,
-    `System admin deactivated: ${admin[0].email}`,
-    { removedBy }
-  );
+export async function listSuperAdmins(): Promise<SuperAdminUser[]> {
+  const results = await db.select().from(user).where(eq(user.isSuperAdmin, true)).orderBy(user.adminAddedAt);
+  return results.map((u) => ({
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    isSuperAdmin: u.isSuperAdmin,
+    adminNotes: u.adminNotes,
+    adminAddedBy: u.adminAddedBy,
+    adminAddedAt: u.adminAddedAt,
+    lastLogin: u.lastLogin,
+  }));
 }
 
-/**
- * Reactivate a system admin
- */
-export async function reactivateSystemAdmin(
-  adminId: string,
-  reactivatedBy: string
-): Promise<void> {
-  const admin = await db
-    .select()
-    .from(systemAdmins)
-    .where(eq(systemAdmins.id, adminId))
-    .limit(1);
-
-  if (admin.length === 0) {
-    throw new Error("System admin not found");
-  }
-
-  // Reactivate the admin
-  await db
-    .update(systemAdmins)
-    .set({
-      isActive: true,
-      updatedAt: new Date(),
-    })
-    .where(eq(systemAdmins.id, adminId));
-
-  // If linked to a user, restore super admin flag
-  if (admin[0].userId) {
-    await db
-      .update(user)
-      .set({
-        isSuperAdmin: true,
-        updatedAt: new Date(),
-      })
-      .where(eq(user.id, admin[0].userId));
-  }
-
-  // Log the action
-  await logSystemAdminAction(
-    adminId,
-    "reactivated",
-    "system_admin",
-    adminId,
-    `System admin reactivated: ${admin[0].email}`,
-    { reactivatedBy }
-  );
-}
-
-/**
- * List all system admins
- */
-export async function listSystemAdmins(includeInactive = false) {
-  const query = db.select().from(systemAdmins);
-
-  if (!includeInactive) {
-    query.where(eq(systemAdmins.isActive, true));
-  }
-
+export async function getSystemAdminAuditLog(limit = 100, offset = 0, userId?: string) {
+  let query = db.select().from(systemAdminAuditLog).orderBy(systemAdminAuditLog.createdAt).limit(limit).offset(offset);
+  if (userId) query = query.where(eq(systemAdminAuditLog.userId, userId)) as any;
   return await query;
 }
 
-/**
- * Get system admin audit log
- */
-export async function getSystemAdminAuditLog(
-  limit = 100,
-  offset = 0,
-  adminId?: string
-) {
-  const query = db
-    .select()
-    .from(systemAdminAuditLog)
-    .orderBy(systemAdminAuditLog.createdAt)
-    .limit(limit)
-    .offset(offset);
-
-  if (adminId) {
-    query.where(eq(systemAdminAuditLog.adminId, adminId));
-  }
-
-  return await query;
-}
-
-/**
- * Log a system admin action
- */
-export async function logSystemAdminAction(
-  adminId: string,
-  action: string,
-  entityType: string | null,
-  entityId: string | null,
-  description: string,
-  metadata?: any,
-  ipAddress?: string,
-  userAgent?: string
-): Promise<void> {
+export async function logSystemAdminAction(userId: string, action: string, entityType: string | null, entityId: string | null, description: string, metadata?: any, ipAddress?: string, userAgent?: string): Promise<void> {
   const id = generateUUID();
   await db.insert(systemAdminAuditLog).values({
-    id,
-    adminId,
-    action,
-    entityType,
-    entityId,
-    description,
+    id, userId, action, entityType, entityId, description,
     metadata: metadata ? JSON.stringify(metadata) : null,
-    ipAddress,
-    userAgent,
+    ipAddress, userAgent,
   });
 }
 
-/**
- * Update last login time for a system admin
- */
-export async function updateSystemAdminLastLogin(userId: string): Promise<void> {
-  const admin = await getSystemAdminByUserId(userId);
-  if (!admin) return;
-
-  await db
-    .update(systemAdmins)
-    .set({
-      lastLogin: new Date(),
-      updatedAt: new Date(),
-    })
-    .where(eq(systemAdmins.id, admin.id));
-}
-
-/**
- * Check if user should be elevated to super admin on login
- * This is called during authentication flow
- */
-export async function checkAndElevateSuperAdmin(
-  email: string,
-  userId: string
-): Promise<boolean> {
-  const isAuthorized = await isAuthorizedSystemAdmin(email);
-  if (!isAuthorized) {
-    return false;
-  }
-
-  await linkSystemAdminToUser(email, userId);
-  return true;
+export async function updateSuperAdminLastLogin(userId: string): Promise<void> {
+  const isSuperAdminUser = await isSuperAdmin(userId);
+  if (!isSuperAdminUser) return;
+  await db.update(user).set({ lastLogin: new Date(), updatedAt: new Date() }).where(eq(user.id, userId));
 }

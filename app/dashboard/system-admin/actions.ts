@@ -2,13 +2,13 @@
 
 import { requireSuperAdmin } from "@/lib/middleware/super-admin.middleware";
 import {
-  addSystemAdmin,
-  removeSystemAdmin,
-  reactivateSystemAdmin,
-  listSystemAdmins,
+  grantSuperAdminByEmail,
+  revokeSuperAdmin,
+  grantSuperAdmin,
+  listSuperAdmins,
   getSystemAdminAuditLog,
   logSystemAdminAction,
-  getSystemAdminByUserId,
+  getSuperAdminById,
 } from "@/lib/services/system-admin.service";
 import {
   getUserTenantContext,
@@ -29,7 +29,7 @@ import { eq } from "drizzle-orm";
 
 export async function getSystemAdmins() {
   await requireSuperAdmin();
-  const admins = await listSystemAdmins(true);
+  const admins = await listSuperAdmins();
   return { success: true, admins };
 }
 
@@ -39,41 +39,36 @@ export async function addNewSystemAdmin(
   notes?: string
 ) {
   const admin = await requireSuperAdmin();
-  const adminRecord = await getSystemAdminByUserId(admin.userId);
-
-  if (!adminRecord) {
-    return { error: "Not authorized" };
-  }
 
   try {
-    const newAdminId = await addSystemAdmin(
+    const newUserId = await grantSuperAdminByEmail(
       email,
-      name || null,
+      name,
       admin.userId,
       notes
     );
-    return { success: true, adminId: newAdminId };
+    return { success: true, userId: newUserId };
   } catch (error: any) {
     return { error: error.message };
   }
 }
 
-export async function deactivateSystemAdmin(adminId: string) {
+export async function deactivateSystemAdmin(userId: string) {
   const admin = await requireSuperAdmin();
 
   try {
-    await removeSystemAdmin(adminId, admin.userId);
+    await revokeSuperAdmin(userId, admin.userId, "Deactivated by admin");
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
   }
 }
 
-export async function activateSystemAdmin(adminId: string) {
+export async function activateSystemAdmin(userId: string) {
   const admin = await requireSuperAdmin();
 
   try {
-    await reactivateSystemAdmin(adminId, admin.userId);
+    await grantSuperAdmin(userId, admin.userId, "Reactivated by admin");
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
@@ -92,13 +87,13 @@ export async function getAuditLog(limit = 50, offset = 0) {
 
 export async function getSystemOverview() {
   const admin = await requireSuperAdmin();
-  const adminRecord = await getSystemAdminByUserId(admin.userId);
+  const adminRecord = await getSuperAdminById(admin.userId);
 
   // Get counts
   const orgs = await db.select().from(organizations);
   const allRoles = await db.select().from(roles);
   const allPermissions = await db.select().from(permissions);
-  const admins = await listSystemAdmins(true);
+  const admins = await listSuperAdmins();
 
   // Get admin's context
   const context = await getUserTenantContext(admin.userId);
@@ -112,7 +107,7 @@ export async function getSystemOverview() {
       totalRoles: allRoles.length,
       totalPermissions: allPermissions.length,
       totalAdmins: admins.length,
-      activeAdmins: admins.filter((a) => a.isActive).length,
+      activeAdmins: admins.length, // All listed admins are active (isSuperAdmin=true)
     },
     currentAdmin: {
       email: admin.email,
@@ -142,11 +137,6 @@ export async function createOrganization(data: {
   parentId?: string;
 }) {
   const admin = await requireSuperAdmin();
-  const adminRecord = await getSystemAdminByUserId(admin.userId);
-
-  if (!adminRecord) {
-    return { error: "Not authorized" };
-  }
 
   const { generateUUID } = await import("@/lib/services/uuid.service");
   const orgId = generateUUID();
@@ -165,7 +155,7 @@ export async function createOrganization(data: {
 
     // Log the action
     await logSystemAdminAction(
-      adminRecord.id,
+      admin.userId,
       "created_organization",
       "organization",
       orgId,
@@ -184,11 +174,6 @@ export async function updateOrganizationStatus(
   isActive: boolean
 ) {
   const admin = await requireSuperAdmin();
-  const adminRecord = await getSystemAdminByUserId(admin.userId);
-
-  if (!adminRecord) {
-    return { error: "Not authorized" };
-  }
 
   try {
     await db
@@ -198,7 +183,7 @@ export async function updateOrganizationStatus(
 
     // Log the action
     await logSystemAdminAction(
-      adminRecord.id,
+      admin.userId,
       isActive ? "activated_organization" : "deactivated_organization",
       "organization",
       orgId,
