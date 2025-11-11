@@ -11,7 +11,7 @@ import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Plus, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
+import { Building2, Plus, CheckCircle, XCircle, ArrowLeft, Pencil } from "lucide-react";
 import Link from "next/link";
 import { OrganizationStatusToggle } from "./organization-status-toggle";
 
@@ -139,6 +139,12 @@ export default async function OrganizationsPage() {
                       <CheckCircle className="mr-1 h-3 w-3" />
                       Active
                     </Badge>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/dashboard/system-admin/organizations/${org.id}/edit`}>
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Edit
+                      </Link>
+                    </Button>
                     <OrganizationStatusToggle
                       organizationId={org.id}
                       currentStatus={org.isActive}
@@ -189,6 +195,12 @@ export default async function OrganizationsPage() {
                       <XCircle className="mr-1 h-3 w-3" />
                       Inactive
                     </Badge>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/dashboard/system-admin/organizations/${org.id}/edit`}>
+                        <Pencil className="h-4 w-4 mr-2" />
+                        Edit
+                      </Link>
+                    </Button>
                     <OrganizationStatusToggle
                       organizationId={org.id}
                       currentStatus={org.isActive}

@@ -169,6 +169,50 @@ export async function createOrganization(data: {
   }
 }
 
+export async function updateOrganization(
+  orgId: string,
+  data: {
+    name?: string;
+    type?: string;
+    description?: string;
+    parentId?: string;
+  }
+) {
+  const admin = await requireSuperAdmin();
+
+  try {
+    const updateData: any = {
+      updatedAt: new Date(),
+    };
+
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.type !== undefined) updateData.type = data.type;
+    if (data.description !== undefined)
+      updateData.description = data.description || null;
+    if (data.parentId !== undefined)
+      updateData.parentId = data.parentId || null;
+
+    await db
+      .update(organizations)
+      .set(updateData)
+      .where(eq(organizations.id, orgId));
+
+    // Log the action
+    await logSystemAdminAction(
+      admin.userId,
+      "updated_organization",
+      "organization",
+      orgId,
+      `Updated organization details`,
+      data
+    );
+
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
 export async function updateOrganizationStatus(
   orgId: string,
   isActive: boolean
@@ -192,6 +236,26 @@ export async function updateOrganizationStatus(
     );
 
     return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function getOrganizationById(orgId: string) {
+  await requireSuperAdmin();
+
+  try {
+    const org = await db
+      .select()
+      .from(organizations)
+      .where(eq(organizations.id, orgId))
+      .limit(1);
+
+    if (!org.length) {
+      return { error: "Organization not found" };
+    }
+
+    return { success: true, organization: org[0] };
   } catch (error: any) {
     return { error: error.message };
   }

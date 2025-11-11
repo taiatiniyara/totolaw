@@ -59,6 +59,31 @@ Navigate to: `/dashboard/system-admin/organizations`
 - Check creation and update dates
 - Quick statistics (total, active, inactive counts)
 
+### Editing Organizations
+
+**Edit Organization Details:**
+1. Find the organization in the list
+2. Click the **"Edit"** button next to the organization
+3. Update the desired fields:
+   - Organization name
+   - Organization type
+   - Parent organization
+   - Description
+4. Click **"Update Organization"**
+5. Changes are saved and logged in the audit trail
+
+**What Can Be Edited:**
+- ✅ Organization name
+- ✅ Organization type
+- ✅ Parent organization
+- ✅ Description
+- ❌ Organization code (cannot be changed after creation)
+
+**Validation Rules:**
+- Name and type are required fields
+- An organization cannot be its own parent
+- All changes are audited
+
 ### Activating/Deactivating Organizations
 
 **Deactivate an Organization:**
@@ -178,11 +203,31 @@ createOrganization({
 })
 ```
 
+### Update Organization
+```typescript
+updateOrganization(
+  organizationId: string,
+  data: {
+    name?: string,
+    type?: string,
+    description?: string,
+    parentId?: string
+  }
+)
+```
+
 ### Update Organization Status
 ```typescript
 updateOrganizationStatus(
   organizationId: string,
   isActive: boolean
+)
+```
+
+### Get Organization by ID
+```typescript
+getOrganizationById(
+  organizationId: string
 )
 ```
 
@@ -193,10 +238,12 @@ getAllOrganizations()
 
 ## Files Reference
 
-- `/app/dashboard/system-admin/organizations/new/page.tsx` - Create page
-- `/app/dashboard/system-admin/organizations/new/create-organization-form.tsx` - Form component
-- `/app/dashboard/system-admin/organizations/page.tsx` - List page
-- `/app/dashboard/system-admin/organizations/organization-status-toggle.tsx` - Toggle component
+- `/app/dashboard/system-admin/organizations/page.tsx` - Organizations list page
+- `/app/dashboard/system-admin/organizations/new/page.tsx` - Create organization page
+- `/app/dashboard/system-admin/organizations/new/create-organization-form.tsx` - Create form component
+- `/app/dashboard/system-admin/organizations/[id]/edit/page.tsx` - Edit organization page
+- `/app/dashboard/system-admin/organizations/[id]/edit/edit-organization-form.tsx` - Edit form component
+- `/app/dashboard/system-admin/organizations/organization-status-toggle.tsx` - Status toggle component
 - `/app/dashboard/system-admin/actions.ts` - Server actions
 
 ## Security Notes
