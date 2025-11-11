@@ -32,14 +32,14 @@ export default async function ManualTranscriptionPage({ params }: PageProps) {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    redirect("/dashboard/no-organization");
+  if (!context?.organisationId) {
+    redirect("/dashboard/no-organisation");
   }
 
   // Get transcript details
   const details = await transcriptService.getTranscriptWithDetails(
     params.id,
-    context.organizationId
+    context.organisationId
   );
 
   if (!details) {

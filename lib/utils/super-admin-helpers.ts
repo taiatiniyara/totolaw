@@ -54,10 +54,10 @@ export async function isUserSuperAdmin(userId: string): Promise<boolean> {
 }
 
 /**
- * Check if an organization ID represents super admin omnipotent access
+ * Check if an organisation ID represents super admin omnipotent access
  */
-export function isSuperAdminContext(organizationId: string | null | undefined): boolean {
-  return organizationId === "*";
+export function isSuperAdminContext(organisationId: string | null | undefined): boolean {
+  return organisationId === "*";
 }
 
 /**
@@ -87,12 +87,12 @@ export async function getSessionWithSuperAdminStatus() {
 }
 
 /**
- * Bypass organization check for super admins
+ * Bypass organisation check for super admins
  * Returns true if access should be granted
  */
 export function shouldBypassOrgCheck(
-  organizationId: string | null | undefined,
+  organisationId: string | null | undefined,
   isSuperAdmin: boolean
 ): boolean {
-  return isSuperAdmin || organizationId === "*";
+  return isSuperAdmin || organisationId === "*";
 }

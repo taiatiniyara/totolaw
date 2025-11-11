@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, StatCard, LinkCard, } from "@/components/common";
 import { getCaseStats } from "./cases/actions";
-import { getCurrentOrganization, getUpcomingHearings, getRecentCases } from "./actions";
+import { getCurrentOrganisation, getUpcomingHearings, getRecentCases } from "./actions";
 import { 
   FileText, 
   Clock, 
@@ -27,7 +27,7 @@ import {
 export default async function DashboardPage() {
   const [statsResult, orgResult, hearingsResult, casesResult] = await Promise.all([
     getCaseStats(),
-    getCurrentOrganization(),
+    getCurrentOrganisation(),
     getUpcomingHearings(5),
     getRecentCases(5),
   ]);
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <PageHeader
         title="Dashboard"
-        description={org?.organizationName ? `${org.organizationName} - ${org.roleName}` : "Welcome to Totolaw"}
+        description={org?.organisationName ? `${org.organisationName} - ${org.roleName}` : "Welcome to Totolaw"}
         action={{
           label: "New Case",
           href: "/dashboard/cases",
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
         <StatCard
           title="Total Cases"
           value={stats.total}
-          description="All cases in your organization"
+          description="All cases in your organisation"
           icon={FileText}
           iconColor="text-primary"
         />
@@ -189,18 +189,18 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* Organization Info */}
+      {/* Organisation Info */}
       <Card>
         <CardHeader>
-          <CardTitle>Organization Information</CardTitle>
-          <CardDescription>Your current organization context</CardDescription>
+          <CardTitle>Organisation Information</CardTitle>
+          <CardDescription>Your current organisation context</CardDescription>
         </CardHeader>
         <CardContent>
           {org ? (
             <div className="grid gap-4 md:grid-cols-3">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Organization</p>
-                <p className="text-lg font-semibold mt-1">{org.organizationName}</p>
+                <p className="text-sm font-medium text-muted-foreground">Organisation</p>
+                <p className="text-lg font-semibold mt-1">{org.organisationName}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Your Role</p>
@@ -215,7 +215,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
-              No organization context available
+              No organisation context available
             </p>
           )}
         </CardContent>

@@ -24,7 +24,7 @@ import Link from "next/link";
 
 type Evidence = {
   id: string;
-  organizationId: string;
+  organisationId: string;
   caseId: string;
   hearingId: string | null;
   fileName: string;

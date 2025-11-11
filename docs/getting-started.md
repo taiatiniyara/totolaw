@@ -279,14 +279,14 @@ Once you have Totolaw running:
 ## Available Features
 
 All core features are implemented and ready to use:
-- ✅ Multi-tenant organizations with data isolation
+- ✅ Multi-tenant organisations with data isolation
 - ✅ Role-based access control (RBAC)
 - ✅ Case management (CRUD operations)
 - ✅ Hearing management with calendar
 - ✅ Evidence upload and file management
 - ✅ User management and role assignments
 - ✅ Global search functionality
-- ✅ Organization switching
+- ✅ Organisation switching
 - ✅ Dashboard with statistics
 
 ## Getting Help

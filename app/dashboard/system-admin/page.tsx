@@ -3,7 +3,7 @@ import { requireSuperAdmin } from "@/lib/middleware/super-admin.middleware";
 import {
   getSystemOverview,
   getSystemAdmins,
-  getAllOrganizations,
+  getAllOrganisations,
 } from "./actions";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ export default async function SystemAdminDashboard() {
   const [overviewResult, adminsResult, orgsResult] = await Promise.all([
     getSystemOverview(),
     getSystemAdmins(),
-    getAllOrganizations(),
+    getAllOrganisations(),
   ]);
 
   if (!overviewResult.success || !adminsResult.success || !orgsResult.success) {
@@ -40,7 +40,7 @@ export default async function SystemAdminDashboard() {
 
   const { overview, currentAdmin } = overviewResult;
   const { admins } = adminsResult;
-  const { organizations } = orgsResult;
+  const { organisations } = orgsResult;
 
   return (
     <div className="space-y-6">
@@ -66,12 +66,12 @@ export default async function SystemAdminDashboard() {
         <CardContent>
           <div className="flex gap-4 text-sm">
             <div>
-              <span className="text-muted-foreground">Current Organization:</span>{" "}
-              <strong>{currentAdmin.currentOrganization}</strong>
+              <span className="text-muted-foreground">Current Organisation:</span>{" "}
+              <strong>{currentAdmin.currentOrganisation}</strong>
             </div>
             <div>
-              <span className="text-muted-foreground">Linked Organizations:</span>{" "}
-              <strong>{currentAdmin.linkedOrganizations}</strong>
+              <span className="text-muted-foreground">Linked Organisations:</span>{" "}
+              <strong>{currentAdmin.linkedOrganisations}</strong>
             </div>
           </div>
         </CardContent>
@@ -80,9 +80,9 @@ export default async function SystemAdminDashboard() {
       {/* System Overview Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Organizations"
-          value={overview.totalOrganizations}
-          description={`${overview.activeOrganizations} active`}
+          title="Organisations"
+          value={overview.totalOrganisations}
+          description={`${overview.activeOrganisations} active`}
           icon={Building2}
         />
         <StatCard
@@ -94,7 +94,7 @@ export default async function SystemAdminDashboard() {
         <StatCard
           title="Roles"
           value={overview.totalRoles}
-          description="Across all organizations"
+          description="Across all organisations"
           icon={Users}
         />
         <StatCard
@@ -118,10 +118,10 @@ export default async function SystemAdminDashboard() {
               Manage System Admins
             </Button>
           </Link>
-          <Link href="/dashboard/system-admin/organizations">
+          <Link href="/dashboard/system-admin/organisations">
             <Button variant="outline" className="w-full justify-start">
               <Building2 className="mr-2 h-4 w-4" />
-              Manage Organizations
+              Manage Organisations
             </Button>
           </Link>
           <Link href="/dashboard/system-admin/roles">
@@ -139,25 +139,25 @@ export default async function SystemAdminDashboard() {
         </CardContent>
       </Card>
 
-      {/* Recent Organizations */}
+      {/* Recent Organisations */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Organizations</CardTitle>
-              <CardDescription>All registered organizations</CardDescription>
+              <CardTitle>Organisations</CardTitle>
+              <CardDescription>All registered organisations</CardDescription>
             </div>
-            <Link href="/dashboard/system-admin/organizations/new">
+            <Link href="/dashboard/system-admin/organisations/new">
               <Button size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Organization
+                Add Organisation
               </Button>
             </Link>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {organizations.slice(0, 5).map((org) => (
+            {organisations.slice(0, 5).map((org) => (
               <DataRow
                 key={org.id}
                 icon={Building2}
@@ -184,10 +184,10 @@ export default async function SystemAdminDashboard() {
                 )}
               </DataRow>
             ))}
-            {organizations.length > 5 && (
-              <Link href="/dashboard/system-admin/organizations">
+            {organisations.length > 5 && (
+              <Link href="/dashboard/system-admin/organisations">
                 <Button variant="link" className="w-full">
-                  View all {organizations.length} organizations
+                  View all {organisations.length} organisations
                 </Button>
               </Link>
             )}

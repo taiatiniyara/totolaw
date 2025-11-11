@@ -56,7 +56,7 @@ export async function PermissionGate({
 
     const context = await getUserTenantContext(session.user.id);
     
-    if (!context?.organizationId) {
+    if (!context?.organisationId) {
       return <>{fallback}</>;
     }
 
@@ -66,7 +66,7 @@ export async function PermissionGate({
     if (permission) {
       hasAccess = await hasPermission(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         permission,
         context.isSuperAdmin
       );
@@ -75,7 +75,7 @@ export async function PermissionGate({
     else if (anyPermissions && anyPermissions.length > 0) {
       hasAccess = await hasAnyPermission(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         anyPermissions,
         context.isSuperAdmin
       );
@@ -84,7 +84,7 @@ export async function PermissionGate({
     else if (allPermissions && allPermissions.length > 0) {
       hasAccess = await hasAllPermissions(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         allPermissions,
         context.isSuperAdmin
       );

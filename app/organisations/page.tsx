@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { getPublicOrganizations } from "./actions";
-import { OrganizationHierarchy } from "@/components/organization-hierarchy";
+import { getPublicOrganisations } from "./actions";
+import { OrganisationHierarchy } from "@/components/organisation-hierarchy";
 import { LandingHeader } from "@/components/landing-header";
 import { Heading } from "@/components/ui/heading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Organizations | Totolaw",
-  description: "View the organizational hierarchy of Pacific Island court systems using Totolaw",
+  title: "Organisations | Totolaw",
+  description: "View the organisational hierarchy of Pacific Island court systems using Totolaw",
 };
 
-export default async function OrganizationsPage() {
-  const result = await getPublicOrganizations();
+export default async function OrganisationsPage() {
+  const result = await getPublicOrganisations();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -38,25 +38,25 @@ export default async function OrganizationsPage() {
                 <Building2 className="h-10 w-10 text-blue-600" />
                 <div>
                   <Heading as="h1" className="text-3xl md:text-5xl">
-                    Organizations
+                    Organisations
                   </Heading>
                   <p className="text-lg text-muted-foreground mt-2">
-                    Pacific Island court systems and judicial organizations using Totolaw
+                    Pacific Island court systems and judicial organisations using Totolaw
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Content */}
-            {!result.success || !result.organizations ? (
+            {!result.success || !result.organisations ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  {result.error || "Failed to load organizations"}
+                  {result.error || "Failed to load organisations"}
                 </AlertDescription>
               </Alert>
             ) : (
-              <OrganizationHierarchy organizations={result.organizations} />
+              <OrganisationHierarchy organisations={result.organisations} />
             )}
           </div>
         </div>

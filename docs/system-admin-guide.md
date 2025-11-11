@@ -17,15 +17,15 @@ Complete guide for managing super administrators in the Totolaw platform.
 
 System administrators (super admins) have **omnipotent access** to the entire platform:
 
-- ✅ Access all organizations without membership
-- ✅ Bypass all organization-based filters
+- ✅ Access all organisations without membership
+- ✅ Bypass all organisation-based filters
 - ✅ Have all permissions automatically
-- ✅ View, create, update, and delete data across all organizations
+- ✅ View, create, update, and delete data across all organisations
 - ✅ Manage other system administrators
 
-### The Magic: `organizationId: "*"`
+### The Magic: `organisationId: "*"`
 
-When a super admin's organization context is `"*"`, they have access to everything. This special value signals to all query helpers, validators, and permission checks to bypass restrictions.
+When a super admin's organisation context is `"*"`, they have access to everything. This special value signals to all query helpers, validators, and permission checks to bypass restrictions.
 
 ## Quick Start
 
@@ -64,7 +64,7 @@ await grantSuperAdminByEmail(
 1. User logs in with magic link at `/auth/login`
 2. Automatically gains super admin access
 3. Navigate to `/dashboard/system-admin` for admin dashboard
-4. Use organization switcher to select "All Organizations (Super Admin)"
+4. Use organisation switcher to select "All Organisations (Super Admin)"
 
 ## How It Works
 
@@ -110,23 +110,23 @@ CREATE TABLE "user" (
                  ▼
 ┌─────────────────────────────────────────────┐
 │ 4. User gains full platform access          │
-│    organizationId: "*" in context           │
+│    organisationId: "*" in context           │
 └─────────────────────────────────────────────┘
 ```
 
-### Organization Context
+### Organisation Context
 
 ```typescript
 // Super admin context (global access)
 {
-  organizationId: "*",
+  organisationId: "*",
   userId: "user-123",
   isSuperAdmin: true
 }
 
-// Regular user context (organization-scoped)
+// Regular user context (organisation-scoped)
 {
-  organizationId: "org-456",
+  organisationId: "org-456",
   userId: "user-789",
   isSuperAdmin: false
 }
@@ -192,17 +192,17 @@ const admins = await listSuperAdmins();
 
 ### What Super Admins Can Do
 
-#### 1. Organization Management
-- Create new organizations (courts, tribunals)
-- View all organizations without membership
-- Activate/deactivate organizations
-- Manage organizational hierarchies
+#### 1. Organisation Management
+- Create new organisations (courts, tribunals)
+- View all organisations without membership
+- Activate/deactivate organisations
+- Manage organisational hierarchies
 
 #### 2. Data Access
-- View all cases across all organizations
-- View all hearings across all organizations
+- View all cases across all organisations
+- View all hearings across all organisations
 - View all evidence and documents
-- Search globally across organizations
+- Search globally across organisations
 
 #### 3. System Administration
 - Add/remove other system admins
@@ -211,14 +211,14 @@ const admins = await listSuperAdmins();
 - Manage roles and permissions
 
 #### 4. Bypass Restrictions
-- Access data without organization membership
+- Access data without organisation membership
 - Override all permission checks
-- Create records in any organization
-- No organization-based filtering
+- Create records in any organisation
+- No organisation-based filtering
 
 ### What Super Admins Cannot Do
 
-- Cannot use `"*"` for INSERT operations (must specify target organizationId)
+- Cannot use `"*"` for INSERT operations (must specify target organisationId)
 - Actions are fully audited (cannot bypass logging)
 - Cannot delete themselves (only deactivate)
 
@@ -236,8 +236,8 @@ import {
 // Check if current session is super admin
 const isSuperAdmin = await isCurrentUserSuperAdmin();
 
-// Check if organization ID represents omnipotent access
-if (isSuperAdminContext(organizationId)) {
+// Check if organisation ID represents omnipotent access
+if (isSuperAdminContext(organisationId)) {
   // Handle super admin case
 }
 
@@ -257,7 +257,7 @@ const context = await getUserTenantContext(userId);
 const cases = await db
   .select()
   .from(casesTable)
-  .where(withOrgFilter(context.organizationId, casesTable));
+  .where(withOrgFilter(context.organisationId, casesTable));
 ```
 
 ### Access Validation (Automatic Bypass)
@@ -269,14 +269,14 @@ const caseRecord = await getCaseById(id);
 
 // Super admins: always passes
 // Regular users: throws error if wrong org
-validateOrgAccess(context.organizationId, caseRecord, 'Case');
+validateOrgAccess(context.organisationId, caseRecord, 'Case');
 ```
 
 ### Custom Queries with Super Admin Check
 
 ```typescript
 const context = await getUserTenantContext(userId);
-const isSuperAdmin = context.organizationId === "*";
+const isSuperAdmin = context.organisationId === "*";
 
 const results = await db
   .select()
@@ -284,7 +284,7 @@ const results = await db
   .where(
     isSuperAdmin
       ? sql`status = 'active'`  // No org filter
-      : sql`organization_id = ${context.organizationId} AND status = 'active'`
+      : sql`organisation_id = ${context.organisationId} AND status = 'active'`
   );
 ```
 
@@ -300,7 +300,7 @@ import { hasPermission } from "@/lib/services/authorization.service";
 // Always returns true for super admins
 const canEdit = await hasPermission(
   userId, 
-  organizationId, 
+  organisationId, 
   'cases.edit', 
   isSuperAdmin
 );
@@ -328,7 +328,7 @@ Audit log includes:
 
 #### 1. Principle of Least Privilege
 - Only grant super admin to trusted individuals
-- Use organization-specific admins for day-to-day operations
+- Use organisation-specific admins for day-to-day operations
 - Reserve super admin for setup and configuration
 
 #### 2. Regular Audits
@@ -379,27 +379,27 @@ WHERE email = 'admin@example.com';
 - Check for typos in email
 - Have user log out and log back in
 
-### Super Admin Only Sees One Organization's Data
+### Super Admin Only Sees One Organisation's Data
 
 **Symptoms:** Super admin sees filtered data instead of all data
 
 **Checks:**
 
-1. Verify organization context:
+1. Verify organisation context:
 ```typescript
 const context = await getUserTenantContext(userId);
 console.log('Context:', context);
-// Should show: { organizationId: "*", ... }
+// Should show: { organisationId: "*", ... }
 ```
 
-2. Check organization switcher selection
+2. Check organisation switcher selection
 
 **Solutions:**
-- Select "All Organizations (Super Admin)" in switcher
-- Clear `current_organization_id` in database:
+- Select "All Organisations (Super Admin)" in switcher
+- Clear `current_organisation_id` in database:
 ```sql
 UPDATE "user" 
-SET current_organization_id = NULL 
+SET current_organisation_id = NULL 
 WHERE email = 'admin@example.com';
 ```
 
@@ -407,9 +407,9 @@ WHERE email = 'admin@example.com';
 
 **Symptoms:** Error when trying to insert data
 
-**Cause:** Using `"*"` as organizationId for inserts
+**Cause:** Using `"*"` as organisationId for inserts
 
-**Solution:** Must specify target organization:
+**Solution:** Must specify target organisation:
 ```typescript
 // ❌ Wrong
 await db.insert(cases).values(
@@ -418,11 +418,11 @@ await db.insert(cases).values(
 
 // ✅ Correct
 await db.insert(cases).values(
-  withOrgId(targetOrganizationId, { title: "New Case" })
+  withOrgId(targetOrganisationId, { title: "New Case" })
 );
 ```
 
-### Query Not Bypassing Organization Filter
+### Query Not Bypassing Organisation Filter
 
 **Symptoms:** Super admin still sees filtered results
 
@@ -430,10 +430,10 @@ await db.insert(cases).values(
 
 ```typescript
 // ❌ Manual filter (doesn't bypass)
-.where(eq(table.organizationId, context.organizationId))
+.where(eq(table.organisationId, context.organisationId))
 
 // ✅ Helper function (bypasses for super admins)
-.where(withOrgFilter(context.organizationId, table))
+.where(withOrgFilter(context.organisationId, table))
 ```
 
 ## Quick Reference
@@ -467,37 +467,37 @@ await db.insert(cases).values(
 ```typescript
 const context = await getUserTenantContext(session.user.id);
 const results = await db.select().from(table)
-  .where(withOrgFilter(context.organizationId, table));
+  .where(withOrgFilter(context.organisationId, table));
 ```
 
 #### Pattern 2: With Additional Conditions
 ```typescript
 const results = await db.select().from(cases)
-  .where(withOrgFilter(context.organizationId, cases, [
+  .where(withOrgFilter(context.organisationId, cases, [
     eq(cases.status, 'active')
   ]));
 ```
 
 #### Pattern 3: Custom SQL
 ```typescript
-const isSuperAdmin = context.organizationId === "*";
+const isSuperAdmin = context.organisationId === "*";
 const results = await db.select().from(table)
   .where(isSuperAdmin 
     ? sql`status = 'active'`
-    : sql`organization_id = ${context.organizationId} AND status = 'active'`
+    : sql`organisation_id = ${context.organisationId} AND status = 'active'`
   );
 ```
 
 #### Pattern 4: Validation
 ```typescript
 const record = await getRecordById(id);
-validateOrgAccess(context.organizationId, record, 'Record');
+validateOrgAccess(context.organisationId, record, 'Record');
 ```
 
 ## Related Files
 
 - `lib/services/system-admin.service.ts` - Admin management service
-- `lib/services/tenant.service.ts` - Organization context
+- `lib/services/tenant.service.ts` - Organisation context
 - `lib/utils/query-helpers.ts` - Query filtering utilities
 - `lib/utils/super-admin-helpers.ts` - Super admin utilities
 - `lib/middleware/super-admin.middleware.ts` - Session middleware

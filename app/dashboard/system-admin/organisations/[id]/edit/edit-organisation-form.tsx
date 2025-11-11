@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Create Organization Form
+ * Edit Organisation Form
  * 
- * Client-side form for creating new organizations
+ * Client-side form for editing existing organisations
  */
 
 import { useState } from "react";
@@ -21,17 +21,23 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
-import { createOrganization } from "../../actions";
+import { updateOrganisation } from "../../../actions";
 
-interface Organization {
+interface Organisation {
   id: string;
   name: string;
   code: string;
   type: string;
+  description: string | null;
+  parentId: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-interface CreateOrganizationFormProps {
-  organizations: Organization[];
+interface EditOrganisationFormProps {
+  organisation: Organisation;
+  organisations: Organisation[];
 }
 
 const ORGANIZATION_TYPES = [
@@ -44,18 +50,17 @@ const ORGANIZATION_TYPES = [
   { value: "other", label: "Other" },
 ];
 
-export function CreateOrganizationForm({ organizations }: CreateOrganizationFormProps) {
+export function EditOrganisationForm({ organisation, organisations }: EditOrganisationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "",
-    code: "",
-    type: "",
-    description: "",
-    parentId: "",
+    name: organisation.name,
+    type: organisation.type,
+    description: organisation.description || "",
+    parentId: organisation.parentId || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,32 +71,21 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
 
     try {
       // Validate required fields
-      if (!formData.name || !formData.code || !formData.type) {
+      if (!formData.name || !formData.type) {
         setError("Please fill in all required fields");
         setIsSubmitting(false);
         return;
       }
 
-      // Validate code format (alphanumeric, no spaces)
-      if (!/^[A-Z0-9_-]+$/.test(formData.code.toUpperCase())) {
-        setError("Organization code must contain only letters, numbers, hyphens, and underscores");
+      // Check for circular parent relationship
+      if (formData.parentId === organisation.id) {
+        setError("An organisation cannot be its own parent");
         setIsSubmitting(false);
         return;
       }
 
-      // Check if code already exists
-      const codeExists = organizations.some(
-        (org) => org.code.toUpperCase() === formData.code.toUpperCase()
-      );
-      if (codeExists) {
-        setError("An organization with this code already exists");
-        setIsSubmitting(false);
-        return;
-      }
-
-      const result = await createOrganization({
+      const result = await updateOrganisation(organisation.id, {
         name: formData.name,
-        code: formData.code,
         type: formData.type,
         description: formData.description || undefined,
         parentId: formData.parentId || undefined,
@@ -107,7 +101,7 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
       
       // Redirect after short delay
       setTimeout(() => {
-        router.push("/dashboard/system-admin");
+        router.push("/dashboard/system-admin/organisations");
         router.refresh();
       }, 2000);
     } catch (err) {
@@ -116,18 +110,12 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
     }
   };
 
-  const handleCodeChange = (value: string) => {
-    // Auto-format code to uppercase and replace spaces with hyphens
-    const formatted = value.toUpperCase().replace(/\s+/g, "-");
-    setFormData({ ...formData, code: formatted });
-  };
-
   if (success) {
     return (
       <Alert className="border-green-200 bg-green-50">
         <CheckCircle className="h-4 w-4 text-green-600" />
         <AlertDescription className="text-green-800">
-          Organization created successfully! Redirecting...
+          Organisation updated successfully! Redirecting...
         </AlertDescription>
       </Alert>
     );
@@ -142,10 +130,24 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
         </Alert>
       )}
 
-      {/* Organization Name */}
+      {/* Organisation Code (Read-only) */}
+      <div className="space-y-2">
+        <Label htmlFor="code">Organisation Code</Label>
+        <Input
+          id="code"
+          value={organisation.code}
+          disabled
+          className="font-mono bg-muted"
+        />
+        <p className="text-sm text-muted-foreground">
+          Organisation code cannot be changed after creation
+        </p>
+      </div>
+
+      {/* Organisation Name */}
       <div className="space-y-2">
         <Label htmlFor="name">
-          Organization Name <span className="text-destructive">*</span>
+          Organisation Name <span className="text-destructive">*</span>
         </Label>
         <Input
           id="name"
@@ -156,33 +158,14 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           disabled={isSubmitting}
         />
         <p className="text-sm text-muted-foreground">
-          The full legal name of the organization
+          The full legal name of the organisation
         </p>
       </div>
 
-      {/* Organization Code */}
-      <div className="space-y-2">
-        <Label htmlFor="code">
-          Organization Code <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="code"
-          placeholder="e.g., FIJI-HIGH-COURT"
-          value={formData.code}
-          onChange={(e) => handleCodeChange(e.target.value)}
-          required
-          disabled={isSubmitting}
-          className="font-mono"
-        />
-        <p className="text-sm text-muted-foreground">
-          A unique identifier (will be converted to uppercase, spaces to hyphens)
-        </p>
-      </div>
-
-      {/* Organization Type */}
+      {/* Organisation Type */}
       <div className="space-y-2">
         <Label htmlFor="type">
-          Organization Type <span className="text-destructive">*</span>
+          Organisation Type <span className="text-destructive">*</span>
         </Label>
         <Select
           value={formData.type}
@@ -190,7 +173,7 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           disabled={isSubmitting}
         >
           <SelectTrigger id="type">
-            <SelectValue placeholder="Select organization type" />
+            <SelectValue placeholder="Select organisation type" />
           </SelectTrigger>
           <SelectContent>
             {ORGANIZATION_TYPES.map((type) => (
@@ -201,13 +184,13 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           </SelectContent>
         </Select>
         <p className="text-sm text-muted-foreground">
-          The category of this legal organization
+          The category of this legal organisation
         </p>
       </div>
 
-      {/* Parent Organization (Optional) */}
+      {/* Parent Organisation (Optional) */}
       <div className="space-y-2">
-        <Label htmlFor="parentId">Parent Organization (Optional)</Label>
+        <Label htmlFor="parentId">Parent Organisation (Optional)</Label>
         <div className="space-y-2">
           <Select
             value={formData.parentId || undefined}
@@ -215,11 +198,11 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
             disabled={isSubmitting}
           >
             <SelectTrigger id="parentId">
-              <SelectValue placeholder="None (top-level organization)" />
+              <SelectValue placeholder="None (top-level organisation)" />
             </SelectTrigger>
             <SelectContent>
-              {organizations
-                .filter((org) => org.id !== formData.parentId)
+              {organisations
+                .filter((org) => org.id !== organisation.id) // Exclude self
                 .map((org) => (
                   <SelectItem key={org.id} value={org.id}>
                     {org.name} ({org.code})
@@ -240,7 +223,7 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           )}
         </div>
         <p className="text-sm text-muted-foreground">
-          If this organization is part of a larger entity, select the parent
+          If this organisation is part of a larger entity, select the parent
         </p>
       </div>
 
@@ -249,7 +232,7 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
         <Label htmlFor="description">Description (Optional)</Label>
         <Textarea
           id="description"
-          placeholder="Enter a brief description of the organization..."
+          placeholder="Enter a brief description of the organisation..."
           value={formData.description}
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
@@ -258,7 +241,7 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           rows={4}
         />
         <p className="text-sm text-muted-foreground">
-          Additional information about the organization&apos;s purpose and jurisdiction
+          Additional information about the organisation&apos;s purpose and jurisdiction
         </p>
       </div>
 
@@ -272,17 +255,17 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating Organization...
+              Updating Organisation...
             </>
           ) : (
-            "Create Organization"
+            "Update Organisation"
           )}
         </Button>
         <Button
           type="button"
           variant="outline"
           disabled={isSubmitting}
-          onClick={() => router.push("/dashboard/system-admin")}
+          onClick={() => router.push("/dashboard/system-admin/organisations")}
         >
           Cancel
         </Button>

@@ -35,8 +35,8 @@ export default async function NewTranscriptPage({
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    redirect("/dashboard/no-organization");
+  if (!context?.organisationId) {
+    redirect("/dashboard/no-organisation");
   }
 
   if (!searchParams.hearingId) {
@@ -50,7 +50,7 @@ export default async function NewTranscriptPage({
     .where(
       and(
         eq(hearings.id, searchParams.hearingId),
-        eq(hearings.organizationId, context.organizationId)
+        eq(hearings.organisationId, context.organisationId)
       )
     );
 

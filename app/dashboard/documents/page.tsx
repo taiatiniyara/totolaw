@@ -133,8 +133,8 @@ export default async function DocumentsPage() {
               <div>
                 <Heading as="h4" className="font-medium mb-1">Document Security</Heading>
                 <p className="text-muted-foreground">
-                  All documents are secured with organization-level access control.
-                  Only members of your organization can view these files.
+                  All documents are secured with organisation-level access control.
+                  Only members of your organisation can view these files.
                 </p>
               </div>
               <div>

@@ -9,9 +9,9 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
-// --- Organizations (Countries/Islands)
-export const organizations = pgTable(
-  "organizations",
+// --- Organisations (Countries/Islands)
+export const organisations = pgTable(
+  "organisations",
   {
     id: text("id").primaryKey(),
     name: text("name").notNull(), // e.g., "Fiji", "Samoa", "Tonga"
@@ -35,29 +35,29 @@ export const organizations = pgTable(
   })
 );
 
-export type Organization = typeof organizations.$inferSelect;
-export type NewOrganization = typeof organizations.$inferInsert;
+export type Organisation = typeof organisations.$inferSelect;
+export type NewOrganisation = typeof organisations.$inferInsert;
 
-// Self-referencing relationship for hierarchical organizations
-export const organizationsRelations = {
+// Self-referencing relationship for hierarchical organisations
+export const organisationsRelations = {
   parent: {
-    field: organizations.parentId,
-    references: organizations.id,
+    field: organisations.parentId,
+    references: organisations.id,
   },
 };
 
-// --- Organization Memberships
-export const organizationMembers = pgTable(
-  "organization_members",
+// --- Organisation Memberships
+export const organisationMembers = pgTable(
+  "organisation_members",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     userId: text("user_id")
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
-    isPrimary: boolean("is_primary").default(false).notNull(), // User's primary organization
+    isPrimary: boolean("is_primary").default(false).notNull(), // User's primary organisation
     isActive: boolean("is_active").default(true).notNull(),
     joinedAt: timestamp("joined_at").defaultNow().notNull(),
     leftAt: timestamp("left_at"),
@@ -69,28 +69,28 @@ export const organizationMembers = pgTable(
       .notNull(),
   },
   (table) => ({
-    // Ensure a user can only have one membership per organization
+    // Ensure a user can only have one membership per organisation
     uniqueOrgUser: unique("unique_org_user").on(
-      table.organizationId,
+      table.organisationId,
       table.userId
     ),
-    orgIdx: index("org_member_org_idx").on(table.organizationId),
+    orgIdx: index("org_member_org_idx").on(table.organisationId),
     userIdx: index("org_member_user_idx").on(table.userId),
     primaryIdx: index("org_member_primary_idx").on(table.userId, table.isPrimary),
     activeIdx: index("org_member_active_idx").on(table.isActive),
   })
 );
 
-export type OrganizationMember = typeof organizationMembers.$inferSelect;
-export type NewOrganizationMember = typeof organizationMembers.$inferInsert;
+export type OrganisationMember = typeof organisationMembers.$inferSelect;
+export type NewOrganisationMember = typeof organisationMembers.$inferInsert;
 
-// --- Organization Invitations
-export const organizationInvitations = pgTable(
-  "organization_invitations",
+// --- Organisation Invitations
+export const organisationInvitations = pgTable(
+  "organisation_invitations",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     email: text("email").notNull(),
     roleId: text("role_id"), // Optional: pre-assign role upon acceptance
@@ -110,12 +110,12 @@ export const organizationInvitations = pgTable(
       .notNull(),
   },
   (table) => ({
-    orgIdx: index("org_invitation_org_idx").on(table.organizationId),
+    orgIdx: index("org_invitation_org_idx").on(table.organisationId),
     emailIdx: index("org_invitation_email_idx").on(table.email),
     statusIdx: index("org_invitation_status_idx").on(table.status),
     tokenIdx: index("org_invitation_token_idx").on(table.token),
   })
 );
 
-export type OrganizationInvitation = typeof organizationInvitations.$inferSelect;
-export type NewOrganizationInvitation = typeof organizationInvitations.$inferInsert;
+export type OrganisationInvitation = typeof organisationInvitations.$inferSelect;
+export type NewOrganisationInvitation = typeof organisationInvitations.$inferInsert;

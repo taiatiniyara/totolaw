@@ -1,7 +1,7 @@
 /**
  * Settings Page
  * 
- * Organization and user settings management
+ * Organisation and user settings management
  */
 
 export const dynamic = 'force-dynamic';
@@ -39,7 +39,7 @@ export default async function SettingsPage() {
         {/* Header */}
         <PageHeader
           title="Settings"
-          description="Manage your account and organization preferences"
+          description="Manage your account and organisation preferences"
         />
 
         {/* Settings Categories */}
@@ -63,18 +63,18 @@ export default async function SettingsPage() {
             </div>
           </InfoCard>
 
-          {/* Organization Settings */}
+          {/* Organisation Settings */}
           <InfoCard
-            title="Organization"
-            description="Organization-wide settings and preferences"
+            title="Organisation"
+            description="Organisation-wide settings and preferences"
             icon={Building2}
             clickable={false}
           >
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Organization ID</span>
+                <span className="text-muted-foreground">Organisation ID</span>
                 <span className="font-mono text-xs">
-                  {context?.organizationId?.slice(0, 8) || "N/A"}...
+                  {context?.organisationId?.slice(0, 8) || "N/A"}...
                 </span>
               </div>
               <Badge variant="outline" className="mt-2">

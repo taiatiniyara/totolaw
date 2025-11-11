@@ -1,7 +1,7 @@
 /**
  * Users Management Page
  * 
- * Admin interface to view and manage organization users
+ * Admin interface to view and manage organisation users
  */
 
 export const dynamic = 'force-dynamic';
@@ -11,7 +11,7 @@ import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, ListItemCard, EmptyState } from "@/components/common";
-import { getUsersForOrganization } from "./actions";
+import { getUsersForOrganisation } from "./actions";
 import { Plus, Users as UsersIcon, Mail } from "lucide-react";
 
 export default async function UsersPage() {
@@ -23,7 +23,7 @@ export default async function UsersPage() {
     redirect("/auth/login");
   }
 
-  const result = await getUsersForOrganization();
+  const result = await getUsersForOrganisation();
 
   return (
     <ProtectedRoute requiredPermission="users:read">
@@ -31,7 +31,7 @@ export default async function UsersPage() {
         {/* Header */}
         <PageHeader
           title="Users"
-          description="Manage organization members and roles"
+          description="Manage organisation members and roles"
           action={{
             label: "Invite User",
             href: "/dashboard/users/invite",
@@ -83,7 +83,7 @@ export default async function UsersPage() {
           <EmptyState
             icon={UsersIcon}
             title="No users found"
-            description="Invite team members to your organization"
+            description="Invite team members to your organisation"
             action={{
               label: "Invite User",
               href: "/dashboard/users/invite",

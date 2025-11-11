@@ -219,7 +219,7 @@ export default function EvidenceHelpPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-600 dark:text-blue-400 font-bold">🔒</span>
-              <span>Evidence is isolated by organization - no cross-organization access</span>
+              <span>Evidence is isolated by organisation - no cross-organisation access</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-600 dark:text-blue-400 font-bold">🔒</span>

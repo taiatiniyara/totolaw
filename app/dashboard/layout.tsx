@@ -4,8 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getUserOrganizations, getUserTenantContext } from "@/lib/services/tenant.service";
-import { OrganizationSwitcher } from "@/components/organization-switcher";
+import { getUserOrganisations, getUserTenantContext } from "@/lib/services/tenant.service";
+import { OrganisationSwitcher } from "@/components/organisation-switcher";
 import { NavLink } from "@/components/nav-link";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { LogoutButton } from "@/components/logout-button";
 
-interface Organization {
+interface Organisation {
   id: string;
   name: string;
   code: string;
@@ -33,22 +33,22 @@ export default async function DashboardLayout({
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
   
-  let organizations: Organization[] = [];
-  let currentOrganizationId: string | null = null;
+  let organisations: Organisation[] = [];
+  let currentOrganisationId: string | null = null;
   let isSuperAdmin = false;
   
   if (session?.user) {
     try {
-      const userOrgs = await getUserOrganizations(session.user.id);
-      organizations = userOrgs.map((item) => ({
-        id: item.organization.id,
-        name: item.organization.name,
-        code: item.organization.code,
-        type: item.organization.type,
+      const userOrgs = await getUserOrganisations(session.user.id);
+      organisations = userOrgs.map((item) => ({
+        id: item.organisation.id,
+        name: item.organisation.name,
+        code: item.organisation.code,
+        type: item.organisation.type,
         isPrimary: item.membership.isPrimary,
       }));
       const context = await getUserTenantContext(session.user.id);
-      currentOrganizationId = context?.organizationId || null;
+      currentOrganisationId = context?.organisationId || null;
       
       // Check if user is super admin
       const { user } = await import("@/lib/drizzle/schema/auth-schema");
@@ -57,26 +57,26 @@ export default async function DashboardLayout({
       const userData = await db.select().from(user).where(eq(user.id, session.user.id)).limit(1);
       isSuperAdmin = userData[0]?.isSuperAdmin || false;
       
-      // Super admins see all organizations
-      if (isSuperAdmin && currentOrganizationId === "*") {
-        // Show a special "All Organizations" option for super admins
-        organizations = [
+      // Super admins see all organisations
+      if (isSuperAdmin && currentOrganisationId === "*") {
+        // Show a special "All Organisations" option for super admins
+        organisations = [
           {
             id: "*",
-            name: "All Organizations (Super Admin)",
+            name: "All Organisations (Super Admin)",
             code: "*",
             type: "system",
             isPrimary: true,
           },
-          ...organizations,
+          ...organisations,
         ];
       }
     } catch (error) {
-      console.error("Error loading organization data:", error);
+      console.error("Error loading organisation data:", error);
     }
   }
 
-  const currentOrg = organizations.find(org => org.id === currentOrganizationId);
+  const currentOrg = organisations.find(org => org.id === currentOrganisationId);
   const userInitials = session?.user?.name
     ? session.user.name
         .split(" ")
@@ -98,11 +98,11 @@ export default async function DashboardLayout({
             </Link>
           </div>
 
-          {/* Organization Switcher */}
+          {/* Organisation Switcher */}
           <div className="border-b p-4">
-            <OrganizationSwitcher
-              organizations={organizations}
-              currentOrganizationId={currentOrganizationId}
+            <OrganisationSwitcher
+              organisations={organisations}
+              currentOrganisationId={currentOrganisationId}
             />
           </div>
 
@@ -200,9 +200,9 @@ export default async function DashboardLayout({
               </div>
 
               <div className="border-b p-4">
-                <OrganizationSwitcher
-                  organizations={organizations}
-                  currentOrganizationId={currentOrganizationId}
+                <OrganisationSwitcher
+                  organisations={organisations}
+                  currentOrganisationId={currentOrganisationId}
                 />
               </div>
 

@@ -1,7 +1,7 @@
 /**
  * Cases List Page
  * 
- * Displays all cases for the current organization with permission checks
+ * Displays all cases for the current organisation with permission checks
  */
 
 export const dynamic = 'force-dynamic';

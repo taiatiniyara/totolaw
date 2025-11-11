@@ -1,37 +1,37 @@
-# Organization Management - System Admin
+# Organisation Management - System Admin
 
 ## Overview
 
-System administrators can create and manage organizations through the Super Admin dashboard. This feature allows you to add new court systems, tribunals, and other legal entities to the platform.
+System administrators can create and manage organisations through the Super Admin dashboard. This feature allows you to add new court systems, tribunals, and other legal entities to the platform.
 
-## Accessing Organization Management
+## Accessing Organisation Management
 
 1. Log in as a system administrator
 2. Navigate to **Dashboard → Super Admin** (shield icon in sidebar)
-3. Click **"Manage Organizations"** or **"Add Organization"**
+3. Click **"Manage Organisations"** or **"Add Organisation"**
 
-## Creating a New Organization
+## Creating a New Organisation
 
 ### Navigation
-- From Super Admin Dashboard → Click **"Add Organization"** button
-- Or navigate to: `/dashboard/system-admin/organizations/new`
+- From Super Admin Dashboard → Click **"Add Organisation"** button
+- Or navigate to: `/dashboard/system-admin/organisations/new`
 
 ### Required Fields
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| **Organization Name** | Full legal name | "Fiji High Court" |
-| **Organization Code** | Unique identifier | "FIJI-HIGH-COURT" |
-| **Organization Type** | Category of entity | "Court" |
+| **Organisation Name** | Full legal name | "Fiji High Court" |
+| **Organisation Code** | Unique identifier | "FIJI-HIGH-COURT" |
+| **Organisation Type** | Category of entity | "Court" |
 
 ### Optional Fields
 
 | Field | Description |
 |-------|-------------|
-| **Parent Organization** | If this org is part of a larger entity |
+| **Parent Organisation** | If this org is part of a larger entity |
 | **Description** | Additional context and jurisdiction info |
 
-### Organization Types
+### Organisation Types
 
 - **Court** - Judicial court systems (High Court, Magistrates Court, etc.)
 - **Tribunal** - Specialized tribunals (Employment Tribunal, Land Court, etc.)
@@ -40,7 +40,7 @@ System administrators can create and manage organizations through the Super Admi
 - **Department** - Government legal departments
 - **Other** - Other legal entities
 
-### Organization Code Rules
+### Organisation Code Rules
 
 - Must be unique across the system
 - Automatically converted to UPPERCASE
@@ -48,63 +48,63 @@ System administrators can create and manage organizations through the Super Admi
 - Only letters, numbers, hyphens, and underscores allowed
 - Examples: `FIJI-HIGH-COURT`, `SAMOA-MAGISTRATE`, `TONGA-TRIBUNAL`
 
-## Managing Existing Organizations
+## Managing Existing Organisations
 
-### Viewing All Organizations
-Navigate to: `/dashboard/system-admin/organizations`
+### Viewing All Organisations
+Navigate to: `/dashboard/system-admin/organisations`
 
-### Organization List Features
-- View all active and inactive organizations
-- See organization details (name, code, type, description)
+### Organisation List Features
+- View all active and inactive organisations
+- See organisation details (name, code, type, description)
 - Check creation and update dates
 - Quick statistics (total, active, inactive counts)
 
-### Editing Organizations
+### Editing Organisations
 
-**Edit Organization Details:**
-1. Find the organization in the list
-2. Click the **"Edit"** button next to the organization
+**Edit Organisation Details:**
+1. Find the organisation in the list
+2. Click the **"Edit"** button next to the organisation
 3. Update the desired fields:
-   - Organization name
-   - Organization type
-   - Parent organization
+   - Organisation name
+   - Organisation type
+   - Parent organisation
    - Description
-4. Click **"Update Organization"**
+4. Click **"Update Organisation"**
 5. Changes are saved and logged in the audit trail
 
 **What Can Be Edited:**
-- ✅ Organization name
-- ✅ Organization type
-- ✅ Parent organization
+- ✅ Organisation name
+- ✅ Organisation type
+- ✅ Parent organisation
 - ✅ Description
-- ❌ Organization code (cannot be changed after creation)
+- ❌ Organisation code (cannot be changed after creation)
 
 **Validation Rules:**
 - Name and type are required fields
-- An organization cannot be its own parent
+- An organisation cannot be its own parent
 - All changes are audited
 
-### Activating/Deactivating Organizations
+### Activating/Deactivating Organisations
 
-**Deactivate an Organization:**
-1. Find the organization in the list
-2. Click the power button (⚡) next to the organization
+**Deactivate an Organisation:**
+1. Find the organisation in the list
+2. Click the power button (⚡) next to the organisation
 3. Confirm the deactivation
-4. Users will no longer be able to access this organization's data
+4. Users will no longer be able to access this organisation's data
 
-**Reactivate an Organization:**
-1. Scroll to the "Inactive Organizations" section
-2. Click the power button (⚡) next to the organization
+**Reactivate an Organisation:**
+1. Scroll to the "Inactive Organisations" section
+2. Click the power button (⚡) next to the organisation
 3. Confirm the reactivation
-4. Users can now access the organization again
+4. Users can now access the organisation again
 
 **Important:** Deactivating does NOT delete data - it only prevents access.
 
-## What Happens After Creating an Organization
+## What Happens After Creating an Organisation
 
-When you create a new organization, the system automatically:
+When you create a new organisation, the system automatically:
 
-1. ✅ Creates the organization with unique code
+1. ✅ Creates the organisation with unique code
 2. ✅ Sets up standard roles:
    - Judge
    - Magistrate
@@ -115,29 +115,29 @@ When you create a new organization, the system automatically:
    - Legal Officer
    - Public User
 3. ✅ Assigns standard permissions to each role
-4. ✅ Prepares the organization for user management
+4. ✅ Prepares the organisation for user management
 5. ✅ Logs the creation action in audit trail
 
-## Adding Users to New Organizations
+## Adding Users to New Organisations
 
-After creating an organization:
+After creating an organisation:
 
 1. Navigate to **Users** page
 2. Click **"Invite User"**
 3. Enter user email and details
-4. Select the new organization
+4. Select the new organisation
 5. Assign appropriate roles
 6. User receives invitation email
 
-## Organization Hierarchy
+## Organisation Hierarchy
 
-Organizations can have parent-child relationships:
+Organisations can have parent-child relationships:
 
-- **Parent Organization** - A larger entity (e.g., "Fiji Judiciary")
-- **Child Organization** - A sub-entity (e.g., "Fiji High Court - Suva Division")
+- **Parent Organisation** - A larger entity (e.g., "Fiji Judiciary")
+- **Child Organisation** - A sub-entity (e.g., "Fiji High Court - Suva Division")
 
 This allows for:
-- Organizational structure representation
+- Organisational structure representation
 - Potential data sharing between related entities (future feature)
 - Administrative hierarchy
 
@@ -148,27 +148,27 @@ This allows for:
 - Be consistent with naming patterns
 - Include location for regional offices
 
-### Organization Codes
+### Organisation Codes
 - Keep codes short but descriptive
 - Use country/region prefix (e.g., `FIJI-`, `SAMOA-`)
-- Include organization type (e.g., `-HIGH-COURT`, `-TRIBUNAL`)
+- Include organisation type (e.g., `-HIGH-COURT`, `-TRIBUNAL`)
 
-### Organization Setup
-1. Create the organization
+### Organisation Setup
+1. Create the organisation
 2. Verify standard roles are created
-3. Invite organization administrators first
+3. Invite organisation administrators first
 4. Let org admins invite their team members
 5. Org admins can manage their own settings
 
 ## Troubleshooting
 
-### "Organization code already exists"
+### "Organisation code already exists"
 - Each code must be unique
 - Try adding more specificity: `FIJI-HIGH-COURT-SUVA`
 
-### "Cannot access organization"
-- Verify organization is **Active**
-- Check user has been added to the organization
+### "Cannot access organisation"
+- Verify organisation is **Active**
+- Check user has been added to the organisation
 - Ensure user has been assigned a role
 
 ### Changes not reflecting
@@ -179,10 +179,10 @@ This allows for:
 ## Permissions Required
 
 Only users with **Super Admin** status can:
-- Create organizations
-- Deactivate organizations
-- Reactivate organizations
-- View all organizations across the system
+- Create organisations
+- Deactivate organisations
+- Reactivate organisations
+- View all organisations across the system
 
 ## Related Documentation
 
@@ -192,9 +192,9 @@ Only users with **Super Admin** status can:
 
 ## API Endpoints
 
-### Create Organization
+### Create Organisation
 ```typescript
-createOrganization({
+createOrganisation({
   name: string,
   code: string,
   type: string,
@@ -203,10 +203,10 @@ createOrganization({
 })
 ```
 
-### Update Organization
+### Update Organisation
 ```typescript
-updateOrganization(
-  organizationId: string,
+updateOrganisation(
+  organisationId: string,
   data: {
     name?: string,
     type?: string,
@@ -216,41 +216,41 @@ updateOrganization(
 )
 ```
 
-### Update Organization Status
+### Update Organisation Status
 ```typescript
-updateOrganizationStatus(
-  organizationId: string,
+updateOrganisationStatus(
+  organisationId: string,
   isActive: boolean
 )
 ```
 
-### Get Organization by ID
+### Get Organisation by ID
 ```typescript
-getOrganizationById(
-  organizationId: string
+getOrganisationById(
+  organisationId: string
 )
 ```
 
-### Get All Organizations
+### Get All Organisations
 ```typescript
-getAllOrganizations()
+getAllOrganisations()
 ```
 
 ## Files Reference
 
-- `/app/dashboard/system-admin/organizations/page.tsx` - Organizations list page
-- `/app/dashboard/system-admin/organizations/new/page.tsx` - Create organization page
-- `/app/dashboard/system-admin/organizations/new/create-organization-form.tsx` - Create form component
-- `/app/dashboard/system-admin/organizations/[id]/edit/page.tsx` - Edit organization page
-- `/app/dashboard/system-admin/organizations/[id]/edit/edit-organization-form.tsx` - Edit form component
-- `/app/dashboard/system-admin/organizations/organization-status-toggle.tsx` - Status toggle component
+- `/app/dashboard/system-admin/organisations/page.tsx` - Organisations list page
+- `/app/dashboard/system-admin/organisations/new/page.tsx` - Create organisation page
+- `/app/dashboard/system-admin/organisations/new/create-organisation-form.tsx` - Create form component
+- `/app/dashboard/system-admin/organisations/[id]/edit/page.tsx` - Edit organisation page
+- `/app/dashboard/system-admin/organisations/[id]/edit/edit-organisation-form.tsx` - Edit form component
+- `/app/dashboard/system-admin/organisations/organisation-status-toggle.tsx` - Status toggle component
 - `/app/dashboard/system-admin/actions.ts` - Server actions
 
 ## Security Notes
 
 - All actions are logged in the system audit trail
 - Only super admins can perform these operations
-- Organization data is isolated per tenant
+- Organisation data is isolated per tenant
 - Deactivation is reversible - no data loss
 
 ---

@@ -135,7 +135,7 @@ export default function CasesHelpPage() {
           <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg">
             <p className="text-sm flex items-start gap-2">
               <Info className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-              <span><strong>Tip:</strong> Make sure the case number follows your organization's format. It should be unique within your organization.</span>
+              <span><strong>Tip:</strong> Make sure the case number follows your organisation's format. It should be unique within your organisation.</span>
             </p>
           </div>
 
@@ -343,7 +343,7 @@ export default function CasesHelpPage() {
           <ul className="space-y-2 text-sm">
             <li className="flex items-start gap-2">
               <span className="text-primary font-bold">✓</span>
-              <span>Use consistent case numbering format across your organization</span>
+              <span>Use consistent case numbering format across your organisation</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary font-bold">✓</span>

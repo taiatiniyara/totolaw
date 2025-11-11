@@ -9,7 +9,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { organizations } from "./organization-schema";
+import { organisations } from "./organisation-schema";
 import { cases } from "./db-schema";
 import { hearings } from "./db-schema";
 
@@ -17,8 +17,8 @@ import { hearings } from "./db-schema";
 // Main transcript record linked to a hearing
 export const transcripts = pgTable("transcripts", {
   id: text().primaryKey(),
-  organizationId: text("organization_id")
-    .references(() => organizations.id, { onDelete: "cascade" })
+  organisationId: text("organisation_id")
+    .references(() => organisations.id, { onDelete: "cascade" })
     .notNull(),
   caseId: text("case_id")
     .references(() => cases.id)
@@ -41,7 +41,7 @@ export const transcripts = pgTable("transcripts", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => ({
-  orgIdx: index("transcript_org_idx").on(table.organizationId),
+  orgIdx: index("transcript_org_idx").on(table.organisationId),
   caseIdx: index("transcript_case_idx").on(table.caseId),
   hearingIdx: index("transcript_hearing_idx").on(table.hearingId),
   statusIdx: index("transcript_status_idx").on(table.status),
@@ -54,8 +54,8 @@ export type NewTranscript = typeof transcripts.$inferInsert;
 // Define who is speaking in the transcript (judge, prosecutor, defense attorney, witness, etc.)
 export const transcriptSpeakers = pgTable("transcript_speakers", {
   id: text().primaryKey(),
-  organizationId: text("organization_id")
-    .references(() => organizations.id, { onDelete: "cascade" })
+  organisationId: text("organisation_id")
+    .references(() => organisations.id, { onDelete: "cascade" })
     .notNull(),
   transcriptId: text("transcript_id")
     .references(() => transcripts.id, { onDelete: "cascade" })
@@ -67,7 +67,7 @@ export const transcriptSpeakers = pgTable("transcript_speakers", {
   notes: text("notes"), // additional context about the speaker
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
-  orgIdx: index("transcript_speaker_org_idx").on(table.organizationId),
+  orgIdx: index("transcript_speaker_org_idx").on(table.organisationId),
   transcriptIdx: index("transcript_speaker_transcript_idx").on(table.transcriptId),
   roleIdx: index("transcript_speaker_role_idx").on(table.role),
 }));
@@ -78,8 +78,8 @@ export type NewTranscriptSpeaker = typeof transcriptSpeakers.$inferInsert;
 // Individual segments of the transcript with timestamps and speaker information
 export const transcriptSegments = pgTable("transcript_segments", {
   id: text().primaryKey(),
-  organizationId: text("organization_id")
-    .references(() => organizations.id, { onDelete: "cascade" })
+  organisationId: text("organisation_id")
+    .references(() => organisations.id, { onDelete: "cascade" })
     .notNull(),
   transcriptId: text("transcript_id")
     .references(() => transcripts.id, { onDelete: "cascade" })
@@ -97,7 +97,7 @@ export const transcriptSegments = pgTable("transcript_segments", {
   metadata: json("metadata"), // store additional data like word-level timestamps, alternatives, etc.
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
-  orgIdx: index("transcript_segment_org_idx").on(table.organizationId),
+  orgIdx: index("transcript_segment_org_idx").on(table.organisationId),
   transcriptIdx: index("transcript_segment_transcript_idx").on(table.transcriptId),
   speakerIdx: index("transcript_segment_speaker_idx").on(table.speakerId),
   segmentNumberIdx: index("transcript_segment_number_idx").on(table.transcriptId, table.segmentNumber),
@@ -110,8 +110,8 @@ export type NewTranscriptSegment = typeof transcriptSegments.$inferInsert;
 // Allow users to add notes, highlights, or bookmarks to specific parts of the transcript
 export const transcriptAnnotations = pgTable("transcript_annotations", {
   id: text().primaryKey(),
-  organizationId: text("organization_id")
-    .references(() => organizations.id, { onDelete: "cascade" })
+  organisationId: text("organisation_id")
+    .references(() => organisations.id, { onDelete: "cascade" })
     .notNull(),
   transcriptId: text("transcript_id")
     .references(() => transcripts.id, { onDelete: "cascade" })
@@ -126,7 +126,7 @@ export const transcriptAnnotations = pgTable("transcript_annotations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => ({
-  orgIdx: index("transcript_annotation_org_idx").on(table.organizationId),
+  orgIdx: index("transcript_annotation_org_idx").on(table.organisationId),
   transcriptIdx: index("transcript_annotation_transcript_idx").on(table.transcriptId),
   segmentIdx: index("transcript_annotation_segment_idx").on(table.segmentId),
   typeIdx: index("transcript_annotation_type_idx").on(table.type),

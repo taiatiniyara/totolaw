@@ -1,7 +1,7 @@
 /**
- * No Organization Page
+ * No Organisation Page
  * 
- * Shown when user is not a member of any organization
+ * Shown when user is not a member of any organisation
  */
 
 import Link from "next/link";
@@ -9,22 +9,22 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Building2 } from "lucide-react";
 
-export default function NoOrganizationPage() {
+export default function NoOrganisationPage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
         <Alert>
           <Building2 className="h-5 w-5" />
           <AlertTitle className="text-xl font-bold">
-            No Organization Access
+            No Organisation Access
           </AlertTitle>
           <AlertDescription className="mt-2">
-            You are not currently a member of any organization.
+            You are not currently a member of any organisation.
             <br />
             <br />
             To access the platform, you need to:
             <ul className="mt-2 list-inside list-disc space-y-1">
-              <li>Accept an invitation from an organization</li>
+              <li>Accept an invitation from an organisation</li>
               <li>Contact your administrator to request access</li>
             </ul>
           </AlertDescription>

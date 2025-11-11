@@ -21,8 +21,8 @@ export const systemAdminAuditLog = pgTable(
     userId: text("user_id")
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
-    action: varchar("action", { length: 100 }).notNull(), // "created_organization", "granted_super_admin", "revoked_super_admin", etc.
-    entityType: varchar("entity_type", { length: 50 }), // "organization", "role", "permission", "user"
+    action: varchar("action", { length: 100 }).notNull(), // "created_organisation", "granted_super_admin", "revoked_super_admin", etc.
+    entityType: varchar("entity_type", { length: 50 }), // "organisation", "role", "permission", "user"
     entityId: text("entity_id"),
     description: text("description").notNull(),
     metadata: text("metadata"), // JSON string with additional details

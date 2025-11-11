@@ -3,8 +3,8 @@
 /**
  * Case Management Actions
  * 
- * Server actions for managing cases with multi-tenant organization isolation.
- * All queries include organization filtering for data security.
+ * Server actions for managing cases with multi-tenant organisation isolation.
+ * All queries include organisation filtering for data security.
  */
 
 import { revalidatePath } from "next/cache";
@@ -23,7 +23,7 @@ export type ActionResult<T = any> = {
 };
 
 /**
- * Get all cases for the current user's organization
+ * Get all cases for the current user's organisation
  */
 export async function getCases(filters?: {
   status?: string;
@@ -39,14 +39,14 @@ export async function getCases(filters?: {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "cases:read-all",
       context.isSuperAdmin
     );
@@ -55,7 +55,7 @@ export async function getCases(filters?: {
       // Check if user can at least view their own cases
       const canViewOwn = await hasPermission(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         "cases:read-own",
         context.isSuperAdmin
       );
@@ -92,7 +92,7 @@ export async function getCases(filters?: {
     const query = db
       .select()
       .from(cases)
-      .where(withOrgFilter(context.organizationId, cases, conditions.length > 0 ? conditions : undefined))
+      .where(withOrgFilter(context.organisationId, cases, conditions.length > 0 ? conditions : undefined))
       .orderBy(desc(cases.createdAt));
 
     if (filters?.limit) {
@@ -125,15 +125,15 @@ export async function getCaseById(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     const [caseRecord] = await db
       .select()
       .from(cases)
       .where(
-        withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)])
+        withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)])
       )
       .limit(1);
 
@@ -144,7 +144,7 @@ export async function getCaseById(
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "cases:read-all",
       context.isSuperAdmin
     );
@@ -153,7 +153,7 @@ export async function getCaseById(
       // Check if user can view their own cases
       const canViewOwn = await hasPermission(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         "cases:read-own",
         context.isSuperAdmin
       );
@@ -187,14 +187,14 @@ export async function createCase(data: {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canCreate = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "cases:create",
       context.isSuperAdmin
     );
@@ -206,11 +206,11 @@ export async function createCase(data: {
     // Generate ID
     const caseId = crypto.randomUUID();
 
-    // Insert with organization context
+    // Insert with organisation context
     const [newCase] = await db
       .insert(cases)
       .values(
-        withOrgId(context.organizationId, {
+        withOrgId(context.organisationId, {
           id: caseId,
           title: data.title,
           type: data.type,
@@ -249,25 +249,25 @@ export async function updateCase(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
-    // Verify case exists and belongs to organization
+    // Verify case exists and belongs to organisation
     const [existingCase] = await db
       .select()
       .from(cases)
       .where(
-        withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)])
+        withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)])
       )
       .limit(1);
 
-    validateOrgAccess(context.organizationId, existingCase, "Case");
+    validateOrgAccess(context.organisationId, existingCase, "Case");
 
     // Check permission
     const canUpdate = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "cases:update",
       context.isSuperAdmin
     );
@@ -281,7 +281,7 @@ export async function updateCase(
       .update(cases)
       .set(data)
       .where(
-        withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)])
+        withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)])
       )
       .returning();
 
@@ -309,25 +309,25 @@ export async function deleteCase(caseId: string): Promise<ActionResult> {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
-    // Verify case exists and belongs to organization
+    // Verify case exists and belongs to organisation
     const [existingCase] = await db
       .select()
       .from(cases)
       .where(
-        withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)])
+        withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)])
       )
       .limit(1);
 
-    validateOrgAccess(context.organizationId, existingCase, "Case");
+    validateOrgAccess(context.organisationId, existingCase, "Case");
 
     // Check permission
     const canDelete = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "cases:delete",
       context.isSuperAdmin
     );
@@ -340,7 +340,7 @@ export async function deleteCase(caseId: string): Promise<ActionResult> {
     await db
       .delete(cases)
       .where(
-        withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)])
+        withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)])
       );
 
     revalidatePath("/dashboard/cases");
@@ -373,8 +373,8 @@ export async function getCaseStats(): Promise<
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Get counts for each status
@@ -386,7 +386,7 @@ export async function getCaseStats(): Promise<
         closed: sql<number>`count(*) filter (where status = 'closed')::int`,
       })
       .from(cases)
-      .where(eq(cases.organizationId, context.organizationId));
+      .where(eq(cases.organisationId, context.organisationId));
 
     return { success: true, data: stats };
   } catch (error) {

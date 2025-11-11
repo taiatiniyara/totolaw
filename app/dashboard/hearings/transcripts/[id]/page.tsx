@@ -33,14 +33,14 @@ export default async function TranscriptPage({ params }: TranscriptPageProps) {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    redirect("/dashboard/no-organization");
+  if (!context?.organisationId) {
+    redirect("/dashboard/no-organisation");
   }
 
   // Fetch transcript with all details
   const details = await transcriptService.getTranscriptWithDetails(
     params.id,
-    context.organizationId
+    context.organisationId
   );
 
   if (!details) {

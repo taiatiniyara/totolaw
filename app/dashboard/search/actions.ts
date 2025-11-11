@@ -56,12 +56,12 @@ export async function globalSearch(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     const searchPattern = `%${query.toLowerCase()}%`;
-    const isSuperAdmin = context.organizationId === "*";
+    const isSuperAdmin = context.organisationId === "*";
 
     // Search cases
     const casesResults = await db
@@ -71,7 +71,7 @@ export async function globalSearch(
         type: cases.type,
         status: cases.status,
         createdAt: cases.createdAt,
-        organizationId: cases.organizationId,
+        organisationId: cases.organisationId,
       })
       .from(cases)
       .where(
@@ -81,7 +81,7 @@ export async function globalSearch(
               LOWER(${cases.type}) LIKE ${searchPattern} OR
               LOWER(${cases.status}) LIKE ${searchPattern}
             )`
-          : sql`${cases.organizationId} = ${context.organizationId} AND (
+          : sql`${cases.organisationId} = ${context.organisationId} AND (
               LOWER(${cases.title}) LIKE ${searchPattern} OR
               LOWER(${cases.type}) LIKE ${searchPattern} OR
               LOWER(${cases.status}) LIKE ${searchPattern}
@@ -97,7 +97,7 @@ export async function globalSearch(
         caseTitle: cases.title,
         date: hearings.date,
         location: hearings.location,
-        organizationId: hearings.organizationId,
+        organisationId: hearings.organisationId,
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
@@ -107,7 +107,7 @@ export async function globalSearch(
               LOWER(${hearings.location}) LIKE ${searchPattern} OR
               LOWER(${cases.title}) LIKE ${searchPattern}
             )`
-          : sql`${hearings.organizationId} = ${context.organizationId} AND (
+          : sql`${hearings.organisationId} = ${context.organisationId} AND (
               LOWER(${hearings.location}) LIKE ${searchPattern} OR
               LOWER(${cases.title}) LIKE ${searchPattern}
             )`
@@ -123,7 +123,7 @@ export async function globalSearch(
         fileType: evidence.fileType,
         fileSize: evidence.fileSize,
         createdAt: evidence.createdAt,
-        organizationId: evidence.organizationId,
+        organisationId: evidence.organisationId,
       })
       .from(evidence)
       .where(
@@ -132,7 +132,7 @@ export async function globalSearch(
               LOWER(${evidence.fileName}) LIKE ${searchPattern} OR
               LOWER(${evidence.description}) LIKE ${searchPattern}
             )`
-          : sql`${evidence.organizationId} = ${context.organizationId} AND (
+          : sql`${evidence.organisationId} = ${context.organisationId} AND (
               LOWER(${evidence.fileName}) LIKE ${searchPattern} OR
               LOWER(${evidence.description}) LIKE ${searchPattern}
             )`

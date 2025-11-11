@@ -35,7 +35,7 @@ export default async function UserDetailPage({ params }: PageProps) {
   const result = await getUserById(id);
 
   if (!result.success || !result.data) {
-    if (result.error === "User not found" || result.error === "User not in organization") {
+    if (result.error === "User not found" || result.error === "User not in organisation") {
       notFound();
     }
     return (
@@ -105,7 +105,7 @@ export default async function UserDetailPage({ params }: PageProps) {
               Roles & Permissions
             </CardTitle>
             <CardDescription>
-              Roles assigned to this user in the current organization
+              Roles assigned to this user in the current organisation
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -19,7 +19,7 @@ This comprehensive guide covers installation, usage, and administration of the c
 
 ### 👑 System Administration
 - **[System Admin Guide](./system-admin-guide.md)** - Complete super admin management guide (⭐ Key Document)
-- **[Organization Management](./organization-management.md)** - Creating and managing organizations
+- **[Organisation Management](./organisation-management.md)** - Creating and managing organisations
 
 ### 🏗️ Technical Documentation
 - **[Architecture](./architecture.md)** - Technical architecture and design patterns
@@ -39,25 +39,25 @@ This comprehensive guide covers installation, usage, and administration of the c
 
 ### System Administrators (Super Admins)
 System administrators have **omnipotent access** to the entire platform:
-- Access all organizations without membership
-- Bypass all organization-based restrictions  
-- View, create, update, and delete data across all organizations
+- Access all organisations without membership
+- Bypass all organisation-based restrictions  
+- View, create, update, and delete data across all organisations
 - Have all permissions automatically
-- Marked with `organizationId: "*"` for global access
+- Marked with `organisationId: "*"` for global access
 
 [Learn more →](./system-admin-guide.md)
 
-### Organizations
+### Organisations
 Independent legal entities (courts, tribunals) with complete data isolation:
-- Each organization has its own users, roles, and data
-- Users can belong to multiple organizations
-- Organization switcher allows context switching
-- Super admins see all organizations
+- Each organisation has its own users, roles, and data
+- Users can belong to multiple organisations
+- Organisation switcher allows context switching
+- Super admins see all organisations
 
-[Learn more →](./organization-management.md)
+[Learn more →](./organisation-management.md)
 
 ### Roles & Permissions
-Granular access control within each organization:
+Granular access control within each organisation:
 - 8 standard roles (Judge, Magistrate, Clerk, etc.)
 - Resource-based permissions (cases:create, hearings:read, etc.)
 - Role-permission mappings
@@ -71,7 +71,7 @@ Granular access control within each organization:
 
 ### For System Administrators
 1. **[System Admin Guide](./system-admin-guide.md)** - Complete management guide
-2. **[Create Your First Organization](./organization-management.md)** - Add courts/tribunals
+2. **[Create Your First Organisation](./organisation-management.md)** - Add courts/tribunals
 3. **[Multi-Tenant RBAC](./multi-tenant-rbac.md)** - Role-based access control
 
 ### For Developers
@@ -92,7 +92,7 @@ Granular access control within each organization:
 - **Database:** PostgreSQL with Drizzle ORM
 - **Authentication:** Better Auth with magic links (passwordless)
 - **UI:** Tailwind CSS + shadcn/ui components
-- **Multi-Tenancy:** Organization-based data isolation
+- **Multi-Tenancy:** Organisation-based data isolation
 - **RBAC:** Granular role and permission system
 - **Deployment:** PM2 on Ubuntu VPS
 
@@ -110,9 +110,9 @@ Granular access control within each organization:
 - ✅ **Court Transcription** - Manual transcription tools for hearings
 
 ### Admin Features
-- ✅ **Organization Management** - Create/manage organizations
+- ✅ **Organisation Management** - Create/manage organisations
 - ✅ **Role Management** - View and configure roles/permissions
-- ✅ **User Administration** - Manage users across all organizations
+- ✅ **User Administration** - Manage users across all organisations
 - ✅ **Audit Logging** - Track all system admin actions
 - ✅ **Super Admin Dashboard** - System-wide overview and controls
 
@@ -121,7 +121,7 @@ Granular access control within each organization:
 ## 🔒 Security Features
 
 - Passwordless authentication (magic links)
-- Organization-based data isolation
+- Organisation-based data isolation
 - Role-based access control (RBAC)
 - Super admin audit logging
 - Rate limiting

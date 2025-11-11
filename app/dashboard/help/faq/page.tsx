@@ -61,9 +61,9 @@ export default function FAQPage() {
             </AccordionItem>
 
             <AccordionItem value="item-3">
-              <AccordionTrigger>How do I switch between organizations?</AccordionTrigger>
+              <AccordionTrigger>How do I switch between organisations?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
-                If you belong to multiple organizations, click the organization dropdown at the top of the sidebar. Select the organization you want to switch to. The dashboard will reload with that organization's data.
+                If you belong to multiple organisations, click the organisation dropdown at the top of the sidebar. Select the organisation you want to switch to. The dashboard will reload with that organisation's data.
               </AccordionContent>
             </AccordionItem>
 
@@ -159,7 +159,7 @@ export default function FAQPage() {
             <AccordionItem value="evidence-2">
               <AccordionTrigger>Is there a file size limit for evidence?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
-                File size limits depend on your organization's configuration. Typically, individual files up to 50MB are supported. For larger files (like long videos), consider compressing them or contacting your administrator.
+                File size limits depend on your organisation's configuration. Typically, individual files up to 50MB are supported. For larger files (like long videos), consider compressing them or contacting your administrator.
               </AccordionContent>
             </AccordionItem>
 
@@ -186,7 +186,7 @@ export default function FAQPage() {
                 Yes. Totolaw uses industry-standard security measures including:
                 <ul className="space-y-1 ml-4 mt-2">
                   <li>• Encrypted data storage and transmission</li>
-                  <li>• Organization-based data isolation</li>
+                  <li>• Organisation-based data isolation</li>
                   <li>• Role-based access control</li>
                   <li>• Audit logging of all actions</li>
                   <li>• Regular security updates</li>
@@ -195,9 +195,9 @@ export default function FAQPage() {
             </AccordionItem>
 
             <AccordionItem value="security-2">
-              <AccordionTrigger>Can users from other organizations see my data?</AccordionTrigger>
+              <AccordionTrigger>Can users from other organisations see my data?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
-                No. Totolaw implements strict data isolation between organizations. Users can only access data from organizations they belong to. Even system administrators follow proper protocols for accessing organization-specific data.
+                No. Totolaw implements strict data isolation between organisations. Users can only access data from organisations they belong to. Even system administrators follow proper protocols for accessing organisation-specific data.
               </AccordionContent>
             </AccordionItem>
 

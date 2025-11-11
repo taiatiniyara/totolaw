@@ -1,7 +1,7 @@
 /**
  * User Invite Page
  * 
- * Invite new users to the organization
+ * Invite new users to the organisation
  */
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ export default async function InviteUserPage() {
           <div className="flex-1">
             <Heading as="h1">Invite User</Heading>
             <p className="text-muted-foreground">
-              Add a new member to your organization
+              Add a new member to your organisation
             </p>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default async function InviteUserPage() {
           <AlertDescription>
             <strong>Coming Soon:</strong> User invitation functionality is currently under development.
             Users can currently be added directly through the database or by signing up and being
-            assigned to the organization by an administrator.
+            assigned to the organisation by an administrator.
           </AlertDescription>
         </Alert>
 
@@ -61,7 +61,7 @@ export default async function InviteUserPage() {
               Invite New User
             </CardTitle>
             <CardDescription>
-              Send an invitation email to add a new member to your organization
+              Send an invitation email to add a new member to your organisation
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -88,7 +88,7 @@ export default async function InviteUserPage() {
             <ol className="list-decimal list-inside space-y-2 text-sm">
               <li>User creates an account by signing in with their email</li>
               <li>User receives a magic link to verify their email</li>
-              <li>Administrator assigns the user to the organization</li>
+              <li>Administrator assigns the user to the organisation</li>
               <li>Administrator assigns appropriate roles to the user</li>
             </ol>
           </CardContent>

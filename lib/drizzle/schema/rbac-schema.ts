@@ -8,15 +8,15 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { organizations } from "./organization-schema";
+import { organisations } from "./organisation-schema";
 
 // --- Roles
 export const roles = pgTable(
   "roles",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     name: varchar("name", { length: 100 }).notNull(), // e.g., "Judge", "Clerk", "Administrator"
     slug: varchar("slug", { length: 100 }).notNull(), // e.g., "judge", "clerk", "admin"
@@ -31,12 +31,12 @@ export const roles = pgTable(
       .notNull(),
   },
   (table) => ({
-    // Unique role slug per organization
+    // Unique role slug per organisation
     uniqueOrgSlug: unique("unique_org_role_slug").on(
-      table.organizationId,
+      table.organisationId,
       table.slug
     ),
-    orgIdx: index("role_org_idx").on(table.organizationId),
+    orgIdx: index("role_org_idx").on(table.organisationId),
     slugIdx: index("role_slug_idx").on(table.slug),
     systemIdx: index("role_system_idx").on(table.isSystem),
     activeIdx: index("role_active_idx").on(table.isActive),
@@ -113,8 +113,8 @@ export const userRoles = pgTable(
     roleId: text("role_id")
       .references(() => roles.id, { onDelete: "cascade" })
       .notNull(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     scope: text("scope"), // Optional: JSON string for scoped access (e.g., specific divisions, regions)
     isActive: boolean("is_active").default(true).notNull(),
@@ -130,17 +130,17 @@ export const userRoles = pgTable(
       .notNull(),
   },
   (table) => ({
-    // Unique role assignment per user per organization
+    // Unique role assignment per user per organisation
     uniqueUserRoleOrg: unique("unique_user_role_org").on(
       table.userId,
       table.roleId,
-      table.organizationId
+      table.organisationId
     ),
     userIdx: index("user_role_user_idx").on(table.userId),
     roleIdx: index("user_role_role_idx").on(table.roleId),
-    orgIdx: index("user_role_org_idx").on(table.organizationId),
+    orgIdx: index("user_role_org_idx").on(table.organisationId),
     activeIdx: index("user_role_active_idx").on(table.isActive),
-    userOrgIdx: index("user_role_user_org_idx").on(table.userId, table.organizationId),
+    userOrgIdx: index("user_role_user_org_idx").on(table.userId, table.organisationId),
   })
 );
 
@@ -158,8 +158,8 @@ export const userPermissions = pgTable(
     permissionId: text("permission_id")
       .references(() => permissions.id, { onDelete: "cascade" })
       .notNull(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     granted: boolean("granted").default(true).notNull(), // true = grant, false = deny (explicit deny)
     conditions: text("conditions"), // JSON string for conditional permissions
@@ -178,9 +178,9 @@ export const userPermissions = pgTable(
   (table) => ({
     userIdx: index("user_perm_user_idx").on(table.userId),
     permIdx: index("user_perm_perm_idx").on(table.permissionId),
-    orgIdx: index("user_perm_org_idx").on(table.organizationId),
+    orgIdx: index("user_perm_org_idx").on(table.organisationId),
     grantedIdx: index("user_perm_granted_idx").on(table.granted),
-    userOrgIdx: index("user_perm_user_org_idx").on(table.userId, table.organizationId),
+    userOrgIdx: index("user_perm_user_org_idx").on(table.userId, table.organisationId),
   })
 );
 
@@ -192,8 +192,8 @@ export const rbacAuditLog = pgTable(
   "rbac_audit_log",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
-      .references(() => organizations.id, { onDelete: "cascade" })
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
       .notNull(),
     entityType: varchar("entity_type", { length: 50 }).notNull(), // "role", "permission", "user_role", "user_permission"
     entityId: text("entity_id").notNull(),
@@ -209,7 +209,7 @@ export const rbacAuditLog = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => ({
-    orgIdx: index("audit_org_idx").on(table.organizationId),
+    orgIdx: index("audit_org_idx").on(table.organisationId),
     entityIdx: index("audit_entity_idx").on(table.entityType, table.entityId),
     performedByIdx: index("audit_performed_by_idx").on(table.performedBy),
     targetUserIdx: index("audit_target_user_idx").on(table.targetUserId),

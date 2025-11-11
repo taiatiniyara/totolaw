@@ -1,39 +1,39 @@
 /**
  * Query Helper Utilities
  * 
- * Common patterns for database queries with multi-tenant organization filtering.
+ * Common patterns for database queries with multi-tenant organisation filtering.
  * All queries should use these helpers to ensure proper data isolation.
  * 
- * Super admins with organizationId="*" bypass all organization filtering.
+ * Super admins with organisationId="*" bypass all organisation filtering.
  */
 
 import { and, eq, SQL } from "drizzle-orm";
 import { PgTable } from "drizzle-orm/pg-core";
 
 /**
- * Add organization filter to query conditions
- * Super admins (organizationId="*") bypass organization filtering
+ * Add organisation filter to query conditions
+ * Super admins (organisationId="*") bypass organisation filtering
  * 
  * @example
- * const conditions = withOrgFilter(organizationId, cases, [
+ * const conditions = withOrgFilter(organisationId, cases, [
  *   eq(cases.status, 'active'),
  *   eq(cases.assignedTo, userId)
  * ]);
  */
 export function withOrgFilter<T extends PgTable>(
-  organizationId: string,
+  organisationId: string,
   table: T,
   additionalConditions?: SQL[]
 ): SQL | undefined {
-  // Super admin bypass: "*" means access to all organizations
-  if (organizationId === "*") {
+  // Super admin bypass: "*" means access to all organisations
+  if (organisationId === "*") {
     if (!additionalConditions || additionalConditions.length === 0) {
       return undefined;
     }
     return and(...additionalConditions);
   }
 
-  const orgCondition = eq((table as any).organizationId, organizationId);
+  const orgCondition = eq((table as any).organisationId, organisationId);
   
   if (!additionalConditions || additionalConditions.length === 0) {
     return orgCondition;
@@ -43,96 +43,96 @@ export function withOrgFilter<T extends PgTable>(
 }
 
 /**
- * Create organization-scoped values for insert operations
- * Note: Super admins must specify a valid organizationId for inserts
+ * Create organisation-scoped values for insert operations
+ * Note: Super admins must specify a valid organisationId for inserts
  * 
  * @example
  * await db.insert(cases).values(
- *   withOrgId(organizationId, {
+ *   withOrgId(organisationId, {
  *     title: 'New Case',
  *     status: 'pending'
  *   })
  * );
  */
 export function withOrgId<T extends Record<string, any>>(
-  organizationId: string,
+  organisationId: string,
   values: T
-): T & { organizationId: string } {
-  // Super admins must specify a target organization for inserts
-  if (organizationId === "*") {
-    throw new Error("Super admins must specify a target organizationId for insert operations");
+): T & { organisationId: string } {
+  // Super admins must specify a target organisation for inserts
+  if (organisationId === "*") {
+    throw new Error("Super admins must specify a target organisationId for insert operations");
   }
   
   return {
     ...values,
-    organizationId,
+    organisationId,
   };
 }
 
 /**
- * Create organization-scoped values for bulk insert operations
+ * Create organisation-scoped values for bulk insert operations
  * 
  * @example
  * await db.insert(evidence).values(
- *   withOrgIds(organizationId, [
+ *   withOrgIds(organisationId, [
  *     { title: 'Evidence 1', type: 'document' },
  *     { title: 'Evidence 2', type: 'photo' }
  *   ])
  * );
  */
 export function withOrgIds<T extends Record<string, any>>(
-  organizationId: string,
+  organisationId: string,
   valuesArray: T[]
-): Array<T & { organizationId: string }> {
-  return valuesArray.map(values => withOrgId(organizationId, values));
+): Array<T & { organisationId: string }> {
+  return valuesArray.map(values => withOrgId(organisationId, values));
 }
 
 /**
- * Validate that a record belongs to the current organization
+ * Validate that a record belongs to the current organisation
  * Throws error if validation fails
- * Super admins (organizationId="*") bypass validation
+ * Super admins (organisationId="*") bypass validation
  * 
  * @example
  * const caseRecord = await db.select()...;
- * validateOrgAccess(organizationId, caseRecord, 'Case');
+ * validateOrgAccess(organisationId, caseRecord, 'Case');
  */
 export function validateOrgAccess(
-  organizationId: string,
-  record: { organizationId?: string } | null | undefined,
+  organisationId: string,
+  record: { organisationId?: string } | null | undefined,
   resourceName: string = "Resource"
 ): void {
   if (!record) {
     throw new Error(`${resourceName} not found`);
   }
   
-  // Super admins bypass organization validation
-  if (organizationId === "*") {
+  // Super admins bypass organisation validation
+  if (organisationId === "*") {
     return;
   }
   
-  if (record.organizationId !== organizationId) {
-    throw new Error(`Access denied: ${resourceName} does not belong to your organization`);
+  if (record.organisationId !== organisationId) {
+    throw new Error(`Access denied: ${resourceName} does not belong to your organisation`);
   }
 }
 
 /**
- * Check if a record belongs to the current organization (non-throwing)
- * Super admins (organizationId="*") always have access
+ * Check if a record belongs to the current organisation (non-throwing)
+ * Super admins (organisationId="*") always have access
  * 
  * @example
  * const caseRecord = await db.select()...;
- * if (hasOrgAccess(organizationId, caseRecord)) {
+ * if (hasOrgAccess(organisationId, caseRecord)) {
  *   // proceed
  * }
  */
 export function hasOrgAccess(
-  organizationId: string,
-  record: { organizationId?: string } | null | undefined
+  organisationId: string,
+  record: { organisationId?: string } | null | undefined
 ): boolean {
   // Super admins have access to all records
-  if (organizationId === "*") {
+  if (organisationId === "*") {
     return record != null;
   }
   
-  return record != null && record.organizationId === organizationId;
+  return record != null && record.organisationId === organisationId;
 }

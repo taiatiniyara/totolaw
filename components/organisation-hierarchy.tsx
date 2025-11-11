@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Building2, ChevronRight } from "lucide-react";
 
-interface Organization {
+interface Organisation {
   id: string;
   name: string;
   code: string;
@@ -14,26 +14,26 @@ interface Organization {
   createdAt: Date;
 }
 
-interface OrganizationHierarchyProps {
-  organizations: Organization[];
+interface OrganisationHierarchyProps {
+  organisations: Organisation[];
 }
 
-interface OrganizationNode extends Organization {
-  children: OrganizationNode[];
+interface OrganisationNode extends Organisation {
+  children: OrganisationNode[];
 }
 
 // Build tree structure from flat list
-function buildTree(organizations: Organization[]): OrganizationNode[] {
-  const orgMap = new Map<string, OrganizationNode>();
-  const roots: OrganizationNode[] = [];
+function buildTree(organisations: Organisation[]): OrganisationNode[] {
+  const orgMap = new Map<string, OrganisationNode>();
+  const roots: OrganisationNode[] = [];
 
   // Create nodes
-  organizations.forEach((org) => {
+  organisations.forEach((org) => {
     orgMap.set(org.id, { ...org, children: [] });
   });
 
   // Build tree
-  organizations.forEach((org) => {
+  organisations.forEach((org) => {
     const node = orgMap.get(org.id)!;
     if (org.parentId) {
       const parent = orgMap.get(org.parentId);
@@ -51,7 +51,7 @@ function buildTree(organizations: Organization[]): OrganizationNode[] {
   return roots;
 }
 
-function OrganizationTreeNode({ node, level = 0 }: { node: OrganizationNode; level?: number }) {
+function OrganisationTreeNode({ node, level = 0 }: { node: OrganisationNode; level?: number }) {
   const hasChildren = node.children.length > 0;
   const indent = level * 24;
 
@@ -97,7 +97,7 @@ function OrganizationTreeNode({ node, level = 0 }: { node: OrganizationNode; lev
       {hasChildren && (
         <div className="space-y-2">
           {node.children.map((child) => (
-            <OrganizationTreeNode key={child.id} node={child} level={level + 1} />
+            <OrganisationTreeNode key={child.id} node={child} level={level + 1} />
           ))}
         </div>
       )}
@@ -105,14 +105,14 @@ function OrganizationTreeNode({ node, level = 0 }: { node: OrganizationNode; lev
   );
 }
 
-export function OrganizationHierarchy({ organizations }: OrganizationHierarchyProps) {
-  const tree = buildTree(organizations);
+export function OrganisationHierarchy({ organisations }: OrganisationHierarchyProps) {
+  const tree = buildTree(organisations);
 
   // Statistics
-  const totalOrgs = organizations.length;
+  const totalOrgs = organisations.length;
   const topLevelOrgs = tree.length;
-  const orgTypes = [...new Set(organizations.map(o => o.type))];
-  const countries = organizations.filter(o => o.type === 'country').length;
+  const orgTypes = [...new Set(organisations.map(o => o.type))];
+  const countries = organisations.filter(o => o.type === 'country').length;
 
   return (
     <div className="space-y-6">
@@ -120,7 +120,7 @@ export function OrganizationHierarchy({ organizations }: OrganizationHierarchyPr
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Organisations</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -130,7 +130,7 @@ export function OrganizationHierarchy({ organizations }: OrganizationHierarchyPr
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top-Level Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">Top-Level Organisations</CardTitle>
             <Building2 className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
@@ -140,7 +140,7 @@ export function OrganizationHierarchy({ organizations }: OrganizationHierarchyPr
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Organization Types</CardTitle>
+            <CardTitle className="text-sm font-medium">Organisation Types</CardTitle>
             <Badge variant="outline">{orgTypes.length}</Badge>
           </CardHeader>
           <CardContent>
@@ -165,21 +165,21 @@ export function OrganizationHierarchy({ organizations }: OrganizationHierarchyPr
       {/* Tree View */}
       <Card>
         <CardHeader>
-          <CardTitle>Organizational Hierarchy</CardTitle>
+          <CardTitle>Organisational Hierarchy</CardTitle>
           <CardDescription>
-            Complete structure of all active organizations and their relationships
+            Complete structure of all active organisations and their relationships
           </CardDescription>
         </CardHeader>
         <CardContent>
           {tree.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Building2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No organizations found</p>
+              <p>No organisations found</p>
             </div>
           ) : (
             <div className="space-y-4">
               {tree.map((node) => (
-                <OrganizationTreeNode key={node.id} node={node} />
+                <OrganisationTreeNode key={node.id} node={node} />
               ))}
             </div>
           )}
@@ -194,18 +194,18 @@ export function OrganizationHierarchy({ organizations }: OrganizationHierarchyPr
         <CardContent className="space-y-2">
           <div className="flex items-center gap-3 text-sm">
             <Building2 className="h-5 w-5 text-blue-600" />
-            <span className="text-muted-foreground">Top-level organization (no parent)</span>
+            <span className="text-muted-foreground">Top-level organisation (no parent)</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
             <Building2 className="h-5 w-5 text-primary" />
-            <span className="text-muted-foreground">Sub-organization (has parent)</span>
+            <span className="text-muted-foreground">Sub-organisation (has parent)</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
               2 sub-orgs
             </Badge>
-            <span className="text-muted-foreground">Number of child organizations</span>
+            <span className="text-muted-foreground">Number of child organisations</span>
           </div>
         </CardContent>
       </Card>

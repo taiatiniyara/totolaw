@@ -12,7 +12,7 @@ export const user = pgTable("user", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   // Multi-tenant RBAC fields
-  currentOrganizationId: text("current_organization_id"),
+  currentOrganisationId: text("current_organisation_id"),
   isSuperAdmin: boolean("is_super_admin").default(false).notNull(),
   // Super admin metadata
   adminNotes: text("admin_notes"),

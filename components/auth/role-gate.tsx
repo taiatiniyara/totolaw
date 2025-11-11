@@ -56,7 +56,7 @@ export async function RoleGate({
 
     const context = await getUserTenantContext(session.user.id);
     
-    if (!context?.organizationId) {
+    if (!context?.organisationId) {
       return <>{fallback}</>;
     }
 
@@ -66,7 +66,7 @@ export async function RoleGate({
     if (role) {
       hasAccess = await hasRole(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         role,
         context.isSuperAdmin
       );
@@ -75,7 +75,7 @@ export async function RoleGate({
     else if (anyRoles && anyRoles.length > 0) {
       hasAccess = await hasAnyRole(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         anyRoles,
         context.isSuperAdmin
       );
@@ -84,7 +84,7 @@ export async function RoleGate({
     else if (allRoles && allRoles.length > 0) {
       hasAccess = await hasAllRoles(
         session.user.id,
-        context.organizationId,
+        context.organisationId,
         allRoles,
         context.isSuperAdmin
       );

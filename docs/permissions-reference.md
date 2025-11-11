@@ -17,7 +17,7 @@ Permissions follow the format: `resource:action`
 |------------|-------------|---------------|
 | `cases:create` | Create new cases | Court Clerk, Prosecutor |
 | `cases:read` | View case details | All roles |
-| `cases:read-all` | View all cases in organization | Judge, Administrator |
+| `cases:read-all` | View all cases in organisation | Judge, Administrator |
 | `cases:read-own` | View only assigned/created cases | Clerk, Prosecutor, Defender |
 | `cases:update` | Edit case information | Court Clerk, Judge |
 | `cases:delete` | Delete cases | Administrator only |
@@ -136,16 +136,16 @@ Permissions follow the format: `resource:action`
 | `permissions:grant` | Grant direct permissions to users | Administrator |
 | `permissions:deny` | Explicitly deny user permissions | Administrator |
 
-### Organizations
+### Organisations
 
 | Permission | Description | Typical Roles |
 |------------|-------------|---------------|
-| `organizations:create` | Create sub-organizations | Super Admin, Administrator |
-| `organizations:read` | View organization details | All members |
-| `organizations:update` | Edit organization settings | Administrator |
-| `organizations:delete` | Delete organizations | Super Admin only |
-| `organizations:invite` | Invite users to organization | Administrator, Senior Clerk |
-| `organizations:remove-member` | Remove org members | Administrator |
+| `organisations:create` | Create sub-organisations | Super Admin, Administrator |
+| `organisations:read` | View organisation details | All members |
+| `organisations:update` | Edit organisation settings | Administrator |
+| `organisations:delete` | Delete organisations | Super Admin only |
+| `organisations:invite` | Invite users to organisation | Administrator, Senior Clerk |
+| `organisations:remove-member` | Remove org members | Administrator |
 
 ### Reports
 
@@ -200,7 +200,7 @@ Platform-wide administrator with all permissions.
 
 ### Chief Justice
 
-Highest authority in an organization's court system.
+Highest authority in an organisation's court system.
 
 **Permissions**:
 - All case permissions
@@ -268,7 +268,7 @@ Administrative clerk with user management.
 - `trials:create`, `trials:read`, `trials:update`
 - `users:read`, `users:create`, `users:update`
 - `roles:assign` (limited)
-- `organizations:invite`
+- `organisations:invite`
 - `documents:upload`, `documents:read`, `documents:update`
 - `settings:manage-lists`
 
@@ -332,7 +332,7 @@ System and user administrator.
 - `users:*` (all user permissions)
 - `roles:*` (all role permissions)
 - `permissions:*` (all permission permissions)
-- `organizations:*` (all org permissions except delete)
+- `organisations:*` (all org permissions except delete)
 - `settings:*` (all settings permissions)
 - `reports:*` (all report permissions)
 - `audit:view`, `audit:export`
@@ -375,7 +375,7 @@ For easier management, permissions can be grouped:
 - `users:*`
 - `roles:*`
 - `permissions:*`
-- `organizations:*`
+- `organisations:*`
 - `settings:*`
 
 ### Reporting Group
@@ -409,21 +409,21 @@ const caseManagerPermissions = [
 // Check single permission
 const canCreateCase = await hasPermission(
   userId, 
-  organizationId, 
+  organisationId, 
   'cases:create'
 );
 
 // Check multiple permissions (any)
 const canManageCases = await hasAnyPermission(
   userId,
-  organizationId,
+  organisationId,
   ['cases:create', 'cases:update', 'cases:assign']
 );
 
 // Check multiple permissions (all)
 const canFullyManageCases = await hasAllPermissions(
   userId,
-  organizationId,
+  organisationId,
   ['cases:create', 'cases:read', 'cases:update', 'cases:delete']
 );
 ```

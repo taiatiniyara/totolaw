@@ -28,13 +28,13 @@ export async function createTranscript(data: {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const transcript = await transcriptService.createTranscript(
-      context.organizationId,
+      context.organisationId,
       session.user.id,
       data
     );
@@ -60,14 +60,14 @@ export async function getTranscriptDetails(transcriptId: string) {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const details = await transcriptService.getTranscriptWithDetails(
       transcriptId,
-      context.organizationId
+      context.organisationId
     );
 
     if (!details) {
@@ -97,14 +97,14 @@ export async function updateTranscriptStatus(
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const transcript = await transcriptService.updateTranscriptStatus(
       transcriptId,
-      context.organizationId,
+      context.organisationId,
       status,
       session.user.id
     );
@@ -135,13 +135,13 @@ export async function addSpeaker(data: {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const speaker = await transcriptService.addSpeaker(
-      context.organizationId,
+      context.organisationId,
       data
     );
 
@@ -169,14 +169,14 @@ export async function updateSegment(
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const segment = await transcriptService.updateSegment(
       segmentId,
-      context.organizationId,
+      context.organisationId,
       {
         text,
         editedBy: session.user.id,
@@ -209,13 +209,13 @@ export async function addAnnotation(data: {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const annotation = await transcriptService.addAnnotation(
-      context.organizationId,
+      context.organisationId,
       {
         ...data,
         createdBy: session.user.id,
@@ -242,14 +242,14 @@ export async function deleteAnnotation(annotationId: string) {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     await transcriptService.deleteAnnotation(
       annotationId,
-      context.organizationId,
+      context.organisationId,
       session.user.id
     );
 
@@ -276,14 +276,14 @@ export async function searchTranscript(
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const segments = await transcriptService.searchSegments(
       transcriptId,
-      context.organizationId,
+      context.organisationId,
       query
     );
 
@@ -316,8 +316,8 @@ export async function saveManualTranscriptEntries(data: {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
@@ -334,18 +334,18 @@ export async function saveManualTranscriptEntries(data: {
     }));
 
     // Add segments to transcript
-    await transcriptService.addSegmentsBatch(context.organizationId, segments);
+    await transcriptService.addSegmentsBatch(context.organisationId, segments);
 
     // Update transcript status if it was draft
     const transcript = await transcriptService.getTranscript(
       data.transcriptId,
-      context.organizationId
+      context.organisationId
     );
 
     if (transcript?.status === "draft") {
       await transcriptService.updateTranscriptStatus(
         data.transcriptId,
-        context.organizationId,
+        context.organisationId,
         "completed",
         session.user.id
       );
@@ -382,15 +382,15 @@ export async function autoSaveManualTranscript(data: {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     // Just update the status to in-progress to indicate work is being done
     await transcriptService.updateTranscriptStatus(
       data.transcriptId,
-      context.organizationId,
+      context.organisationId,
       "in-progress"
     );
 
@@ -433,14 +433,14 @@ export async function getTranscriptStats(transcriptId: string) {
   }
 
   const context = await getUserTenantContext(session.user.id);
-  if (!context?.organizationId) {
-    return { error: "Organization context not found" };
+  if (!context?.organisationId) {
+    return { error: "Organisation context not found" };
   }
 
   try {
     const stats = await transcriptService.getTranscriptStats(
       transcriptId,
-      context.organizationId
+      context.organisationId
     );
 
     return { success: true, stats };

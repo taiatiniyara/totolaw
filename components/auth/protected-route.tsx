@@ -44,13 +44,13 @@ export async function ProtectedRoute({
 
   const context = await getUserTenantContext(session.user.id);
 
-  if (!context?.organizationId) {
-    redirect("/dashboard/no-organization");
+  if (!context?.organisationId) {
+    redirect("/dashboard/no-organisation");
   }
 
   const hasAccess = await hasPermission(
     session.user.id,
-    context.organizationId,
+    context.organisationId,
     requiredPermission,
     context.isSuperAdmin
   );

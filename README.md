@@ -10,11 +10,11 @@ Totolaw is a modern, secure web application designed to streamline court case ma
 
 Purpose-built to serve the unique needs of Pacific Island court systems, Totolaw provides:
 
-- **Multi-Tenant Architecture** - Separate organizations for each court system (Fiji, Samoa, Tonga, Vanuatu)
+- **Multi-Tenant Architecture** - Separate organisations for each court system (Fiji, Samoa, Tonga, Vanuatu)
 - **Role-Based Access Control** - Granular permissions for judges, magistrates, clerks, prosecutors, and administrators
 - **Secure Authentication** - Passwordless magic link authentication for easy, secure access
 - **Case Management** - Comprehensive tracking of legal cases, hearings, evidence, and proceedings
-- **Data Isolation** - Each organization's data is completely isolated and secure
+- **Data Isolation** - Each organisation's data is completely isolated and secure
 - **User-Friendly Interface** - Modern, responsive dashboard built with shadcn/ui components
 - **Scalable Architecture** - Built on Next.js 16 with PostgreSQL for reliability
 
@@ -49,7 +49,7 @@ Comprehensive documentation is available in the `/docs` folder:
 - [Database Schema](./docs/database.md) - Database structure and migrations
 - [System Admin Guide](./docs/system-admin-guide.md) - Complete super admin management guide
 - [Multi-Tenant RBAC](./docs/multi-tenant-rbac.md) - Role-based access control
-- [Organization Management](./docs/organization-management.md) - Managing organizations
+- [Organisation Management](./docs/organisation-management.md) - Managing organisations
 
 ## 🛠️ Tech Stack
 
@@ -65,12 +65,12 @@ Comprehensive documentation is available in the `/docs` folder:
 ## ✨ Key Features
 
 ### Multi-Tenant & RBAC
-- 🏢 Organization-based isolation (Fiji, Samoa, Tonga, Vanuatu)
+- 🏢 Organisation-based isolation (Fiji, Samoa, Tonga, Vanuatu)
 - 🔐 Role-based access control with granular permissions
-- 👥 Users can belong to multiple organizations
-- 🔄 Easy organization switching
+- 👥 Users can belong to multiple organisations
+- 🔄 Easy organisation switching
 - 📝 Complete audit trail for compliance
-- 🛡️ **System admins have omnipotent access** - Full access to all organizations without membership
+- 🛡️ **System admins have omnipotent access** - Full access to all organisations without membership
 
 ### Authentication & Security
 - 🔐 Passwordless magic link authentication
@@ -92,7 +92,7 @@ Comprehensive documentation is available in the `/docs` folder:
 - 🚀 Fast page loads with Next.js 16
 - 📱 Mobile-friendly interface
 - ♿ Accessible UI components
-- 🌐 Organization switcher in navigation
+- 🌐 Organisation switcher in navigation
 - 📊 Real-time search with debouncing
 
 ## 🔧 Configuration

@@ -54,14 +54,14 @@ export async function uploadEvidence(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     // Check permission
     const canCreate = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "evidence:create",
       context.isSuperAdmin
     );
@@ -92,11 +92,11 @@ export async function uploadEvidence(
       return { success: false, error: "File type not allowed" };
     }
 
-    // Verify case exists and belongs to organization
+    // Verify case exists and belongs to organisation
     const [caseRecord] = await db
       .select()
       .from(cases)
-      .where(withOrgFilter(context.organizationId, cases, [eq(cases.id, caseId)]))
+      .where(withOrgFilter(context.organisationId, cases, [eq(cases.id, caseId)]))
       .limit(1);
 
     if (!caseRecord) {
@@ -124,7 +124,7 @@ export async function uploadEvidence(
     const evidenceId = generateUUID();
     await db.insert(evidence).values({
       id: evidenceId,
-      organizationId: context.organizationId,
+      organisationId: context.organisationId,
       caseId,
       hearingId,
       fileName: file.name,
@@ -161,14 +161,14 @@ export async function getEvidenceForCase(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     // Check permission
     const canRead = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "evidence:read",
       context.isSuperAdmin
     );
@@ -182,7 +182,7 @@ export async function getEvidenceForCase(
       .select()
       .from(evidence)
       .where(
-        withOrgFilter(context.organizationId, evidence, [
+        withOrgFilter(context.organisationId, evidence, [
           eq(evidence.caseId, caseId),
         ])
       )
@@ -211,14 +211,14 @@ export async function getEvidenceById(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     // Check permission
     const canRead = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "evidence:read",
       context.isSuperAdmin
     );
@@ -232,7 +232,7 @@ export async function getEvidenceById(
       .select()
       .from(evidence)
       .where(
-        withOrgFilter(context.organizationId, evidence, [
+        withOrgFilter(context.organisationId, evidence, [
           eq(evidence.id, evidenceId),
         ])
       )
@@ -265,14 +265,14 @@ export async function deleteEvidence(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     // Check permission
     const canDelete = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "evidence:delete",
       context.isSuperAdmin
     );
@@ -286,7 +286,7 @@ export async function deleteEvidence(
       .select()
       .from(evidence)
       .where(
-        withOrgFilter(context.organizationId, evidence, [
+        withOrgFilter(context.organisationId, evidence, [
           eq(evidence.id, evidenceId),
         ])
       )
@@ -334,14 +334,14 @@ export async function getAllEvidence(options?: {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     // Check permission
     const canRead = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "evidence:read",
       context.isSuperAdmin
     );
@@ -354,7 +354,7 @@ export async function getAllEvidence(options?: {
     const query = db
       .select({
         id: evidence.id,
-        organizationId: evidence.organizationId,
+        organisationId: evidence.organisationId,
         caseId: evidence.caseId,
         hearingId: evidence.hearingId,
         fileName: evidence.fileName,
@@ -368,7 +368,7 @@ export async function getAllEvidence(options?: {
       })
       .from(evidence)
       .innerJoin(cases, eq(evidence.caseId, cases.id))
-      .where(withOrgFilter(context.organizationId, evidence))
+      .where(withOrgFilter(context.organisationId, evidence))
       .orderBy(desc(evidence.createdAt))
       .limit(options?.limit || 100);
 

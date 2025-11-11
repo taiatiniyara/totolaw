@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as authSchema from "./schema/auth-schema";
-import * as organizationSchema from "./schema/organization-schema";
+import * as organisationSchema from "./schema/organisation-schema";
 import * as rbacSchema from "./schema/rbac-schema";
 import * as dbSchema from "./schema/db-schema";
 import * as caseSchema from "./schema/case-schema";
@@ -17,7 +17,7 @@ const pool = new Pool({
 export const db = drizzle(pool, {
   schema: {
     ...authSchema,
-    ...organizationSchema,
+    ...organisationSchema,
     ...rbacSchema,
     ...dbSchema,
     ...caseSchema,

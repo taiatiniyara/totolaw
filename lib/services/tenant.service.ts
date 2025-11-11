@@ -1,22 +1,22 @@
 import { db } from "../drizzle/connection";
-import { organizations, organizationMembers } from "../drizzle/schema/organization-schema";
+import { organisations, organisationMembers } from "../drizzle/schema/organisation-schema";
 import { user } from "../drizzle/schema/auth-schema";
 import { eq, and } from "drizzle-orm";
 
 /**
  * Tenant Context Service
- * Handles organization/tenant context extraction and validation
+ * Handles organisation/tenant context extraction and validation
  */
 
 export interface TenantContext {
-    organizationId: string;
+    organisationId: string;
     userId: string;
     isSuperAdmin: boolean;
 }
 
 /**
- * Get the user's current organization context
- * Super admins get special context that bypasses organization restrictions
+ * Get the user's current organisation context
+ * Super admins get special context that bypasses organisation restrictions
  */
 export async function getUserTenantContext(
     userId: string
@@ -27,84 +27,84 @@ export async function getUserTenantContext(
         return null;
     }
 
-    // Super admins get a special context with "*" organization ID
+    // Super admins get a special context with "*" organisation ID
     // This signals to query helpers and authorization checks to bypass org filtering
     if (userRecord.isSuperAdmin) {
         // If super admin has a current org set, use it (allows them to switch context)
         // Otherwise, use "*" to indicate omnipotent access
         return {
-            organizationId: userRecord.currentOrganizationId || "*",
+            organisationId: userRecord.currentOrganisationId || "*",
             userId: userRecord.id,
             isSuperAdmin: true,
         };
     }
 
-    // If user has a current organization set, use that
-    if (userRecord.currentOrganizationId) {
+    // If user has a current organisation set, use that
+    if (userRecord.currentOrganisationId) {
         return {
-            organizationId: userRecord.currentOrganizationId,
+            organisationId: userRecord.currentOrganisationId,
             userId: userRecord.id,
             isSuperAdmin: userRecord.isSuperAdmin,
         };
     }
 
-    // Otherwise, get their primary organization
-    const primaryMembership = await db.select().from(organizationMembers).where(
+    // Otherwise, get their primary organisation
+    const primaryMembership = await db.select().from(organisationMembers).where(
         and(
-            eq(organizationMembers.userId, userId),
-            eq(organizationMembers.isPrimary, true),
-            eq(organizationMembers.isActive, true)
+            eq(organisationMembers.userId, userId),
+            eq(organisationMembers.isPrimary, true),
+            eq(organisationMembers.isActive, true)
         )
     ).limit(1).then(results => results[0]);
 
     if (primaryMembership) {
         return {
-            organizationId: primaryMembership.organizationId,
+            organisationId: primaryMembership.organisationId,
             userId: userRecord.id,
             isSuperAdmin: userRecord.isSuperAdmin,
         };
     }
 
     // If no primary, get any active membership
-    const anyMembership = await db.select().from(organizationMembers).where(
+    const anyMembership = await db.select().from(organisationMembers).where(
         and(
-            eq(organizationMembers.userId, userId),
-            eq(organizationMembers.isActive, true)
+            eq(organisationMembers.userId, userId),
+            eq(organisationMembers.isActive, true)
         )
     ).limit(1).then(results => results[0]);
 
     if (anyMembership) {
         return {
-            organizationId: anyMembership.organizationId,
+            organisationId: anyMembership.organisationId,
             userId: userRecord.id,
             isSuperAdmin: userRecord.isSuperAdmin,
         };
     }
 
-    // Non-super-admin users without any organization membership
+    // Non-super-admin users without any organisation membership
     return null;
 }
 
 /**
- * Verify that a user has access to a specific organization
+ * Verify that a user has access to a specific organisation
  */
-export async function verifyUserOrganizationAccess(
+export async function verifyUserOrganisationAccess(
     userId: string,
-    organizationId: string
+    organisationId: string
 ): Promise<boolean> {
     const userRecord = await db.select().from(user).where(eq(user.id, userId)).limit(1).then(results => results[0]);
 
-    // Super admins have access to all organizations
+    // Super admins have access to all organisations
     if (userRecord?.isSuperAdmin) {
         return true;
     }
 
-    // Check if user is a member of this organization
-    const membership = await db.select().from(organizationMembers).where(
+    // Check if user is a member of this organisation
+    const membership = await db.select().from(organisationMembers).where(
         and(
-            eq(organizationMembers.userId, userId),
-            eq(organizationMembers.organizationId, organizationId),
-            eq(organizationMembers.isActive, true)
+            eq(organisationMembers.userId, userId),
+            eq(organisationMembers.organisationId, organisationId),
+            eq(organisationMembers.isActive, true)
         )
     ).limit(1).then(results => results[0]);
 
@@ -112,26 +112,26 @@ export async function verifyUserOrganizationAccess(
 }
 
 /**
- * Get all organizations a user has access to
- * Super admins get access to ALL organizations
+ * Get all organisations a user has access to
+ * Super admins get access to ALL organisations
  */
-export async function getUserOrganizations(userId: string) {
+export async function getUserOrganisations(userId: string) {
     const [userRecord] = await db.select().from(user).where(eq(user.id, userId));
 
-    // Super admins have access to all organizations
+    // Super admins have access to all organisations
     if (userRecord?.isSuperAdmin) {
         const allOrgs = await db
             .select()
-            .from(organizations)
-            .where(eq(organizations.isActive, true));
+            .from(organisations)
+            .where(eq(organisations.isActive, true));
         
         // Return in the same format as regular memberships
         return allOrgs.map(org => ({
-            organization: org,
+            organisation: org,
             membership: {
                 id: `super-admin-${org.id}`,
                 userId: userId,
-                organizationId: org.id,
+                organisationId: org.id,
                 isPrimary: false,
                 isActive: true,
                 joinedAt: new Date(),
@@ -144,16 +144,16 @@ export async function getUserOrganizations(userId: string) {
 
     const memberships = await db
         .select({
-            organization: organizations,
-            membership: organizationMembers,
+            organisation: organisations,
+            membership: organisationMembers,
         })
-        .from(organizationMembers)
-        .innerJoin(organizations, eq(organizations.id, organizationMembers.organizationId))
+        .from(organisationMembers)
+        .innerJoin(organisations, eq(organisations.id, organisationMembers.organisationId))
         .where(
             and(
-                eq(organizationMembers.userId, userId),
-                eq(organizationMembers.isActive, true),
-                eq(organizations.isActive, true)
+                eq(organisationMembers.userId, userId),
+                eq(organisationMembers.isActive, true),
+                eq(organisations.isActive, true)
             )
         );
 
@@ -161,24 +161,24 @@ export async function getUserOrganizations(userId: string) {
 }
 
 /**
- * Switch user's current organization context
+ * Switch user's current organisation context
  */
-export async function switchUserOrganization(
+export async function switchUserOrganisation(
     userId: string,
-    organizationId: string
+    organisationId: string
 ): Promise<boolean> {
-    // Verify user has access to this organization
-    const hasAccess = await verifyUserOrganizationAccess(userId, organizationId);
+    // Verify user has access to this organisation
+    const hasAccess = await verifyUserOrganisationAccess(userId, organisationId);
 
     if (!hasAccess) {
         return false;
     }
 
-    // Update user's current organization
+    // Update user's current organisation
     await db
         .update(user)
         .set({
-            currentOrganizationId: organizationId,
+            currentOrganisationId: organisationId,
             updatedAt: new Date(),
         })
         .where(eq(user.id, userId));
@@ -187,20 +187,20 @@ export async function switchUserOrganization(
 }
 
 /**
- * Get organization by ID
+ * Get organisation by ID
  */
-export async function getOrganizationById(organizationId: string) {
-    return await db.select().from(organizations).where(eq(organizations.id, organizationId)).limit(1).then(results => results[0]);
+export async function getOrganisationById(organisationId: string) {
+    return await db.select().from(organisations).where(eq(organisations.id, organisationId)).limit(1).then(results => results[0]);
 }
 
 /**
- * Check if organization exists and is active
+ * Check if organisation exists and is active
  */
-export async function isOrganizationActive(organizationId: string): Promise<boolean> {
-    const org = await db.select().from(organizations).where(
+export async function isOrganisationActive(organisationId: string): Promise<boolean> {
+    const org = await db.select().from(organisations).where(
         and(
-            eq(organizations.id, organizationId),
-            eq(organizations.isActive, true)
+            eq(organisations.id, organisationId),
+            eq(organisations.isActive, true)
         )
     ).limit(1).then(results => results[0]);
 

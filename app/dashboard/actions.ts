@@ -3,7 +3,7 @@
 /**
  * Dashboard Actions
  * 
- * General dashboard actions including logout and organization switching.
+ * General dashboard actions including logout and organisation switching.
  */
 
 import { redirect } from "next/navigation";
@@ -12,8 +12,8 @@ import { authClient } from "@/lib/auth-client";
 import { auth } from "@/lib/auth";
 import { 
   getUserTenantContext, 
-  getUserOrganizations,
-  switchUserOrganization 
+  getUserOrganisations,
+  switchUserOrganisation 
 } from "@/lib/services/tenant.service";
 
 export type ActionResult<T = any> = {
@@ -36,10 +36,10 @@ export async function logoutAction() {
 }
 
 /**
- * Get current organization context
- * Super admins get special context with "*" organization ID for omnipotent access
+ * Get current organisation context
+ * Super admins get special context with "*" organisation ID for omnipotent access
  */
-export async function getCurrentOrganization(): Promise<ActionResult> {
+export async function getCurrentOrganisation(): Promise<ActionResult> {
   try {
     const session = await auth.api.getSession({ 
       headers: await import("next/headers").then(m => m.headers()) 
@@ -56,18 +56,18 @@ export async function getCurrentOrganization(): Promise<ActionResult> {
       data: context 
     };
   } catch (error) {
-    console.error("Error getting organization context:", error);
+    console.error("Error getting organisation context:", error);
     return { 
       success: false, 
-      error: "Failed to get organization context" 
+      error: "Failed to get organisation context" 
     };
   }
 }
 
 /**
- * Get all organizations the user has access to
+ * Get all organisations the user has access to
  */
-export async function getAvailableOrganizations(): Promise<ActionResult> {
+export async function getAvailableOrganisations(): Promise<ActionResult> {
   try {
     const session = await auth.api.getSession({ 
       headers: await import("next/headers").then(m => m.headers()) 
@@ -77,26 +77,26 @@ export async function getAvailableOrganizations(): Promise<ActionResult> {
       return { success: false, error: "Unauthorized" };
     }
 
-    const organizations = await getUserOrganizations(session.user.id);
+    const organisations = await getUserOrganisations(session.user.id);
     
     return { 
       success: true, 
-      data: organizations 
+      data: organisations 
     };
   } catch (error) {
-    console.error("Error getting organizations:", error);
+    console.error("Error getting organisations:", error);
     return { 
       success: false, 
-      error: "Failed to get organizations" 
+      error: "Failed to get organisations" 
     };
   }
 }
 
 /**
- * Switch to a different organization
+ * Switch to a different organisation
  */
-export async function switchOrganization(
-  organizationId: string
+export async function switchOrganisation(
+  organisationId: string
 ): Promise<ActionResult> {
   try {
     const session = await auth.api.getSession({ 
@@ -107,7 +107,7 @@ export async function switchOrganization(
       return { success: false, error: "Unauthorized" };
     }
 
-    await switchUserOrganization(session.user.id, organizationId);
+    await switchUserOrganisation(session.user.id, organisationId);
     
     // Revalidate all dashboard pages
     revalidatePath("/dashboard");
@@ -115,20 +115,20 @@ export async function switchOrganization(
     
     return { 
       success: true, 
-      data: { organizationId } 
+      data: { organisationId } 
     };
   } catch (error) {
-    console.error("Error switching organization:", error);
+    console.error("Error switching organisation:", error);
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : "Failed to switch organization" 
+      error: error instanceof Error ? error.message : "Failed to switch organisation" 
     };
   }
 }
 
 /**
  * Get upcoming hearings for dashboard
- * Super admins see hearings from all organizations
+ * Super admins see hearings from all organisations
  */
 export async function getUpcomingHearings(limit: number = 5): Promise<ActionResult> {
   try {
@@ -141,8 +141,8 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     const { db } = await import("@/lib/drizzle/connection");
@@ -150,7 +150,7 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
     const { withOrgFilter } = await import("@/lib/utils/query-helpers");
     const { gte, asc, eq } = await import("drizzle-orm");
 
-    const conditions = withOrgFilter(context.organizationId, hearings, [
+    const conditions = withOrgFilter(context.organisationId, hearings, [
       gte(hearings.date, new Date())
     ]);
 
@@ -161,7 +161,7 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
         caseTitle: cases.title,
         date: hearings.date,
         location: hearings.location,
-        organizationId: hearings.organizationId,
+        organisationId: hearings.organisationId,
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
@@ -178,7 +178,7 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
 
 /**
  * Get recent cases for dashboard
- * Super admins see cases from all organizations
+ * Super admins see cases from all organisations
  */
 export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
   try {
@@ -191,8 +191,8 @@ export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "Organization context not found" };
+    if (!context?.organisationId) {
+      return { success: false, error: "Organisation context not found" };
     }
 
     const { db } = await import("@/lib/drizzle/connection");
@@ -200,7 +200,7 @@ export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
     const { withOrgFilter } = await import("@/lib/utils/query-helpers");
     const { desc } = await import("drizzle-orm");
 
-    const conditions = withOrgFilter(context.organizationId, cases);
+    const conditions = withOrgFilter(context.organisationId, cases);
 
     const results = await db
       .select({
@@ -209,7 +209,7 @@ export async function getRecentCases(limit: number = 5): Promise<ActionResult> {
         type: cases.type,
         status: cases.status,
         createdAt: cases.createdAt,
-        organizationId: cases.organizationId,
+        organisationId: cases.organisationId,
       })
       .from(cases)
       .where(conditions)

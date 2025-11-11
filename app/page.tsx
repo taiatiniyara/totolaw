@@ -139,9 +139,9 @@ export default function Home() {
           <Card>
             <CardHeader>
               <Building2 className="h-10 w-10 text-primary mb-4" />
-              <CardTitle>Multi-Organization</CardTitle>
+              <CardTitle>Multi-Organisation</CardTitle>
               <CardDescription>
-                Separate organizations for each court system with complete data isolation and security
+                Separate organisations for each court system with complete data isolation and security
               </CardDescription>
             </CardHeader>
           </Card>
@@ -161,7 +161,7 @@ export default function Home() {
               <Search className="h-10 w-10 text-primary mb-4" />
               <CardTitle>Global Search</CardTitle>
               <CardDescription>
-                Fast, powerful search across cases, hearings, evidence, and documents organization-wide
+                Fast, powerful search across cases, hearings, evidence, and documents organisation-wide
               </CardDescription>
             </CardHeader>
           </Card>
@@ -229,7 +229,7 @@ export default function Home() {
                 <div>
                   <Heading as="h3" className="mb-1">Scalable & Reliable</Heading>
                   <p className="text-muted-foreground">
-                    Built on modern technology stack that grows with your organization
+                    Built on modern technology stack that grows with your organisation
                   </p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ export default function Home() {
                 <div>
                   <Heading as="h3" className="mb-1">Secure by Default</Heading>
                   <p className="text-muted-foreground">
-                    Enterprise-grade security with complete data isolation between organizations
+                    Enterprise-grade security with complete data isolation between organisations
                   </p>
                 </div>
               </div>
@@ -258,7 +258,7 @@ export default function Home() {
 
           <Card className="p-8">
             <CardHeader>
-              <CardTitle className="text-2xl">Supported Organizations</CardTitle>
+              <CardTitle className="text-2xl">Supported Organisations</CardTitle>
               <CardDescription>
                 Currently supporting multiple Pacific Island court systems
               </CardDescription>
@@ -387,7 +387,7 @@ export default function Home() {
                 <li><a href="#features" className="hover:text-primary transition-colors">Features</a></li>
                 <li><a href="#benefits" className="hover:text-primary transition-colors">Benefits</a></li>
                 <li><a href="#about" className="hover:text-primary transition-colors">About</a></li>
-                <li><a href="/organizations" className="hover:text-primary transition-colors">Organizations</a></li>
+                <li><a href="/organisations" className="hover:text-primary transition-colors">Organisations</a></li>
               </ul>
             </div>
             

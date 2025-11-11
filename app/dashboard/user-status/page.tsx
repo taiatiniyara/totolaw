@@ -137,7 +137,7 @@ export default async function UserStatusPage() {
               <CheckCircle className="h-5 w-5 text-green-600" />
             </div>
             <div className="flex items-center justify-between p-3 border rounded-lg">
-              <span>Organization Management</span>
+              <span>Organisation Management</span>
               <CheckCircle className="h-5 w-5 text-green-600" />
             </div>
             <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -149,7 +149,7 @@ export default async function UserStatusPage() {
               )}
             </div>
             <div className="flex items-center justify-between p-3 border rounded-lg">
-              <span>System-Wide Access (All Organizations)</span>
+              <span>System-Wide Access (All Organisations)</span>
               {userRecord?.isSuperAdmin ? (
                 <CheckCircle className="h-5 w-5 text-green-600" />
               ) : (

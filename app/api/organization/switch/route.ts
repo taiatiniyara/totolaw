@@ -1,13 +1,13 @@
 /**
- * Organization Switch API Route
+ * Organisation Switch API Route
  * 
- * POST /api/organization/switch
- * Switches the user's active organization context
+ * POST /api/organisation/switch
+ * Switches the user's active organisation context
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { switchUserOrganization } from "@/lib/services/tenant.service";
+import { switchUserOrganisation } from "@/lib/services/tenant.service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,31 +25,31 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { organizationId } = body;
+    const { organisationId } = body;
 
-    if (!organizationId) {
+    if (!organisationId) {
       return NextResponse.json(
-        { error: "Organization ID is required" },
+        { error: "Organisation ID is required" },
         { status: 400 }
       );
     }
 
-    // Switch organization
-    await switchUserOrganization(session.user.id, organizationId);
+    // Switch organisation
+    await switchUserOrganisation(session.user.id, organisationId);
 
     return NextResponse.json({
       success: true,
-      data: { organizationId }
+      data: { organisationId }
     });
 
   } catch (error) {
-    console.error("Organization switch error:", error);
+    console.error("Organisation switch error:", error);
     
     return NextResponse.json(
       { 
         error: error instanceof Error 
           ? error.message 
-          : "Failed to switch organization" 
+          : "Failed to switch organisation" 
       },
       { status: 500 }
     );

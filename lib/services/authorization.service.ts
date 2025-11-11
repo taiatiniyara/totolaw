@@ -15,18 +15,18 @@ import { eq, and, inArray, or, sql } from "drizzle-orm";
 
 export interface UserPermissions {
   userId: string;
-  organizationId: string;
+  organisationId: string;
   roles: string[];
   permissions: string[];
   isSuperAdmin: boolean;
 }
 
 /**
- * Get all permissions for a user in a specific organization
+ * Get all permissions for a user in a specific organisation
  */
 export async function getUserPermissions(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   isSuperAdmin: boolean = false
 ): Promise<UserPermissions> {
   // Super admins have all permissions
@@ -34,14 +34,14 @@ export async function getUserPermissions(
     const allPermissions = await db.select().from(permissions);
     return {
       userId,
-      organizationId,
+      organisationId,
       roles: ["super-admin"],
       permissions: allPermissions.map(p => p.slug),
       isSuperAdmin: true,
     };
   }
 
-  // Get user's active roles in this organization
+  // Get user's active roles in this organisation
   const userRoleRecords = await db
     .select({
       role: roles,
@@ -52,7 +52,7 @@ export async function getUserPermissions(
     .where(
       and(
         eq(userRoles.userId, userId),
-        eq(userRoles.organizationId, organizationId),
+        eq(userRoles.organisationId, organisationId),
         eq(userRoles.isActive, true),
         or(
           sql`${userRoles.expiresAt} IS NULL`,
@@ -88,7 +88,7 @@ export async function getUserPermissions(
     .where(
       and(
         eq(userPermissions.userId, userId),
-        eq(userPermissions.organizationId, organizationId),
+        eq(userPermissions.organisationId, organisationId),
         or(
           sql`${userPermissions.expiresAt} IS NULL`,
           sql`${userPermissions.expiresAt} > NOW()`
@@ -116,7 +116,7 @@ export async function getUserPermissions(
 
   return {
     userId,
-    organizationId,
+    organisationId,
     roles: roleNames,
     permissions: Array.from(allPermissions),
     isSuperAdmin: false,
@@ -128,7 +128,7 @@ export async function getUserPermissions(
  */
 export async function hasPermission(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   permissionSlug: string,
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -136,7 +136,7 @@ export async function hasPermission(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return userPerms.permissions.includes(permissionSlug);
 }
 
@@ -145,7 +145,7 @@ export async function hasPermission(
  */
 export async function hasAnyPermission(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   permissionSlugs: string[],
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -153,7 +153,7 @@ export async function hasAnyPermission(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return permissionSlugs.some(slug => userPerms.permissions.includes(slug));
 }
 
@@ -162,7 +162,7 @@ export async function hasAnyPermission(
  */
 export async function hasAllPermissions(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   permissionSlugs: string[],
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -170,7 +170,7 @@ export async function hasAllPermissions(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return permissionSlugs.every(slug => userPerms.permissions.includes(slug));
 }
 
@@ -179,7 +179,7 @@ export async function hasAllPermissions(
  */
 export async function hasRole(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   roleSlug: string,
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -187,7 +187,7 @@ export async function hasRole(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return userPerms.roles.includes(roleSlug);
 }
 
@@ -196,7 +196,7 @@ export async function hasRole(
  */
 export async function hasAnyRole(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   roleSlugs: string[],
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -204,7 +204,7 @@ export async function hasAnyRole(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return roleSlugs.some(slug => userPerms.roles.includes(slug));
 }
 
@@ -213,7 +213,7 @@ export async function hasAnyRole(
  */
 export async function hasAllRoles(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   roleSlugs: string[],
   isSuperAdmin: boolean = false
 ): Promise<boolean> {
@@ -221,14 +221,14 @@ export async function hasAllRoles(
     return true;
   }
 
-  const userPerms = await getUserPermissions(userId, organizationId, isSuperAdmin);
+  const userPerms = await getUserPermissions(userId, organisationId, isSuperAdmin);
   return roleSlugs.every(slug => userPerms.roles.includes(slug));
 }
 
 /**
- * Get all roles for a user in a specific organization
+ * Get all roles for a user in a specific organisation
  */
-export async function getUserRoles(userId: string, organizationId: string) {
+export async function getUserRoles(userId: string, organisationId: string) {
   return await db
     .select({
       role: roles,
@@ -239,7 +239,7 @@ export async function getUserRoles(userId: string, organizationId: string) {
     .where(
       and(
         eq(userRoles.userId, userId),
-        eq(userRoles.organizationId, organizationId),
+        eq(userRoles.organisationId, organisationId),
         eq(userRoles.isActive, true)
       )
     );
@@ -251,15 +251,15 @@ export async function getUserRoles(userId: string, organizationId: string) {
 export async function assignRole(
   userId: string,
   roleId: string,
-  organizationId: string,
+  organisationId: string,
   assignedBy: string,
   scope?: string,
   expiresAt?: Date
 ) {
   const roleRecord = await db.select().from(roles).where(eq(roles.id, roleId)).limit(1).then(results => results[0]);
 
-  if (!roleRecord || roleRecord.organizationId !== organizationId) {
-    throw new Error("Role not found or does not belong to this organization");
+  if (!roleRecord || roleRecord.organisationId !== organisationId) {
+    throw new Error("Role not found or does not belong to this organisation");
   }
 
   const { generateUUID } = await import("./uuid.service");
@@ -269,7 +269,7 @@ export async function assignRole(
     id,
     userId,
     roleId,
-    organizationId,
+    organisationId,
     assignedBy,
     scope,
     expiresAt,
@@ -303,7 +303,7 @@ export async function revokeRole(
 export async function grantPermission(
   userId: string,
   permissionId: string,
-  organizationId: string,
+  organisationId: string,
   assignedBy: string,
   conditions?: string,
   scope?: string,
@@ -316,7 +316,7 @@ export async function grantPermission(
     id,
     userId,
     permissionId,
-    organizationId,
+    organisationId,
     granted: true,
     conditions,
     scope,
@@ -333,7 +333,7 @@ export async function grantPermission(
 export async function denyPermission(
   userId: string,
   permissionId: string,
-  organizationId: string,
+  organisationId: string,
   assignedBy: string,
   expiresAt?: Date
 ): Promise<string> {
@@ -344,7 +344,7 @@ export async function denyPermission(
     id,
     userId,
     permissionId,
-    organizationId,
+    organisationId,
     granted: false,
     assignedBy,
     expiresAt,

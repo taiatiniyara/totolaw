@@ -1,12 +1,12 @@
 /**
  * Roles & Permissions Page
  * 
- * Super admin page to view all roles and permissions across organizations
+ * Super admin page to view all roles and permissions across organisations
  */
 
 import { redirect } from "next/navigation";
 import { requireSuperAdmin } from "@/lib/middleware/super-admin.middleware";
-import { getRolesAndPermissions, getAllOrganizations } from "../actions";
+import { getRolesAndPermissions, getAllOrganisations } from "../actions";
 import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export default async function RolesAndPermissionsPage() {
 
   const [rolesResult, orgsResult] = await Promise.all([
     getRolesAndPermissions(),
-    getAllOrganizations(),
+    getAllOrganisations(),
   ]);
 
   if (!rolesResult.success || !orgsResult.success) {
@@ -37,10 +37,10 @@ export default async function RolesAndPermissionsPage() {
   }
 
   const { roles, rolesByOrg, permissions, permissionsByResource } = rolesResult;
-  const { organizations } = orgsResult;
+  const { organisations } = orgsResult;
 
   // Create org lookup map
-  const orgMap = new Map(organizations.map((org) => [org.id, org]));
+  const orgMap = new Map(organisations.map((org) => [org.id, org]));
 
   // Group permissions by action
   const permissionsByAction = permissions.reduce((acc, perm) => {
@@ -83,7 +83,7 @@ export default async function RolesAndPermissionsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">Organisations</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -114,12 +114,12 @@ export default async function RolesAndPermissionsPage() {
         </Card>
       </div>
 
-      {/* Roles by Organization */}
+      {/* Roles by Organisation */}
       <Card>
         <CardHeader>
-          <CardTitle>Roles by Organization</CardTitle>
+          <CardTitle>Roles by Organisation</CardTitle>
           <CardDescription>
-            View all roles configured in each organization
+            View all roles configured in each organisation
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -132,7 +132,7 @@ export default async function RolesAndPermissionsPage() {
                     <div className="flex items-center gap-3">
                       <Badge variant="outline">{orgRoles.length} roles</Badge>
                       <span className="font-semibold">
-                        {org?.name || "Unknown Organization"}
+                        {org?.name || "Unknown Organisation"}
                       </span>
                       <Badge variant="secondary" className="font-mono text-xs">
                         {org?.code || orgId}

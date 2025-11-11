@@ -84,8 +84,8 @@ export default function FAQPage() {
                     <AccordionTrigger>How much does Totolaw cost?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Totolaw pricing varies based on your organization's size and needs. Contact your system administrator
-                        or reach out to our sales team for specific pricing information for your court or organization.
+                        Totolaw pricing varies based on your organisation's size and needs. Contact your system administrator
+                        or reach out to our sales team for specific pricing information for your court or organisation.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -116,7 +116,7 @@ export default function FAQPage() {
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
                         <li>In-app documentation and guides</li>
-                        <li>Contact your system administrator for organization-specific help</li>
+                        <li>Contact your system administrator for organisation-specific help</li>
                         <li>Email support@totolaw.com for technical issues</li>
                         <li>Browse this FAQ for common questions</li>
                       </ul>
@@ -239,7 +239,7 @@ export default function FAQPage() {
                       <p>
                         All evidence is encrypted both at rest and in transit using industry-standard encryption. Access is 
                         controlled by role-based permissions, and all file access is logged for audit purposes. Only authorized
-                        users within your organization can view evidence.
+                        users within your organisation can view evidence.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -294,7 +294,7 @@ export default function FAQPage() {
                         <li><strong>Viewer:</strong> Read-only access to assigned cases</li>
                       </ul>
                       <p className="mt-2">
-                        Your role is assigned by your organization's administrator based on your responsibilities.
+                        Your role is assigned by your organisation's administrator based on your responsibilities.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -313,8 +313,8 @@ export default function FAQPage() {
                     <AccordionTrigger>What does "multi-tenant" mean?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Multi-tenant means each court or organization has its own isolated space within Totolaw. Your data is
-                        completely separate from other organizations. You can only see cases and information from your own organization.
+                        Multi-tenant means each court or organisation has its own isolated space within Totolaw. Your data is
+                        completely separate from other organisations. You can only see cases and information from your own organisation.
                       </p>
                     </AccordionContent>
                   </AccordionItem>

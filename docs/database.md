@@ -13,7 +13,7 @@ Totolaw uses **PostgreSQL** as its relational database, accessed through **Drizz
 - **Migration Tool**: Drizzle Kit
 - **Connection Pooling**: Enabled by default
 
-## Schema Organization
+## Schema Organisation
 
 Schemas are organized by domain:
 

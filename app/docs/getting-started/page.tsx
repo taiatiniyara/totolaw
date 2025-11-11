@@ -164,9 +164,9 @@ export default function GettingStartedPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Organizations</h4>
+                    <h4 className="font-semibold mb-1">Organisations</h4>
                     <p className="text-sm text-muted-foreground">
-                      Totolaw is multi-tenant. Each court or legal organization has its own space with isolated data.
+                      Totolaw is multi-tenant. Each court or legal organisation has its own space with isolated data.
                     </p>
                   </div>
 

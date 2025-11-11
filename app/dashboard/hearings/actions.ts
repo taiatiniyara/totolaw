@@ -34,7 +34,7 @@ interface HearingWithCase {
 }
 
 /**
- * Get all hearings for the organization
+ * Get all hearings for the organisation
  */
 export async function getHearings(options?: {
   limit?: number;
@@ -48,14 +48,14 @@ export async function getHearings(options?: {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "hearings:read",
       context.isSuperAdmin
     );
@@ -87,7 +87,7 @@ export async function getHearings(options?: {
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
-      .where(withOrgFilter(context.organizationId, hearings, conditions.length > 0 ? conditions : undefined))
+      .where(withOrgFilter(context.organisationId, hearings, conditions.length > 0 ? conditions : undefined))
       .orderBy(desc(hearings.date))
       .limit(options?.limit || 1000);
 
@@ -111,14 +111,14 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "hearings:read",
       context.isSuperAdmin
     );
@@ -141,7 +141,7 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
       .where(
-        withOrgFilter(context.organizationId, hearings, [
+        withOrgFilter(context.organisationId, hearings, [
           eq(hearings.id, hearingId)
         ])
       )
@@ -175,14 +175,14 @@ export async function createHearing(data: {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canCreate = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "hearings:create",
       context.isSuperAdmin
     );
@@ -191,12 +191,12 @@ export async function createHearing(data: {
       return { success: false, error: "Permission denied" };
     }
 
-    // Verify case belongs to organization
+    // Verify case belongs to organisation
     const [caseItem] = await db
       .select()
       .from(cases)
       .where(
-        withOrgFilter(context.organizationId, cases, [
+        withOrgFilter(context.organisationId, cases, [
           eq(cases.id, data.caseId)
         ])
       )
@@ -213,7 +213,7 @@ export async function createHearing(data: {
     await db
       .insert(hearings)
       .values(
-        withOrgId(context.organizationId, {
+        withOrgId(context.organisationId, {
           id: hearingId,
           caseId: data.caseId,
           date: data.date,
@@ -252,14 +252,14 @@ export async function updateHearing(
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canUpdate = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "hearings:update",
       context.isSuperAdmin
     );
@@ -268,12 +268,12 @@ export async function updateHearing(
       return { success: false, error: "Permission denied" };
     }
 
-    // Verify hearing exists and belongs to organization
+    // Verify hearing exists and belongs to organisation
     const [hearing] = await db
       .select()
       .from(hearings)
       .where(
-        withOrgFilter(context.organizationId, hearings, [
+        withOrgFilter(context.organisationId, hearings, [
           eq(hearings.id, hearingId),
         ])
       )
@@ -310,14 +310,14 @@ export async function deleteHearing(hearingId: string): Promise<ActionResult> {
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canDelete = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "hearings:delete",
       context.isSuperAdmin
     );
@@ -326,12 +326,12 @@ export async function deleteHearing(hearingId: string): Promise<ActionResult> {
       return { success: false, error: "Permission denied" };
     }
 
-    // Verify hearing exists and belongs to organization
+    // Verify hearing exists and belongs to organisation
     const [hearing] = await db
       .select()
       .from(hearings)
       .where(
-        withOrgFilter(context.organizationId, hearings, [
+        withOrgFilter(context.organisationId, hearings, [
           eq(hearings.id, hearingId),
         ])
       )

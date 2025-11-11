@@ -2,17 +2,17 @@
 
 **Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
 
-This document describes the multi-tenant organization and role-based access control (RBAC) architecture that enables the Totolaw platform to scale across multiple Pacific Islands.
+This document describes the multi-tenant organisation and role-based access control (RBAC) architecture that enables the Totolaw platform to scale across multiple Pacific Islands.
 
 ## Overview
 
-The platform now supports multi-tenancy with organization-based isolation and comprehensive role-based access control. This architecture allows:
+The platform now supports multi-tenancy with organisation-based isolation and comprehensive role-based access control. This architecture allows:
 
-- **Multiple Organizations**: Support for Fiji, Samoa, Tonga, Vanuatu, and other Pacific Island nations
-- **Organizational Hierarchies**: Countries → Provinces → Districts → Courts
+- **Multiple Organisations**: Support for Fiji, Samoa, Tonga, Vanuatu, and other Pacific Island nations
+- **Organisational Hierarchies**: Countries → Provinces → Districts → Courts
 - **Role-Based Access**: Judges, Clerks, Prosecutors, Defenders, Administrators, etc.
 - **Permission Granularity**: Fine-grained control over what users can do
-- **Data Isolation**: Complete separation of data between organizations
+- **Data Isolation**: Complete separation of data between organisations
 - **Audit Trail**: Full tracking of permission and role changes
 
 ## Architecture Diagram
@@ -21,19 +21,19 @@ The platform now supports multi-tenancy with organization-based isolation and co
 ┌─────────────────────────────────────────────────────────────┐
 │                         User                                │
 │  - isSuperAdmin: Platform-level access                     │
-│  - currentOrganizationId: Active context                   │
+│  - currentOrganisationId: Active context                   │
 └────────────────────┬────────────────────────────────────────┘
                      │
         ┌────────────┴────────────┐
         │                         │
 ┌───────▼──────────┐    ┌────────▼─────────┐
-│  Organizations   │    │  Organization     │
+│  Organisations   │    │  Organisation     │
 │  - Countries     │◄───┤  Members          │
 │  - Provinces     │    │  - isPrimary      │
 │  - Districts     │    │  - isActive       │
 └───────┬──────────┘    └──────────────────┘
         │
-        │ organizationId (tenant isolation)
+        │ organisationId (tenant isolation)
         │
         ├──────────────┬──────────────┬──────────────┐
         │              │              │              │
@@ -54,11 +54,11 @@ The platform now supports multi-tenancy with organization-based isolation and co
 
 ## Database Schema
 
-### 1. Organizations
+### 1. Organisations
 
-Organizations represent countries, regions, or court systems in the Pacific Islands.
+Organisations represent countries, regions, or court systems in the Pacific Islands.
 
-**Table: `organizations`**
+**Table: `organisations`**
 
 ```typescript
 {
@@ -87,18 +87,18 @@ Fiji (FJ)
   └── Northern Division (FJ-N)
 ```
 
-### 2. Organization Memberships
+### 2. Organisation Memberships
 
-Tracks which users belong to which organizations.
+Tracks which users belong to which organisations.
 
-**Table: `organization_members`**
+**Table: `organisation_members`**
 
 ```typescript
 {
   id: string (PK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   userId: string (FK)
-  isPrimary: boolean          // User's default organization
+  isPrimary: boolean          // User's default organisation
   isActive: boolean
   joinedAt: timestamp
   leftAt: timestamp
@@ -107,21 +107,21 @@ Tracks which users belong to which organizations.
 ```
 
 **Features:**
-- Users can belong to multiple organizations
-- One organization marked as primary
+- Users can belong to multiple organisations
+- One organisation marked as primary
 - Support for deactivation without deletion
 - Audit trail of who added the user
 
-### 3. Organization Invitations
+### 3. Organisation Invitations
 
-Manage invitations to join organizations.
+Manage invitations to join organisations.
 
-**Table: `organization_invitations`**
+**Table: `organisation_invitations`**
 
 ```typescript
 {
   id: string (PK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   email: string
   roleId: string (FK)         // Optional: pre-assign role
   token: string (unique)
@@ -138,14 +138,14 @@ Manage invitations to join organizations.
 
 ### 1. Roles
 
-Roles are organization-specific and define a set of permissions.
+Roles are organisation-specific and define a set of permissions.
 
 **Table: `roles`**
 
 ```typescript
 {
   id: string (PK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   name: string                // "Judge", "Senior Clerk"
   slug: string                // "judge", "senior-clerk"
   description: string
@@ -231,7 +231,7 @@ Links roles to their permissions.
 
 ### 4. User Role Assignments
 
-Assigns roles to users within organizations.
+Assigns roles to users within organisations.
 
 **Table: `user_roles`**
 
@@ -240,7 +240,7 @@ Assigns roles to users within organizations.
   id: string (PK)
   userId: string (FK)
   roleId: string (FK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   scope: string (JSON)        // Scoped access (e.g., specific divisions)
   isActive: boolean
   assignedBy: string (FK)
@@ -252,7 +252,7 @@ Assigns roles to users within organizations.
 ```
 
 **Features:**
-- Users can have multiple roles per organization
+- Users can have multiple roles per organisation
 - Roles can be scoped (e.g., Judge only for Criminal Division)
 - Support for temporary role assignments
 - Full audit trail
@@ -268,7 +268,7 @@ Override role permissions for specific users.
   id: string (PK)
   userId: string (FK)
   permissionId: string (FK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   granted: boolean            // true = grant, false = explicit deny
   conditions: string (JSON)
   scope: string (JSON)
@@ -293,7 +293,7 @@ Track all role and permission changes.
 ```typescript
 {
   id: string (PK)
-  organizationId: string (FK)
+  organisationId: string (FK)
   entityType: string          // "role", "permission", "user_role"
   entityId: string
   action: string              // "created", "updated", "assigned", "revoked"
@@ -311,13 +311,13 @@ Track all role and permission changes.
 
 ### Tenant Isolation Strategy
 
-Every data table includes an `organizationId` foreign key to ensure complete data separation:
+Every data table includes an `organisationId` foreign key to ensure complete data separation:
 
 ```typescript
 // Example: Cases table with tenant isolation
 {
   id: string (PK)
-  organizationId: string (FK)  // 👈 Tenant isolation
+  organisationId: string (FK)  // 👈 Tenant isolation
   title: string
   status: string
   // ... other fields
@@ -327,13 +327,13 @@ Every data table includes an `organizationId` foreign key to ensure complete dat
 **Enforced at Multiple Levels:**
 
 1. **Database Level**: Foreign key constraints
-2. **Query Level**: All queries include organization filter
+2. **Query Level**: All queries include organisation filter
 3. **Service Level**: Tenant context validation
-4. **API Level**: Middleware validates organization access
+4. **API Level**: Middleware validates organisation access
 
 ### Updated Tables with Tenant Isolation
 
-All application tables now include `organizationId`:
+All application tables now include `organisationId`:
 
 - ✅ `cases` - Case records
 - ✅ `evidence` - Evidence submissions
@@ -353,25 +353,25 @@ All application tables now include `organizationId`:
 
 **File: `lib/services/tenant.service.ts`**
 
-Manages organization context and user memberships.
+Manages organisation context and user memberships.
 
 **Key Functions:**
 
 ```typescript
-// Get user's current organization context
+// Get user's current organisation context
 getUserTenantContext(userId: string): Promise<TenantContext | null>
 
-// Verify user has access to organization
-verifyUserOrganizationAccess(userId: string, organizationId: string): Promise<boolean>
+// Verify user has access to organisation
+verifyUserOrganisationAccess(userId: string, organisationId: string): Promise<boolean>
 
-// Get all organizations user belongs to
-getUserOrganizations(userId: string): Promise<Organization[]>
+// Get all organisations user belongs to
+getUserOrganisations(userId: string): Promise<Organisation[]>
 
-// Switch user's active organization
-switchUserOrganization(userId: string, organizationId: string): Promise<boolean>
+// Switch user's active organisation
+switchUserOrganisation(userId: string, organisationId: string): Promise<boolean>
 
-// Check if organization is active
-isOrganizationActive(organizationId: string): Promise<boolean>
+// Check if organisation is active
+isOrganisationActive(organisationId: string): Promise<boolean>
 ```
 
 **Example Usage:**
@@ -379,15 +379,15 @@ isOrganizationActive(organizationId: string): Promise<boolean>
 ```typescript
 import { getUserTenantContext } from '@/lib/services/tenant.service';
 
-// Get user's organization context
+// Get user's organisation context
 const context = await getUserTenantContext(userId);
 if (!context) {
-  throw new Error("User has no organization access");
+  throw new Error("User has no organisation access");
 }
 
 // Use context for queries
 const cases = await db.query.cases.findMany({
-  where: eq(cases.organizationId, context.organizationId)
+  where: eq(cases.organisationId, context.organisationId)
 });
 ```
 
@@ -401,38 +401,38 @@ Handles permission checking and role management.
 
 ```typescript
 // Get all permissions for user
-getUserPermissions(userId: string, organizationId: string): Promise<UserPermissions>
+getUserPermissions(userId: string, organisationId: string): Promise<UserPermissions>
 
 // Check specific permission
-hasPermission(userId: string, organizationId: string, permissionSlug: string): Promise<boolean>
+hasPermission(userId: string, organisationId: string, permissionSlug: string): Promise<boolean>
 
 // Check any of multiple permissions
-hasAnyPermission(userId: string, organizationId: string, permissionSlugs: string[]): Promise<boolean>
+hasAnyPermission(userId: string, organisationId: string, permissionSlugs: string[]): Promise<boolean>
 
 // Check all permissions
-hasAllPermissions(userId: string, organizationId: string, permissionSlugs: string[]): Promise<boolean>
+hasAllPermissions(userId: string, organisationId: string, permissionSlugs: string[]): Promise<boolean>
 
 // Check role membership
-hasRole(userId: string, organizationId: string, roleSlug: string): Promise<boolean>
+hasRole(userId: string, organisationId: string, roleSlug: string): Promise<boolean>
 
 // Assign role to user
-assignRole(userId: string, roleId: string, organizationId: string, assignedBy: string): Promise<string>
+assignRole(userId: string, roleId: string, organisationId: string, assignedBy: string): Promise<string>
 
 // Revoke role from user
 revokeRole(userRoleId: string, revokedBy: string): Promise<void>
 
 // Grant direct permission
-grantPermission(userId: string, permissionId: string, organizationId: string, assignedBy: string): Promise<string>
+grantPermission(userId: string, permissionId: string, organisationId: string, assignedBy: string): Promise<string>
 
 // Deny permission (explicit deny)
-denyPermission(userId: string, permissionId: string, organizationId: string, assignedBy: string): Promise<string>
+denyPermission(userId: string, permissionId: string, organisationId: string, assignedBy: string): Promise<string>
 ```
 
 **Permission Resolution Logic:**
 
 ```
 1. Check if user is super admin → Grant all permissions
-2. Get user's active roles in organization
+2. Get user's active roles in organisation
 3. Get permissions from those roles
 4. Get direct user permissions (grants)
 5. Get direct user permission denies
@@ -445,13 +445,13 @@ denyPermission(userId: string, permissionId: string, organizationId: string, ass
 import { hasPermission, hasRole } from '@/lib/services/authorization.service';
 
 // Check if user can create cases
-const canCreate = await hasPermission(userId, organizationId, 'cases:create');
+const canCreate = await hasPermission(userId, organisationId, 'cases:create');
 if (!canCreate) {
   return { error: "Unauthorized" };
 }
 
 // Check if user is a judge
-const isJudge = await hasRole(userId, organizationId, 'judge');
+const isJudge = await hasRole(userId, organisationId, 'judge');
 if (isJudge) {
   // Allow verdict submission
 }
@@ -459,16 +459,16 @@ if (isJudge) {
 
 ## Implementation Guide
 
-### 1. Setup Organizations
+### 1. Setup Organisations
 
 ```typescript
 import { db } from '@/lib/drizzle/connection';
-import { organizations } from '@/lib/drizzle/schema/organization-schema';
+import { organisations } from '@/lib/drizzle/schema/organisation-schema';
 import { generateUUID } from '@/lib/services/uuid.service';
 
-// Create Fiji organization
+// Create Fiji organisation
 const fijiId = generateUUID();
-await db.insert(organizations).values({
+await db.insert(organisations).values({
   id: fijiId,
   name: 'Fiji',
   code: 'FJ',
@@ -477,9 +477,9 @@ await db.insert(organizations).values({
   isActive: true,
 });
 
-// Create Samoa organization
+// Create Samoa organisation
 const samoaId = generateUUID();
-await db.insert(organizations).values({
+await db.insert(organisations).values({
   id: samoaId,
   name: 'Samoa',
   code: 'WS',
@@ -498,7 +498,7 @@ import { roles } from '@/lib/drizzle/schema/rbac-schema';
 const judgeRoleId = generateUUID();
 await db.insert(roles).values({
   id: judgeRoleId,
-  organizationId: fijiId,
+  organisationId: fijiId,
   name: 'Judge',
   slug: 'judge',
   description: 'Presiding judge with full case authority',
@@ -551,15 +551,15 @@ for (const perm of casePermissions) {
 }
 ```
 
-### 5. Add Users to Organization
+### 5. Add Users to Organisation
 
 ```typescript
-import { organizationMembers } from '@/lib/drizzle/schema/organization-schema';
+import { organisationMembers } from '@/lib/drizzle/schema/organisation-schema';
 
-// Add user to Fiji organization
-await db.insert(organizationMembers).values({
+// Add user to Fiji organisation
+await db.insert(organisationMembers).values({
   id: generateUUID(),
-  organizationId: fijiId,
+  organisationId: fijiId,
   userId: someUserId,
   isPrimary: true,
   isActive: true,
@@ -599,13 +599,13 @@ export default async function CreateCasePage() {
   // Get tenant context
   const context = await getUserTenantContext(session.user.id);
   if (!context) {
-    return <div>No organization access</div>;
+    return <div>No organisation access</div>;
   }
 
   // Check permission
   const canCreate = await hasPermission(
     session.user.id,
-    context.organizationId,
+    context.organisationId,
     'cases:create',
     context.isSuperAdmin
   );
@@ -640,12 +640,12 @@ export async function createCase(data: { title: string; type: string }) {
 
   const context = await getUserTenantContext(session.user.id);
   if (!context) {
-    return { error: "No organization access" };
+    return { error: "No organisation access" };
   }
 
   const canCreate = await hasPermission(
     session.user.id,
-    context.organizationId,
+    context.organisationId,
     'cases:create',
     context.isSuperAdmin
   );
@@ -657,7 +657,7 @@ export async function createCase(data: { title: string; type: string }) {
   const caseId = generateUUID();
   await db.insert(cases).values({
     id: caseId,
-    organizationId: context.organizationId, // 👈 Tenant isolation
+    organisationId: context.organisationId, // 👈 Tenant isolation
     title: data.title,
     type: data.type,
     status: 'open',
@@ -681,35 +681,35 @@ npm run db-push
 
 Create migration script to:
 
-1. Create initial organizations
-2. Assign existing users to organizations
+1. Create initial organisations
+2. Assign existing users to organisations
 3. Create default roles
 4. Create permissions
 5. Link roles to permissions
 6. Assign roles to existing users
-7. Populate organizationId in existing data
+7. Populate organisationId in existing data
 
 ### Phase 3: Code Updates
 
-1. Update all queries to include organization context
+1. Update all queries to include organisation context
 2. Add permission checks to routes and actions
-3. Update UI to show current organization
-4. Add organization switcher component
-5. Update forms to include organization context
+3. Update UI to show current organisation
+4. Add organisation switcher component
+5. Update forms to include organisation context
 
 ## Security Considerations
 
 ### 1. Defense in Depth
 
 - **Database**: Foreign key constraints
-- **Query**: Organization filters in all queries
+- **Query**: Organisation filters in all queries
 - **Service**: Tenant validation
 - **API**: Permission middleware
 - **UI**: Component-level checks
 
 ### 2. Super Admin Access
 
-Super admins bypass organization and permission checks:
+Super admins bypass organisation and permission checks:
 
 ```typescript
 // Check in user table
@@ -748,12 +748,12 @@ rbac_audit_log {
 // ✅ Good: Get context first
 const context = await getUserTenantContext(userId);
 const cases = await db.query.cases.findMany({
-  where: eq(cases.organizationId, context.organizationId)
+  where: eq(cases.organisationId, context.organisationId)
 });
 
-// ❌ Bad: Hardcoded organization
+// ❌ Bad: Hardcoded organisation
 const cases = await db.query.cases.findMany({
-  where: eq(cases.organizationId, 'some-org-id')
+  where: eq(cases.organisationId, 'some-org-id')
 });
 ```
 
@@ -802,12 +802,12 @@ await assignRole(userId, roleId, orgId, adminId, undefined, expiresAt);
 
 1. **Row-Level Security (RLS)**: Implement PostgreSQL RLS policies
 2. **Dynamic Permissions**: Condition-based permissions (e.g., "own cases only")
-3. **Permission Inheritance**: Child organizations inherit parent permissions
+3. **Permission Inheritance**: Child organisations inherit parent permissions
 4. **Time-Based Access**: Schedule role activation/deactivation
 5. **Multi-Factor Authorization**: Require approval for sensitive actions
 6. **Permission Bundles**: Pre-defined permission sets for common scenarios
 7. **Delegation**: Users can delegate permissions temporarily
-8. **API Rate Limiting**: Per-organization and per-role rate limits
+8. **API Rate Limiting**: Per-organisation and per-role rate limits
 
 ## Support Matrix
 
@@ -826,7 +826,7 @@ await assignRole(userId, roleId, orgId, adminId, undefined, expiresAt);
 
 ### Ready for Expansion
 
-The architecture supports unlimited organizations, making it easy to onboard new Pacific Island nations or expand to other regions.
+The architecture supports unlimited organisations, making it easy to onboard new Pacific Island nations or expand to other regions.
 
 ---
 

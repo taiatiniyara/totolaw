@@ -1,36 +1,36 @@
 /**
- * Organizations Management Page
+ * Organisations Management Page
  * 
- * Super admin page to view and manage all organizations
+ * Super admin page to view and manage all organisations
  */
 
 import { redirect } from "next/navigation";
 import { requireSuperAdmin } from "@/lib/middleware/super-admin.middleware";
-import { getAllOrganizations } from "../actions";
+import { getAllOrganisations } from "../actions";
 import { Heading } from "@/components/ui/heading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Plus, CheckCircle, XCircle, ArrowLeft, Pencil } from "lucide-react";
 import Link from "next/link";
-import { OrganizationStatusToggle } from "./organization-status-toggle";
+import { OrganisationStatusToggle } from "./organisation-status-toggle";
 
-export default async function OrganizationsPage() {
+export default async function OrganisationsPage() {
   try {
     await requireSuperAdmin();
   } catch (error) {
     redirect("/dashboard/access-denied");
   }
 
-  const orgsResult = await getAllOrganizations();
+  const orgsResult = await getAllOrganisations();
   
   if (!orgsResult.success) {
-    return <div>Error loading organizations</div>;
+    return <div>Error loading organisations</div>;
   }
 
-  const { organizations } = orgsResult;
-  const activeOrgs = organizations.filter((org) => org.isActive);
-  const inactiveOrgs = organizations.filter((org) => !org.isActive);
+  const { organisations } = orgsResult;
+  const activeOrgs = organisations.filter((org) => org.isActive);
+  const inactiveOrgs = organisations.filter((org) => !org.isActive);
 
   return (
     <div className="space-y-6">
@@ -44,16 +44,16 @@ export default async function OrganizationsPage() {
         <div className="flex-1">
           <Heading as="h1" className="flex items-center gap-2">
             <Building2 className="h-8 w-8 text-blue-600" />
-            Organizations Management
+            Organisations Management
           </Heading>
           <p className="text-muted-foreground mt-1">
-            View and manage all organizations in the system
+            View and manage all organisations in the system
           </p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/system-admin/organizations/new">
+          <Link href="/dashboard/system-admin/organisations/new">
             <Plus className="mr-2 h-4 w-4" />
-            Add Organization
+            Add Organisation
           </Link>
         </Button>
       </div>
@@ -62,11 +62,11 @@ export default async function OrganizationsPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Organisations</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{organizations.length}</div>
+            <div className="text-2xl font-bold">{organisations.length}</div>
           </CardContent>
         </Card>
 
@@ -91,18 +91,18 @@ export default async function OrganizationsPage() {
         </Card>
       </div>
 
-      {/* Active Organizations */}
+      {/* Active Organisations */}
       <Card>
         <CardHeader>
-          <CardTitle>Active Organizations</CardTitle>
+          <CardTitle>Active Organisations</CardTitle>
           <CardDescription>
-            Currently operational organizations
+            Currently operational organisations
           </CardDescription>
         </CardHeader>
         <CardContent>
           {activeOrgs.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No active organizations
+              No active organisations
             </div>
           ) : (
             <div className="space-y-3">
@@ -140,13 +140,13 @@ export default async function OrganizationsPage() {
                       Active
                     </Badge>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/system-admin/organizations/${org.id}/edit`}>
+                      <Link href={`/dashboard/system-admin/organisations/${org.id}/edit`}>
                         <Pencil className="h-4 w-4 mr-2" />
                         Edit
                       </Link>
                     </Button>
-                    <OrganizationStatusToggle
-                      organizationId={org.id}
+                    <OrganisationStatusToggle
+                      organisationId={org.id}
                       currentStatus={org.isActive}
                     />
                   </div>
@@ -157,13 +157,13 @@ export default async function OrganizationsPage() {
         </CardContent>
       </Card>
 
-      {/* Inactive Organizations */}
+      {/* Inactive Organisations */}
       {inactiveOrgs.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Inactive Organizations</CardTitle>
+            <CardTitle>Inactive Organisations</CardTitle>
             <CardDescription>
-              Organizations that have been deactivated
+              Organisations that have been deactivated
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -196,13 +196,13 @@ export default async function OrganizationsPage() {
                       Inactive
                     </Badge>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/system-admin/organizations/${org.id}/edit`}>
+                      <Link href={`/dashboard/system-admin/organisations/${org.id}/edit`}>
                         <Pencil className="h-4 w-4 mr-2" />
                         Edit
                       </Link>
                     </Button>
-                    <OrganizationStatusToggle
-                      organizationId={org.id}
+                    <OrganisationStatusToggle
+                      organisationId={org.id}
                       currentStatus={org.isActive}
                     />
                   </div>

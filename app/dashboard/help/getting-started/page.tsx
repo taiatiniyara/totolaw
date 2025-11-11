@@ -206,9 +206,9 @@ export default function GettingStartedPage() {
         <CardContent>
           <div className="space-y-4">
             <div className="border-l-4 border-primary pl-4">
-              <h4 className="font-semibold mb-1">Organization</h4>
+              <h4 className="font-semibold mb-1">Organisation</h4>
               <p className="text-sm text-muted-foreground">
-                Your court system (e.g., Fiji High Court, Samoa Magistrate Court). All data is organized by organization to keep things secure and separate.
+                Your court system (e.g., Fiji High Court, Samoa Magistrate Court). All data is organized by organisation to keep things secure and separate.
               </p>
             </div>
             <div className="border-l-4 border-primary pl-4">
@@ -252,7 +252,7 @@ export default function GettingStartedPage() {
               <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl + K</kbd>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
-              <span>Switch organizations</span>
+              <span>Switch organisations</span>
               <span className="text-muted-foreground">Click dropdown at top of sidebar</span>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">

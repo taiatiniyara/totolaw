@@ -9,7 +9,7 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/drizzle/connection";
 import { user as userTable } from "@/lib/drizzle/schema/auth-schema";
-import { organizationMembers } from "@/lib/drizzle/schema/organization-schema";
+import { organisationMembers } from "@/lib/drizzle/schema/organisation-schema";
 import { userRoles, roles } from "@/lib/drizzle/schema/rbac-schema";
 import { getUserTenantContext } from "@/lib/services/tenant.service";
 import { hasPermission } from "@/lib/services/authorization.service";
@@ -29,10 +29,10 @@ interface UserWithRoles {
 }
 
 /**
- * Get all users in the current organization
- * Super admins see ALL users from ALL organizations
+ * Get all users in the current organisation
+ * Super admins see ALL users from ALL organisations
  */
-export async function getUsersForOrganization(): Promise<ActionResult<UserWithRoles[]>> {
+export async function getUsersForOrganisation(): Promise<ActionResult<UserWithRoles[]>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
     if (!session?.user) {
@@ -40,14 +40,14 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "users:read",
       context.isSuperAdmin
     );
@@ -56,9 +56,9 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
       return { success: false, error: "Permission denied" };
     }
 
-    const isSuperAdmin = context.organizationId === "*";
+    const isSuperAdmin = context.organisationId === "*";
 
-    // Get organization members (or all users for super admins)
+    // Get organisation members (or all users for super admins)
     const members = isSuperAdmin
       ? await db
           .select({
@@ -69,19 +69,19 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
           .from(userTable)
       : await db
           .select({
-            userId: organizationMembers.userId,
+            userId: organisationMembers.userId,
             email: userTable.email,
             name: userTable.name,
           })
-          .from(organizationMembers)
-          .innerJoin(userTable, eq(organizationMembers.userId, userTable.id))
-          .where(eq(organizationMembers.organizationId, context.organizationId));
+          .from(organisationMembers)
+          .innerJoin(userTable, eq(organisationMembers.userId, userTable.id))
+          .where(eq(organisationMembers.organisationId, context.organisationId));
 
     // Get roles for each user
     const usersWithRoles: UserWithRoles[] = await Promise.all(
       members.map(async (member) => {
-        // For super admins, get roles from all organizations
-        // For regular users, get roles from current organization only
+        // For super admins, get roles from all organisations
+        // For regular users, get roles from current organisation only
         const userRolesData = isSuperAdmin
           ? await db
               .select({
@@ -99,7 +99,7 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
               .where(
                 and(
                   eq(userRoles.userId, member.userId),
-                  eq(userRoles.organizationId, context.organizationId)
+                  eq(userRoles.organisationId, context.organisationId)
                 )
               );
 
@@ -121,7 +121,7 @@ export async function getUsersForOrganization(): Promise<ActionResult<UserWithRo
 
 /**
  * Get user details by ID
- * Super admins can view any user regardless of organization
+ * Super admins can view any user regardless of organisation
  */
 export async function getUserById(userId: string): Promise<ActionResult<UserWithRoles>> {
   try {
@@ -131,14 +131,14 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
     // Check permission
     const canView = await hasPermission(
       session.user.id,
-      context.organizationId,
+      context.organisationId,
       "users:read",
       context.isSuperAdmin
     );
@@ -147,7 +147,7 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
       return { success: false, error: "Permission denied" };
     }
 
-    const isSuperAdmin = context.organizationId === "*";
+    const isSuperAdmin = context.organisationId === "*";
 
     // Get user
     const [foundUser] = await db
@@ -160,21 +160,21 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
       return { success: false, error: "User not found" };
     }
 
-    // Check if user is in the organization (skip for super admins)
+    // Check if user is in the organisation (skip for super admins)
     if (!isSuperAdmin) {
       const [membership] = await db
         .select()
-        .from(organizationMembers)
+        .from(organisationMembers)
         .where(
           and(
-            eq(organizationMembers.userId, userId),
-            eq(organizationMembers.organizationId, context.organizationId)
+            eq(organisationMembers.userId, userId),
+            eq(organisationMembers.organisationId, context.organisationId)
           )
         )
         .limit(1);
 
       if (!membership) {
-        return { success: false, error: "User not in organization" };
+        return { success: false, error: "User not in organisation" };
       }
     }
 
@@ -196,7 +196,7 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
           .where(
             and(
               eq(userRoles.userId, userId),
-              eq(userRoles.organizationId, context.organizationId)
+              eq(userRoles.organisationId, context.organisationId)
             )
           );
 
@@ -216,10 +216,10 @@ export async function getUserById(userId: string): Promise<ActionResult<UserWith
 }
 
 /**
- * Get available roles for the organization
- * Super admins see roles from all organizations
+ * Get available roles for the organisation
+ * Super admins see roles from all organisations
  */
-export async function getOrganizationRoles(): Promise<ActionResult<{ id: string; name: string; slug: string }[]>> {
+export async function getOrganisationRoles(): Promise<ActionResult<{ id: string; name: string; slug: string }[]>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
     if (!session?.user) {
@@ -227,11 +227,11 @@ export async function getOrganizationRoles(): Promise<ActionResult<{ id: string;
     }
 
     const context = await getUserTenantContext(session.user.id);
-    if (!context?.organizationId) {
-      return { success: false, error: "No organization context" };
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
     }
 
-    const isSuperAdmin = context.organizationId === "*";
+    const isSuperAdmin = context.organisationId === "*";
 
     const orgRoles = isSuperAdmin
       ? await db
@@ -248,7 +248,7 @@ export async function getOrganizationRoles(): Promise<ActionResult<{ id: string;
             slug: roles.slug,
           })
           .from(roles)
-          .where(eq(roles.organizationId, context.organizationId));
+          .where(eq(roles.organisationId, context.organisationId));
 
     return { success: true, data: orgRoles };
   } catch (error) {

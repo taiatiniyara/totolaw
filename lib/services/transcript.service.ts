@@ -71,13 +71,13 @@ export class TranscriptService {
    * Create a new transcript
    */
   async createTranscript(
-    organizationId: string,
+    organisationId: string,
     createdBy: string,
     data: CreateTranscriptData
   ): Promise<Transcript> {
     const newTranscript: NewTranscript = {
       id: generateUUID(),
-      organizationId,
+      organisationId,
       caseId: data.caseId,
       hearingId: data.hearingId,
       title: data.title,
@@ -100,7 +100,7 @@ export class TranscriptService {
    */
   async getTranscript(
     transcriptId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<Transcript | null> {
     const [transcript] = await db
       .select()
@@ -108,7 +108,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcripts.id, transcriptId),
-          eq(transcripts.organizationId, organizationId)
+          eq(transcripts.organisationId, organisationId)
         )
       );
 
@@ -120,7 +120,7 @@ export class TranscriptService {
    */
   async getTranscriptsByHearing(
     hearingId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<Transcript[]> {
     return db
       .select()
@@ -128,7 +128,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcripts.hearingId, hearingId),
-          eq(transcripts.organizationId, organizationId)
+          eq(transcripts.organisationId, organisationId)
         )
       )
       .orderBy(desc(transcripts.createdAt));
@@ -139,7 +139,7 @@ export class TranscriptService {
    */
   async getTranscriptsByCase(
     caseId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<Transcript[]> {
     return db
       .select()
@@ -147,7 +147,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcripts.caseId, caseId),
-          eq(transcripts.organizationId, organizationId)
+          eq(transcripts.organisationId, organisationId)
         )
       )
       .orderBy(desc(transcripts.createdAt));
@@ -158,7 +158,7 @@ export class TranscriptService {
    */
   async updateTranscriptStatus(
     transcriptId: string,
-    organizationId: string,
+    organisationId: string,
     status: string,
     userId?: string
   ): Promise<Transcript> {
@@ -182,7 +182,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcripts.id, transcriptId),
-          eq(transcripts.organizationId, organizationId)
+          eq(transcripts.organisationId, organisationId)
         )
       )
       .returning();
@@ -195,7 +195,7 @@ export class TranscriptService {
    */
   async startTranscription(
     transcriptId: string,
-    organizationId: string,
+    organisationId: string,
     transcriptionService: string
   ): Promise<Transcript> {
     const [updated] = await db
@@ -209,7 +209,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcripts.id, transcriptId),
-          eq(transcripts.organizationId, organizationId)
+          eq(transcripts.organisationId, organisationId)
         )
       )
       .returning();
@@ -221,12 +221,12 @@ export class TranscriptService {
    * Add a speaker to a transcript
    */
   async addSpeaker(
-    organizationId: string,
+    organisationId: string,
     data: CreateSpeakerData
   ): Promise<TranscriptSpeaker> {
     const newSpeaker: NewTranscriptSpeaker = {
       id: generateUUID(),
-      organizationId,
+      organisationId,
       transcriptId: data.transcriptId,
       name: data.name,
       role: data.role,
@@ -248,7 +248,7 @@ export class TranscriptService {
    */
   async getSpeakersByTranscript(
     transcriptId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<TranscriptSpeaker[]> {
     return db
       .select()
@@ -256,7 +256,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptSpeakers.transcriptId, transcriptId),
-          eq(transcriptSpeakers.organizationId, organizationId)
+          eq(transcriptSpeakers.organisationId, organisationId)
         )
       );
   }
@@ -265,12 +265,12 @@ export class TranscriptService {
    * Add a segment to a transcript
    */
   async addSegment(
-    organizationId: string,
+    organisationId: string,
     data: CreateSegmentData
   ): Promise<TranscriptSegment> {
     const newSegment: NewTranscriptSegment = {
       id: generateUUID(),
-      organizationId,
+      organisationId,
       transcriptId: data.transcriptId,
       speakerId: data.speakerId,
       segmentNumber: data.segmentNumber,
@@ -294,12 +294,12 @@ export class TranscriptService {
    * Batch add segments (for performance optimization)
    */
   async addSegmentsBatch(
-    organizationId: string,
+    organisationId: string,
     segments: CreateSegmentData[]
   ): Promise<TranscriptSegment[]> {
     const newSegments: NewTranscriptSegment[] = segments.map((data) => ({
       id: generateUUID(),
-      organizationId,
+      organisationId,
       transcriptId: data.transcriptId,
       speakerId: data.speakerId,
       segmentNumber: data.segmentNumber,
@@ -319,7 +319,7 @@ export class TranscriptService {
    */
   async getSegmentsByTranscript(
     transcriptId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<TranscriptSegment[]> {
     return db
       .select()
@@ -327,7 +327,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptSegments.transcriptId, transcriptId),
-          eq(transcriptSegments.organizationId, organizationId)
+          eq(transcriptSegments.organisationId, organisationId)
         )
       )
       .orderBy(asc(transcriptSegments.segmentNumber));
@@ -338,7 +338,7 @@ export class TranscriptService {
    */
   async updateSegment(
     segmentId: string,
-    organizationId: string,
+    organisationId: string,
     data: UpdateSegmentData
   ): Promise<TranscriptSegment> {
     const [updated] = await db
@@ -353,7 +353,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptSegments.id, segmentId),
-          eq(transcriptSegments.organizationId, organizationId)
+          eq(transcriptSegments.organisationId, organisationId)
         )
       )
       .returning();
@@ -366,7 +366,7 @@ export class TranscriptService {
    */
   async searchSegments(
     transcriptId: string,
-    organizationId: string,
+    organisationId: string,
     searchQuery: string
   ): Promise<TranscriptSegment[]> {
     return db
@@ -375,7 +375,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptSegments.transcriptId, transcriptId),
-          eq(transcriptSegments.organizationId, organizationId),
+          eq(transcriptSegments.organisationId, organisationId),
           sql`to_tsvector('english', ${transcriptSegments.text}) @@ plainto_tsquery('english', ${searchQuery})`
         )
       )
@@ -386,12 +386,12 @@ export class TranscriptService {
    * Add an annotation
    */
   async addAnnotation(
-    organizationId: string,
+    organisationId: string,
     data: CreateAnnotationData
   ): Promise<TranscriptAnnotation> {
     const newAnnotation: NewTranscriptAnnotation = {
       id: generateUUID(),
-      organizationId,
+      organisationId,
       transcriptId: data.transcriptId,
       segmentId: data.segmentId,
       type: data.type,
@@ -415,7 +415,7 @@ export class TranscriptService {
    */
   async getAnnotationsByTranscript(
     transcriptId: string,
-    organizationId: string
+    organisationId: string
   ): Promise<TranscriptAnnotation[]> {
     return db
       .select()
@@ -423,7 +423,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptAnnotations.transcriptId, transcriptId),
-          eq(transcriptAnnotations.organizationId, organizationId)
+          eq(transcriptAnnotations.organisationId, organisationId)
         )
       )
       .orderBy(desc(transcriptAnnotations.createdAt));
@@ -434,7 +434,7 @@ export class TranscriptService {
    */
   async deleteAnnotation(
     annotationId: string,
-    organizationId: string,
+    organisationId: string,
     userId: string
   ): Promise<void> {
     await db
@@ -442,7 +442,7 @@ export class TranscriptService {
       .where(
         and(
           eq(transcriptAnnotations.id, annotationId),
-          eq(transcriptAnnotations.organizationId, organizationId),
+          eq(transcriptAnnotations.organisationId, organisationId),
           eq(transcriptAnnotations.createdBy, userId)
         )
       );
@@ -453,15 +453,15 @@ export class TranscriptService {
    */
   async getTranscriptWithDetails(
     transcriptId: string,
-    organizationId: string
+    organisationId: string
   ) {
-    const transcript = await this.getTranscript(transcriptId, organizationId);
+    const transcript = await this.getTranscript(transcriptId, organisationId);
     if (!transcript) return null;
 
     const [speakers, segments, annotations] = await Promise.all([
-      this.getSpeakersByTranscript(transcriptId, organizationId),
-      this.getSegmentsByTranscript(transcriptId, organizationId),
-      this.getAnnotationsByTranscript(transcriptId, organizationId),
+      this.getSpeakersByTranscript(transcriptId, organisationId),
+      this.getSegmentsByTranscript(transcriptId, organisationId),
+      this.getAnnotationsByTranscript(transcriptId, organisationId),
     ]);
 
     return {
@@ -475,10 +475,10 @@ export class TranscriptService {
   /**
    * Calculate transcript statistics
    */
-  async getTranscriptStats(transcriptId: string, organizationId: string) {
+  async getTranscriptStats(transcriptId: string, organisationId: string) {
     const segments = await this.getSegmentsByTranscript(
       transcriptId,
-      organizationId
+      organisationId
     );
 
     const totalWords = segments.reduce(

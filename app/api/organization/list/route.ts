@@ -1,13 +1,13 @@
 /**
- * Organization List API Route
+ * Organisation List API Route
  * 
- * GET /api/organization/list
- * Returns all organizations the user has access to
+ * GET /api/organisation/list
+ * Returns all organisations the user has access to
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getUserOrganizations, getUserTenantContext } from "@/lib/services/tenant.service";
+import { getUserOrganisations, getUserTenantContext } from "@/lib/services/tenant.service";
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,28 +23,28 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user's organizations
-    const organizations = await getUserOrganizations(session.user.id);
+    // Get user's organisations
+    const organisations = await getUserOrganisations(session.user.id);
     
-    // Get current organization
+    // Get current organisation
     const context = await getUserTenantContext(session.user.id);
 
     return NextResponse.json({
       success: true,
       data: {
-        organizations,
-        currentOrganizationId: context?.organizationId
+        organisations,
+        currentOrganisationId: context?.organisationId
       }
     });
 
   } catch (error) {
-    console.error("Error fetching organizations:", error);
+    console.error("Error fetching organisations:", error);
     
     return NextResponse.json(
       { 
         error: error instanceof Error 
           ? error.message 
-          : "Failed to fetch organizations" 
+          : "Failed to fetch organisations" 
       },
       { status: 500 }
     );

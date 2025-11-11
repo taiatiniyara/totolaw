@@ -12,10 +12,10 @@ import {
 } from "@/lib/services/system-admin.service";
 import {
   getUserTenantContext,
-  getUserOrganizations,
+  getUserOrganisations,
 } from "@/lib/services/tenant.service";
 import { db } from "@/lib/drizzle/connection";
-import { organizations } from "@/lib/drizzle/schema/organization-schema";
+import { organisations } from "@/lib/drizzle/schema/organisation-schema";
 import { roles, permissions } from "@/lib/drizzle/schema/rbac-schema";
 import { eq } from "drizzle-orm";
 
@@ -90,20 +90,20 @@ export async function getSystemOverview() {
   const adminRecord = await getSuperAdminById(admin.userId);
 
   // Get counts
-  const orgs = await db.select().from(organizations);
+  const orgs = await db.select().from(organisations);
   const allRoles = await db.select().from(roles);
   const allPermissions = await db.select().from(permissions);
   const admins = await listSuperAdmins();
 
   // Get admin's context
   const context = await getUserTenantContext(admin.userId);
-  const userOrgs = await getUserOrganizations(admin.userId);
+  const userOrgs = await getUserOrganisations(admin.userId);
 
   return {
     success: true,
     overview: {
-      totalOrganizations: orgs.length,
-      activeOrganizations: orgs.filter((o) => o.isActive).length,
+      totalOrganisations: orgs.length,
+      activeOrganisations: orgs.filter((o) => o.isActive).length,
       totalRoles: allRoles.length,
       totalPermissions: allPermissions.length,
       totalAdmins: admins.length,
@@ -112,24 +112,24 @@ export async function getSystemOverview() {
     currentAdmin: {
       email: admin.email,
       name: admin.name,
-      linkedOrganizations: userOrgs.length,
-      currentOrganization: context?.organizationId || "None",
+      linkedOrganisations: userOrgs.length,
+      currentOrganisation: context?.organisationId || "None",
     },
     adminRecord,
   };
 }
 
 // ========================================
-// Organization Management
+// Organisation Management
 // ========================================
 
-export async function getAllOrganizations() {
+export async function getAllOrganisations() {
   await requireSuperAdmin();
-  const orgs = await db.select().from(organizations);
-  return { success: true, organizations: orgs };
+  const orgs = await db.select().from(organisations);
+  return { success: true, organisations: orgs };
 }
 
-export async function createOrganization(data: {
+export async function createOrganisation(data: {
   name: string;
   code: string;
   type: string;
@@ -142,7 +142,7 @@ export async function createOrganization(data: {
   const orgId = generateUUID();
 
   try {
-    await db.insert(organizations).values({
+    await db.insert(organisations).values({
       id: orgId,
       name: data.name,
       code: data.code.toUpperCase(),
@@ -156,20 +156,20 @@ export async function createOrganization(data: {
     // Log the action
     await logSystemAdminAction(
       admin.userId,
-      "created_organization",
-      "organization",
+      "created_organisation",
+      "organisation",
       orgId,
-      `Created organization: ${data.name} (${data.code})`,
+      `Created organisation: ${data.name} (${data.code})`,
       data
     );
 
-    return { success: true, organizationId: orgId };
+    return { success: true, organisationId: orgId };
   } catch (error: any) {
     return { error: error.message };
   }
 }
 
-export async function updateOrganization(
+export async function updateOrganisation(
   orgId: string,
   data: {
     name?: string;
@@ -193,17 +193,17 @@ export async function updateOrganization(
       updateData.parentId = data.parentId || null;
 
     await db
-      .update(organizations)
+      .update(organisations)
       .set(updateData)
-      .where(eq(organizations.id, orgId));
+      .where(eq(organisations.id, orgId));
 
     // Log the action
     await logSystemAdminAction(
       admin.userId,
-      "updated_organization",
-      "organization",
+      "updated_organisation",
+      "organisation",
       orgId,
-      `Updated organization details`,
+      `Updated organisation details`,
       data
     );
 
@@ -213,7 +213,7 @@ export async function updateOrganization(
   }
 }
 
-export async function updateOrganizationStatus(
+export async function updateOrganisationStatus(
   orgId: string,
   isActive: boolean
 ) {
@@ -221,17 +221,17 @@ export async function updateOrganizationStatus(
 
   try {
     await db
-      .update(organizations)
+      .update(organisations)
       .set({ isActive, updatedAt: new Date() })
-      .where(eq(organizations.id, orgId));
+      .where(eq(organisations.id, orgId));
 
     // Log the action
     await logSystemAdminAction(
       admin.userId,
-      isActive ? "activated_organization" : "deactivated_organization",
-      "organization",
+      isActive ? "activated_organisation" : "deactivated_organisation",
+      "organisation",
       orgId,
-      `Organization ${isActive ? "activated" : "deactivated"}`,
+      `Organisation ${isActive ? "activated" : "deactivated"}`,
       { orgId, isActive }
     );
 
@@ -241,21 +241,21 @@ export async function updateOrganizationStatus(
   }
 }
 
-export async function getOrganizationById(orgId: string) {
+export async function getOrganisationById(orgId: string) {
   await requireSuperAdmin();
 
   try {
     const org = await db
       .select()
-      .from(organizations)
-      .where(eq(organizations.id, orgId))
+      .from(organisations)
+      .where(eq(organisations.id, orgId))
       .limit(1);
 
     if (!org.length) {
-      return { error: "Organization not found" };
+      return { error: "Organisation not found" };
     }
 
-    return { success: true, organization: org[0] };
+    return { success: true, organisation: org[0] };
   } catch (error: any) {
     return { error: error.message };
   }
@@ -271,9 +271,9 @@ export async function getRolesAndPermissions() {
   const allRoles = await db.select().from(roles);
   const allPermissions = await db.select().from(permissions);
 
-  // Group roles by organization
+  // Group roles by organisation
   const rolesByOrg = allRoles.reduce((acc, role) => {
-    const orgId = role.organizationId;
+    const orgId = role.organisationId;
     if (!acc[orgId]) acc[orgId] = [];
     acc[orgId].push(role);
     return acc;

@@ -26,17 +26,17 @@ Totolaw is built as a modern, server-side rendered web application using the Nex
 │  │   Client Components                      │  │
 │  │   - Interactive UI                       │  │
 │  │   - Form handling                        │  │
-│  │   - Organization switcher                │  │
+│  │   - Organisation switcher                │  │
 │  └──────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────┐  │
 │  │   API Routes                             │  │
 │  │   - /api/auth/* (Better Auth)            │  │
-│  │   - /api/organization/* (Org switching)  │  │
+│  │   - /api/organisation/* (Org switching)  │  │
 │  └──────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────┐  │
 │  │   Server Actions                         │  │
 │  │   - Case management with permissions     │  │
-│  │   - Organization switching               │  │
+│  │   - Organisation switching               │  │
 │  └──────────────────────────────────────────┘  │
 └─────────────────┬───────────────────────────────┘
                   │
@@ -64,15 +64,15 @@ Totolaw is built as a modern, server-side rendered web application using the Nex
 │  │   - Query builder                        │  │
 │  │   - Type-safe queries                    │  │
 │  │   - Schema definitions                   │  │
-│  │   - Organization-filtered queries        │  │
+│  │   - Organisation-filtered queries        │  │
 │  └──────────────────────────────────────────┘  │
 └─────────────────┬───────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────┐
 │          PostgreSQL Database                    │
-│  - Multi-tenant data (organizationId)           │
+│  - Multi-tenant data (organisationId)           │
 │  - User accounts & sessions                     │
-│  - Organizations & memberships                  │
+│  - Organisations & memberships                  │
 │  - Roles, permissions, RBAC                     │
 │  - Cases, hearings, evidence (multi-tenant)     │
 │  - Audit logs                                   │
@@ -257,7 +257,7 @@ export async function createCase(data: CreateCaseData) {
   // Check permission
   const canCreate = await hasPermission(
     session.user.id,
-    context.organizationId,
+    context.organisationId,
     "cases:create"
   );
   
@@ -265,10 +265,10 @@ export async function createCase(data: CreateCaseData) {
     return { success: false, error: "Permission denied" };
   }
   
-  // Create with organization context
+  // Create with organisation context
   const caseId = await db.insert(cases).values({
     ...data,
-    organizationId: context.organizationId
+    organisationId: context.organisationId
   });
   
   return { success: true, data: caseId };
@@ -279,7 +279,7 @@ export async function createCase(data: CreateCaseData) {
 - No API routes needed
 - Type-safe
 - Permission-checked at action level
-- Organization context enforced
+- Organisation context enforced
 - Automatic revalidation
 
 ### 3. Colocation
@@ -295,7 +295,7 @@ dashboard/
 
 **Benefits:**
 - Easy to find related code
-- Better organization
+- Better organisation
 - Easier refactoring
 
 ### 4. Service Layer
@@ -309,13 +309,13 @@ export async function getUserTenantContext(userId: string) {
     where: eq(user.id, userId),
     with: {
       memberships: {
-        with: { organization: true }
+        with: { organisation: true }
       }
     }
   });
   
   return {
-    organizationId: user.currentOrganizationId,
+    organisationId: user.currentOrganisationId,
     userId: user.id,
     isSuperAdmin: user.isSuperAdmin
   };
@@ -324,7 +324,7 @@ export async function getUserTenantContext(userId: string) {
 // lib/services/authorization.service.ts
 export async function hasPermission(
   userId: string,
-  organizationId: string,
+  organisationId: string,
   permission: string
 ) {
   // Permission resolution logic
@@ -622,7 +622,7 @@ SMTP Service
 
 ## Best Practices
 
-### Code Organization
+### Code Organisation
 
 - Use Server Components by default
 - Client Components only for interactivity

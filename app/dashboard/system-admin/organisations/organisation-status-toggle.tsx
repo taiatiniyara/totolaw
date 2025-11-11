@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Organization Status Toggle Component
+ * Organisation Status Toggle Component
  * 
- * Toggle button to activate/deactivate organizations
+ * Toggle button to activate/deactivate organisations
  */
 
 import { useState } from "react";
@@ -21,17 +21,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Loader2, Power } from "lucide-react";
-import { updateOrganizationStatus } from "../actions";
+import { updateOrganisationStatus } from "../actions";
 
-interface OrganizationStatusToggleProps {
-  organizationId: string;
+interface OrganisationStatusToggleProps {
+  organisationId: string;
   currentStatus: boolean;
 }
 
-export function OrganizationStatusToggle({
-  organizationId,
+export function OrganisationStatusToggle({
+  organisationId,
   currentStatus,
-}: OrganizationStatusToggleProps) {
+}: OrganisationStatusToggleProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export function OrganizationStatusToggle({
     setError(null);
 
     try {
-      const result = await updateOrganizationStatus(organizationId, !currentStatus);
+      const result = await updateOrganisationStatus(organisationId, !currentStatus);
 
       if (result.error) {
         setError(result.error);
@@ -51,7 +51,7 @@ export function OrganizationStatusToggle({
 
       router.refresh();
     } catch (err) {
-      setError("Failed to update organization status");
+      setError("Failed to update organisation status");
       setIsLoading(false);
     }
   };
@@ -74,21 +74,21 @@ export function OrganizationStatusToggle({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {currentStatus ? "Deactivate" : "Activate"} Organization?
+            {currentStatus ? "Deactivate" : "Activate"} Organisation?
           </AlertDialogTitle>
           <AlertDialogDescription>
             {currentStatus ? (
               <>
-                This will deactivate the organization. Users will no longer be able to
-                access this organization&apos;s data until it is reactivated.
+                This will deactivate the organisation. Users will no longer be able to
+                access this organisation&apos;s data until it is reactivated.
                 <br />
                 <br />
                 <strong>This action does not delete any data.</strong>
               </>
             ) : (
               <>
-                This will reactivate the organization. Users will be able to access
-                this organization&apos;s data again.
+                This will reactivate the organisation. Users will be able to access
+                this organisation&apos;s data again.
               </>
             )}
           </AlertDialogDescription>
