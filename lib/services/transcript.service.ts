@@ -191,7 +191,7 @@ export class TranscriptService {
   }
 
   /**
-   * Start a live transcription session
+   * Start a transcription session
    */
   async startTranscription(
     transcriptId: string,
@@ -291,7 +291,7 @@ export class TranscriptService {
   }
 
   /**
-   * Batch add segments (for live transcription performance)
+   * Batch add segments (for performance optimization)
    */
   async addSegmentsBatch(
     organizationId: string,

@@ -81,12 +81,7 @@ export default async function TranscriptPage({ params }: TranscriptPageProps) {
         <div className="flex gap-2">
           <Link href={`/dashboard/hearings/transcripts/${params.id}/manual`}>
             <Button variant="outline">
-              Manual Transcription
-            </Button>
-          </Link>
-          <Link href={`/dashboard/hearings/transcripts/${params.id}/live`}>
-            <Button variant="outline">
-              Live Transcription
+              Edit Transcription
             </Button>
           </Link>
         </div>

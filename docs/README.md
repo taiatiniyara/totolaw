@@ -14,10 +14,7 @@ Welcome to the Totolaw documentation. This comprehensive guide covers installati
 - **[Permissions Reference](./permissions-reference.md)** - Complete permissions guide
 
 ### 👑 System Administration
-- **[Super Admin Access](./super-admin-access.md)** - Omnipotent access system (⭐ Key Document)
-- **[Super Admin Quick Reference](./super-admin-quick-reference.md)** - Quick command reference
-- **[Super Admin Quickstart](./super-admin-quickstart.md)** - Getting started as super admin
-- **[System Admin Team](./system-admin-team.md)** - Managing the super admin team
+- **[System Admin Guide](./system-admin-guide.md)** - Complete super admin management guide (⭐ Key Document)
 - **[Organization Management](./organization-management.md)** - Creating and managing organizations
 
 ### 🏗️ Technical Documentation
@@ -26,8 +23,8 @@ Welcome to the Totolaw documentation. This comprehensive guide covers installati
 - **[API Documentation](./api.md)** - API routes and server actions
 
 ### 📝 Feature Documentation
-- **[Court Transcription](./court-transcription.md)** - Live transcription features
-- **[Manual Transcription](./manual-transcription.md)** - Manual transcription editor
+- **[Court Transcription](./court-transcription.md)** - Manual transcription features
+- **[Manual Transcription](./manual-transcription.md)** - Detailed manual transcription guide
 
 ### 🔧 Troubleshooting
 - **[Troubleshooting Guide](./troubleshooting.md)** - Common issues and solutions
@@ -42,9 +39,9 @@ System administrators have **omnipotent access** to the entire platform:
 - Bypass all organization-based restrictions  
 - View, create, update, and delete data across all organizations
 - Have all permissions automatically
-- Marked with \`organizationId: "*"\` for global access
+- Marked with `organizationId: "*"` for global access
 
-[Learn more →](./super-admin-access.md)
+[Learn more →](./system-admin-guide.md)
 
 ### Organizations
 Independent legal entities (courts, tribunals) with complete data isolation:
@@ -69,9 +66,9 @@ Granular access control within each organization:
 ## 🎯 Quick Start Guides
 
 ### For System Administrators
-1. **[Super Admin Quickstart](./super-admin-quickstart.md)** - 5-minute setup
+1. **[System Admin Guide](./system-admin-guide.md)** - Complete management guide
 2. **[Create Your First Organization](./organization-management.md)** - Add courts/tribunals
-3. **[Manage Super Admin Team](./system-admin-team.md)** - Add/remove admins
+3. **[Multi-Tenant RBAC](./multi-tenant-rbac.md)** - Role-based access control
 
 ### For Developers
 1. **[Getting Started](./getting-started.md)** - Development environment setup
@@ -106,7 +103,7 @@ Granular access control within each organization:
 - ✅ **Document Management** - Centralized document hub
 - ✅ **User Management** - Role-based access control
 - ✅ **Search** - Global search across cases, hearings, evidence
-- ✅ **Court Transcription** - Live and manual transcription tools
+- ✅ **Court Transcription** - Manual transcription tools for hearings
 
 ### Admin Features
 - ✅ **Organization Management** - Create/manage organizations
@@ -132,15 +129,14 @@ Granular access control within each organization:
 ## 📚 Scripts & Tools
 
 ### Admin Management (CLI)
-\`\`\`bash
+```bash
 npm run admin:list      # List all super admins
 npm run admin:add       # Add new super admin
-npm run admin:remove    # Deactivate super admin
-npm run admin:activate  # Reactivate super admin
+npm run admin:remove    # Remove super admin privileges
 npm run admin:audit     # View audit log
-\`\`\`
+```
 
-[Full scripts documentation →](../scripts/README.md)
+[Full admin guide →](./system-admin-guide.md)
 
 ---
 
@@ -148,7 +144,7 @@ npm run admin:audit     # View audit log
 
 **Common Issues:**
 - [Troubleshooting Guide](./troubleshooting.md) - Solutions to common problems
-- [Super Admin Access Issues](./super-admin-access.md#troubleshooting) - Admin-specific help
+- [System Admin Guide](./system-admin-guide.md#troubleshooting) - Admin-specific help
 
 **Resources:**
 - Main README: [/README.md](../README.md)

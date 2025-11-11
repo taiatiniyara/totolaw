@@ -107,17 +107,19 @@ Entries are stored as transcript segments with:
 - `metadata.manualEntry`: Flag indicating manual entry
 - `confidence`: Set to 1.0 (100%) for manual entries
 
-## Comparison: Manual vs Live Transcription
+## Why Manual Transcription?
 
-| Feature | Manual | Live (AI) |
-|---------|--------|-----------|
-| **Accuracy with dialects** | ✅ Excellent | ❌ Poor |
-| **Handles code-switching** | ✅ Yes | ❌ No |
-| **Local terminology** | ✅ Perfect | ❌ Struggles |
-| **Speed** | ⚠️ Depends on typist | ✅ Real-time |
-| **Cost** | ✅ No AI fees | ❌ API costs |
-| **Internet required** | ✅ No | ❌ Yes |
-| **Training needed** | ⚠️ Basic typing | ✅ None |
+Manual transcription is the chosen approach for this system because it offers:
+
+| Feature | Benefit |
+|---------|---------|
+| **Accuracy with dialects** | ✅ Excellent - understands local Fijian accents |
+| **Handles code-switching** | ✅ Yes - seamlessly handles mixed languages |
+| **Local terminology** | ✅ Perfect - captures context and legal terms |
+| **Cost** | ✅ No AI fees - no per-minute charges |
+| **Privacy** | ✅ No audio sent to external services |
+| **Internet** | ✅ Works offline with periodic sync |
+| **Training** | ✅ Basic typing skills sufficient |
 
 ## Future Enhancements
 

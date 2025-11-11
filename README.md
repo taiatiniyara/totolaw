@@ -45,7 +45,9 @@ Comprehensive documentation is available in the `/docs` folder:
 - [API Documentation](./docs/api.md) - API routes and services
 - [Deployment](./docs/deployment.md) - Production deployment guide
 - [Database Schema](./docs/database.md) - Database structure and migrations
-- [Super Admin Access](./docs/super-admin-access.md) - Omnipotent access for system administrators
+- [System Admin Guide](./docs/system-admin-guide.md) - Complete super admin management guide
+- [Multi-Tenant RBAC](./docs/multi-tenant-rbac.md) - Role-based access control
+- [Organization Management](./docs/organization-management.md) - Managing organizations
 
 ## 🛠️ Tech Stack
 
@@ -62,11 +64,11 @@ Comprehensive documentation is available in the `/docs` folder:
 
 ### Multi-Tenant & RBAC
 - 🏢 Organization-based isolation (Fiji, Samoa, Tonga, Vanuatu)
-- 🔐 Role-based access control with 8 standard roles per organization
+- 🔐 Role-based access control with granular permissions
 - 👥 Users can belong to multiple organizations
 - 🔄 Easy organization switching
 - 📝 Complete audit trail for compliance
-- 🛡️ **System admins have omnipotent access** - Full access to all organizations without membership requirements
+- 🛡️ **System admins have omnipotent access** - Full access to all organizations without membership
 
 ### Authentication & Security
 - 🔐 Passwordless magic link authentication
@@ -103,12 +105,18 @@ Key configuration files:
 ## 📦 Scripts
 
 ```bash
-npm run dev        # Start development server (port 3441)
-npm run build      # Build for production
-npm start          # Start production server (port 3440)
-npm run lint       # Run ESLint
-npm run db-push    # Push database schema changes
-npm run deploy     # Build and deploy with PM2
+npm run dev          # Start development server (port 3441)
+npm run build        # Build for production
+npm start            # Start production server (port 3440)
+npm run lint         # Run ESLint
+npm run db-push      # Push database schema changes
+npm run deploy       # Build and deploy with PM2
+
+# Admin Management
+npm run admin:list   # List all super admins
+npm run admin:add    # Add new super admin
+npm run admin:remove # Remove super admin privileges
+npm run admin:audit  # View audit log
 ```
 
 ## 🌐 Environment Variables

@@ -1,18 +1,19 @@
+````markdown
 # Court Transcript System
 
 ## Overview
 
-This system provides comprehensive live and batch court transcription capabilities for your legal case management platform.
+This system provides comprehensive manual court transcription capabilities for your legal case management platform, designed specifically for Pacific Island court systems.
 
 ## Features
 
-### 1. **Live Court Transcription**
-- Real-time speech-to-text during hearings
-- Multiple transcription service support (Deepgram, AssemblyAI, Whisper, Google)
-- Speaker identification and diarization
-- Live preview with interim results
-- Pause/resume capability
+### 1. **Manual Court Transcription**
+- Real-time manual entry during hearings
+- Perfect for handling local dialects and accents
+- Speaker identification and management
 - Auto-save to database
+- Keyboard shortcuts for efficiency
+- Session timer and tracking
 
 ### 2. **Transcript Management**
 - Create transcripts linked to hearings and cases
@@ -63,40 +64,25 @@ This system provides comprehensive live and batch court transcription capabiliti
 
 ## How Court Transcription Works
 
-### Real-Time Transcription Flow
+### Manual Transcription Flow
 
-1. **Audio Capture** → Browser captures microphone audio
-2. **Streaming** → Audio chunks sent to server via WebSocket/HTTP
-3. **Speech-to-Text** → Transcription service processes audio
-4. **Speaker ID** → Diarization identifies speakers
-5. **Database** → Segments saved automatically
-6. **Live Display** → UI updates in real-time
+1. **Hearing Starts** → Transcriber opens manual transcription editor
+2. **Speaker Selection** → Select who is speaking from dropdown
+3. **Real-Time Typing** → Type what is being said
+4. **Add Entry** → Save entry with timestamp (Ctrl+Enter)
+5. **Auto-Save** → Background saving every 5 seconds
+6. **Review & Edit** → Edit and review after completion
 
-### Transcription Services
+### Why Manual Transcription?
 
-#### Deepgram (Recommended)
-- **Best for:** Legal/court terminology
-- **Features:** High accuracy, speaker diarization, fast processing
-- **Cost:** Pay-as-you-go, ~$0.0125/min
-- **Setup:** Sign up at https://deepgram.com
-
-#### AssemblyAI
-- **Best for:** Speaker identification accuracy
-- **Features:** Good diarization, entity recognition
-- **Cost:** ~$0.00025/second
-- **Setup:** Sign up at https://www.assemblyai.com
-
-#### OpenAI Whisper
-- **Best for:** Self-hosted or API option
-- **Features:** Open-source, multiple languages
-- **Cost:** Free (self-hosted) or API pricing
-- **Setup:** Use OpenAI API or run locally
-
-#### Google Speech-to-Text
-- **Best for:** Enterprise deployments
-- **Features:** Reliable, multi-language, good accuracy
-- **Cost:** ~$0.006-0.024/15 seconds
-- **Setup:** Google Cloud console
+The system uses manual transcription instead of automated speech-to-text because:
+- **Local Dialects**: Perfect for Fijian, iTaukei, and Pacific languages
+- **Accents**: Handles diverse regional accents
+- **Code-Switching**: Supports mixing multiple languages
+- **No Cost**: No expensive AI API fees
+- **Privacy**: No audio sent to external services
+- **Accuracy**: Human transcribers understand local context
+- **Offline Capable**: Works without internet connection
 
 ## Setup Instructions
 
@@ -107,96 +93,7 @@ This system provides comprehensive live and batch court transcription capabiliti
 psql $DATABASE_URL -f migrations/004_create_transcripts.sql
 ```
 
-### 2. Install Transcription Service SDK
-
-Choose one or more services:
-
-```bash
-# Deepgram (recommended)
-npm install @deepgram/sdk
-
-# AssemblyAI
-npm install assemblyai
-
-# OpenAI (for Whisper API)
-npm install openai
-
-# Google Speech-to-Text
-npm install @google-cloud/speech
-```
-
-### 3. Set Environment Variables
-
-Add to your `.env.local`:
-
-```env
-# Choose one or more transcription services
-
-# Deepgram (recommended for legal)
-DEEPGRAM_API_KEY=your_deepgram_api_key
-
-# AssemblyAI
-ASSEMBLYAI_API_KEY=your_assemblyai_api_key
-
-# OpenAI Whisper
-OPENAI_API_KEY=your_openai_api_key
-
-# Google Speech-to-Text (requires service account JSON)
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
-
-# Or use a generic key name
-TRANSCRIPTION_API_KEY=your_api_key
-```
-
-### 4. Configure WebSocket Support
-
-For production deployments with real-time transcription:
-
-#### Option A: Custom Server (Node.js)
-Create `server.js`:
-
-```javascript
-const { createServer } = require('http');
-const { parse } = require('url');
-const next = require('next');
-const { WebSocketServer } = require('ws');
-
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
-
-app.prepare().then(() => {
-  const server = createServer((req, res) => {
-    const parsedUrl = parse(req.url, true);
-    handle(req, res, parsedUrl);
-  });
-
-  const wss = new WebSocketServer({ server, path: '/api/transcription/ws' });
-
-  wss.on('connection', (ws, req) => {
-    // Handle WebSocket connections for live transcription
-    console.log('Client connected');
-    
-    ws.on('message', (message) => {
-      // Handle audio data
-    });
-
-    ws.on('close', () => {
-      console.log('Client disconnected');
-    });
-  });
-
-  server.listen(3000, (err) => {
-    if (err) throw err;
-    console.log('> Ready on http://localhost:3000');
-  });
-});
-```
-
-#### Option B: Vercel Deployment
-Use Vercel's Edge Functions or integrate with a separate WebSocket service like Pusher or Ably.
-
-### 5. Update Hearing Pages
+### 2. Update Hearing Pages
 
 Add transcript links to hearing detail pages by updating `/app/dashboard/hearings/[id]/page.tsx`:
 
@@ -227,17 +124,18 @@ import { Button } from "@/components/ui/button";
 1. Navigate to a hearing detail page
 2. Click "Create Transcript"
 3. Enter transcript title
-4. (Optional) Add recording URL for batch processing
-5. Click "Create & Start Recording"
+4. (Optional) Add recording URL for reference
+5. Click "Create Transcript"
 
-### Live Recording
+### Manual Transcription
 
-1. Select transcription service (Deepgram recommended)
-2. Grant microphone permissions
-3. Click "Start Recording"
-4. Speak clearly - transcript appears in real-time
-5. Use Pause/Resume as needed
-6. Click "Stop & Save" when complete
+1. Start the session timer when hearing begins
+2. Select the speaker from the dropdown
+3. Type what they say in the text area
+4. Add optional notes for clarification
+5. Press Ctrl+Enter or click "Add Entry" to save
+6. Repeat for each speaker's statement
+7. Click "Complete Transcription" when done
 
 ### Editing Transcripts
 
@@ -263,9 +161,12 @@ import { Button } from "@/components/ui/button";
 
 ## API Endpoints
 
-- `POST /api/transcription/live/[transcriptId]` - Send audio data
-- `DELETE /api/transcription/live/[transcriptId]` - Stop session
-- WebSocket `/api/transcription/ws` - Real-time streaming (custom server)
+The manual transcription system uses server actions instead of API endpoints:
+- `createTranscript` - Create new transcript
+- `saveManualTranscriptEntries` - Save completed entries
+- `autoSaveManualTranscript` - Background auto-save
+- `updateSegment` - Edit existing segment
+- `addAnnotation` - Add annotation to segment
 
 ## Export Formats
 
@@ -286,11 +187,13 @@ Editable Word document with:
 
 ## Best Practices
 
-### Recording Quality
-- Use external microphone for better accuracy
-- Minimize background noise
-- Position mic near speakers
-- Test audio levels before starting
+### Transcriber Workflow
+- Pre-add all expected speakers before starting
+- Use keyboard shortcuts (Ctrl+Enter) for efficiency
+- Add notes for unclear words or context
+- Don't wait for perfection - type as you hear
+- Use notes field for language translations
+- Review and edit after hearing completion
 
 ### Speaker Management
 - Add all expected speakers before recording
@@ -299,88 +202,75 @@ Editable Word document with:
 - Update speaker assignments during review
 
 ### Editing Workflow
-1. Complete live transcription
+1. Complete manual transcription
 2. Review for obvious errors
-3. Assign segments to correct speakers
+3. Verify speaker assignments
 4. Edit text for accuracy
 5. Add annotations for key moments
 6. Mark as "reviewed" when complete
 7. Export final version
 
-### Performance Tips
-- Use Deepgram for best legal accuracy
-- Enable speaker diarization
-- Batch process long recordings overnight
+### Efficiency Tips
+- Learn keyboard shortcuts
+- Use consistent speaker naming
+- Add clarifying notes during transcription
+- Take advantage of auto-save
 - Export PDF for court filing
 - Keep DOCX version for internal edits
 
 ## Troubleshooting
 
-### Microphone Not Working
-- Check browser permissions
-- Verify microphone is selected
-- Test in browser settings
-- Use HTTPS (required for mic access)
+### Auto-Save Not Working
+- Check browser console for errors
+- Verify internet connection (for auto-save)
+- Ensure transcript ID is valid
+- Manual save available as backup
 
-### Poor Transcription Accuracy
-- Improve audio quality
-- Reduce background noise
-- Speak clearly and at moderate pace
-- Try different transcription service
-- Use Deepgram's legal models
+### Keyboard Shortcuts Not Working
+- Ensure text area has focus
+- Check for browser extension conflicts
+- Verify browser supports shortcuts
+- Use mouse as alternative
 
-### WebSocket Connection Issues
-- Verify WebSocket support enabled
-- Check firewall settings
-- Use custom server for production
-- Consider HTTP fallback option
+### Missing Entries
+- Check auto-save is enabled
+- Verify entries were submitted
+- Review browser console for errors
+- Use manual save frequently
 
-### Missing Segments
-- Check internet connection
-- Verify service API key valid
-- Monitor console for errors
-- Ensure segments saving to database
+### Performance Issues
+- Close unnecessary browser tabs
+- Clear browser cache
+- Reduce number of entries per page
+- Use modern browser version
 
-## Cost Estimates
+## Cost Considerations
 
-### Deepgram (Recommended)
-- $0.0125/minute
-- 1-hour hearing = $0.75
-- 100 hours/month = $75
-
-### AssemblyAI
-- $0.015/minute (async)
-- $0.037/minute (real-time)
-- 1-hour hearing = $2.22 (real-time)
-
-### OpenAI Whisper
-- $0.006/minute
-- 1-hour hearing = $0.36
-- Best value for budget-conscious
-
-### Google Speech-to-Text
-- $0.006-0.024/15 seconds
-- 1-hour hearing = $1.44-5.76
-- Free tier: 60 min/month
+### Manual Transcription
+- **No AI API Costs**: Zero external service fees
+- **Staff Time**: Requires dedicated transcriber during hearing
+- **Training**: Minimal training needed for basic typing
+- **Equipment**: Only requires computer with keyboard
+- **Total Cost**: Staff salary only, no per-minute fees
 
 ## Future Enhancements
 
-- [ ] AI-powered transcript summarization
-- [ ] Automatic key point extraction
-- [ ] Multi-language support
-- [ ] Real-time translation
+- [ ] Text templates for common court phrases
+- [ ] Multi-language keyboard support
+- [ ] Collaborative transcription (multiple transcribers)
+- [ ] Speech shortcuts and abbreviations
+- [ ] Offline mode with sync
 - [ ] Video synchronization
-- [ ] Automated redaction
-- [ ] Voice biometrics for speaker ID
+- [ ] Automated redaction tools
 - [ ] Integration with court filing systems
 - [ ] Transcript comparison/diff view
-- [ ] Custom vocabulary for legal terms
+- [ ] Custom dictionaries for legal terms
 
 ## Support
 
 For issues or questions:
-1. Check troubleshooting section
-2. Review transcription service docs
-3. Verify environment configuration
-4. Check browser console for errors
-5. Test with different service providers
+1. Check troubleshooting section above
+2. Review [Manual Transcription Guide](./manual-transcription.md)
+3. Check browser console for errors
+4. Contact system administrator
+5. Review existing transcripts for examples

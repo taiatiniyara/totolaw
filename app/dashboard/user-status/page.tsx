@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db } from "@/lib/drizzle/connection";
 import { user } from "@/lib/drizzle/schema/auth-schema";
-import { systemAdmins } from "@/lib/drizzle/schema/system-admin-schema";
 import { eq } from "drizzle-orm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,15 +31,7 @@ export default async function UserStatusPage() {
     .where(eq(user.id, session.user.id))
     .limit(1);
 
-  // Check system admin status
-  const systemAdminData = await db
-    .select()
-    .from(systemAdmins)
-    .where(eq(systemAdmins.email, session.user.email.toLowerCase()))
-    .limit(1);
-
   const userRecord = userData[0];
-  const systemAdminRecord = systemAdminData[0];
 
   return (
     <div className="container mx-auto p-8">
@@ -85,77 +76,47 @@ export default async function UserStatusPage() {
           <CardContent className="space-y-4">
             <div>
               <div className="text-sm text-muted-foreground mb-2">
-                Database Flag (user.isSuperAdmin)
+                Super Admin Status
               </div>
               {userRecord?.isSuperAdmin ? (
-                <Badge variant="default" className="bg-green-600">
-                  <CheckCircle className="mr-1 h-3 w-3" />
-                  True - Super Admin Active
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-gray-600 border-gray-600">
-                  <XCircle className="mr-1 h-3 w-3" />
-                  False - Regular User
-                </Badge>
-              )}
-            </div>
-
-            <div>
-              <div className="text-sm text-muted-foreground mb-2">
-                System Admin Record
-              </div>
-              {systemAdminRecord ? (
-                <div className="space-y-2">
-                  <Badge variant="default" className="bg-purple-600">
+                <div className="space-y-3">
+                  <Badge variant="default" className="bg-green-600">
                     <CheckCircle className="mr-1 h-3 w-3" />
-                    Authorized System Admin
+                    Super Admin Active
                   </Badge>
-                  <div className="text-sm">
-                    <div className="text-muted-foreground">Name</div>
-                    <div className="font-medium">
-                      {systemAdminRecord.name || "Not set"}
-                    </div>
-                  </div>
-                  <div className="text-sm">
-                    <div className="text-muted-foreground">Status</div>
-                    <div>
-                      {systemAdminRecord.isActive ? (
-                        <Badge variant="outline" className="text-green-600 border-green-600">
-                          Active
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-red-600 border-red-600">
-                          Inactive
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  {systemAdminRecord.userId ? (
+                  {userRecord.adminAddedBy && (
                     <div className="text-sm">
-                      <Badge variant="outline" className="text-blue-600 border-blue-600">
-                        Linked to User Account
-                      </Badge>
-                    </div>
-                  ) : (
-                    <div className="text-sm">
-                      <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-                        Pending First Login
-                      </Badge>
+                      <div className="text-muted-foreground">Granted By</div>
+                      <div className="font-medium">{userRecord.adminAddedBy}</div>
                     </div>
                   )}
-                  {systemAdminRecord.lastLogin && (
+                  {userRecord.adminAddedAt && (
+                    <div className="text-sm">
+                      <div className="text-muted-foreground">Granted On</div>
+                      <div className="font-medium">
+                        {new Date(userRecord.adminAddedAt).toLocaleString()}
+                      </div>
+                    </div>
+                  )}
+                  {userRecord.lastLogin && (
                     <div className="text-sm">
                       <div className="text-muted-foreground">Last Login</div>
                       <div className="font-medium">
-                        {new Date(systemAdminRecord.lastLogin).toLocaleString()}
+                        {new Date(userRecord.lastLogin).toLocaleString()}
                       </div>
+                    </div>
+                  )}
+                  {userRecord.adminNotes && (
+                    <div className="text-sm">
+                      <div className="text-muted-foreground">Notes</div>
+                      <div className="font-medium">{userRecord.adminNotes}</div>
                     </div>
                   )}
                 </div>
               ) : (
                 <Badge variant="outline" className="text-gray-600 border-gray-600">
                   <XCircle className="mr-1 h-3 w-3" />
-                  Not a System Admin
+                  Regular User
                 </Badge>
               )}
             </div>
@@ -207,25 +168,6 @@ export default async function UserStatusPage() {
         </CardContent>
       </Card>
 
-      {/* Instructions */}
-      {systemAdminRecord && !userRecord?.isSuperAdmin && (
-        <Card className="mt-6 border-yellow-200 bg-yellow-50">
-          <CardHeader>
-            <CardTitle className="text-yellow-800">Action Required</CardTitle>
-            <CardDescription className="text-yellow-700">
-              You are registered as a system admin but not yet elevated
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-sm text-yellow-800">
-            <p>To activate your super admin privileges:</p>
-            <ol className="list-decimal list-inside mt-2 space-y-1">
-              <li>Log out of your account</li>
-              <li>Log back in using the magic link</li>
-              <li>Your account will be automatically elevated</li>
-            </ol>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

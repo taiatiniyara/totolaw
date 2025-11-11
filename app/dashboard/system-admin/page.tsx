@@ -155,44 +155,44 @@ export default async function SystemAdminDashboard() {
             </Link>
           </div>
         </CardHeader>
-                  <CardContent>
-            <div className="space-y-2">
-              {organizations.slice(0, 5).map((org) => (
-                <DataRow
-                  key={org.id}
-                  icon={Building2}
-                  title={org.name}
-                  subtitle={`${org.code} • ${org.type}`}
-                  badge={
-                    org.isActive
-                      ? {
-                          label: "Active",
-                          variant: "outline",
-                          color: "text-green-600 border-green-600",
-                        }
-                      : {
-                          label: "Inactive",
-                          variant: "outline",
-                          color: "text-red-600 border-red-600",
-                        }
-                  }
-                >
-                  {org.isActive ? (
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <XCircle className="h-4 w-4 text-red-600" />
-                  )}
-                </DataRow>
-              ))}
-              {organizations.length > 5 && (
-                <Link href="/dashboard/system-admin/organizations">
-                  <Button variant="link" className="w-full">
-                    View all {organizations.length} organizations
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </CardContent>
+        <CardContent>
+          <div className="space-y-2">
+            {organizations.slice(0, 5).map((org) => (
+              <DataRow
+                key={org.id}
+                icon={Building2}
+                title={org.name}
+                subtitle={`${org.code} • ${org.type}`}
+                badge={
+                  org.isActive
+                    ? {
+                      label: "Active",
+                      variant: "outline",
+                      color: "text-green-600 border-green-600",
+                    }
+                    : {
+                      label: "Inactive",
+                      variant: "outline",
+                      color: "text-red-600 border-red-600",
+                    }
+                }
+              >
+                {org.isActive ? (
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                ) : (
+                  <XCircle className="h-4 w-4 text-red-600" />
+                )}
+              </DataRow>
+            ))}
+            {organizations.length > 5 && (
+              <Link href="/dashboard/system-admin/organizations">
+                <Button variant="link" className="w-full">
+                  View all {organizations.length} organizations
+                </Button>
+              </Link>
+            )}
+          </div>
+        </CardContent>
       </Card>
 
       {/* Active System Admins */}
@@ -210,33 +210,23 @@ export default async function SystemAdminDashboard() {
             </Link>
           </div>
         </CardHeader>
-                  <CardContent>
-            <div className="space-y-2">
-              {admins
-                .filter((a) => a.isActive)
-                .map((admin) => (
-                  <DataRow
-                    key={admin.id}
-                    icon={Shield}
-                    title={admin.name || "Unnamed"}
-                    subtitle={admin.email}
-                    badge={
-                      admin.userId
-                        ? {
-                            label: "Linked",
-                            variant: "outline",
-                            color: "text-green-600 border-green-600",
-                          }
-                        : {
-                            label: "Pending",
-                            variant: "outline",
-                            color: "text-yellow-600 border-yellow-600",
-                          }
-                    }
-                  />
-                ))}
-            </div>
-          </CardContent>
+        <CardContent>
+          <div className="space-y-2">
+            {admins.map((admin) => (
+              <DataRow
+                key={admin.id}
+                icon={Shield}
+                title={admin.name || "Unnamed"}
+                subtitle={admin.email}
+                badge={{
+                  label: "Active",
+                  variant: "outline",
+                  color: "text-green-600 border-green-600",
+                }}
+              />
+            ))}
+          </div>
+        </CardContent>
       </Card>
     </div>
   );

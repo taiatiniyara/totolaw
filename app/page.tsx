@@ -387,7 +387,7 @@ export default function Home() {
               <Heading as="h3" className="mb-4">Resources</Heading>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="/docs" className="hover:text-primary transition-colors">Documentation</a></li>
-                <li><a href="https://github.com/taiatiniyara/totolaw" className="hover:text-primary transition-colors">GitHub</a></li>
+                <li><a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="hover:text-primary transition-colors">GitHub</a></li>
               </ul>
             </div>
             

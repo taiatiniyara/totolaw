@@ -35,6 +35,7 @@ interface CreateOrganizationFormProps {
 }
 
 const ORGANIZATION_TYPES = [
+  { value: "country", label: "Country" },
   { value: "court", label: "Court" },
   { value: "tribunal", label: "Tribunal" },
   { value: "commission", label: "Commission" },

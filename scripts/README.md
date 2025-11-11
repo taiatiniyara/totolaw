@@ -1,248 +1,82 @@
-# Admin Management Scripts
+# Initial System Admin Setup
 
-This directory contains CLI tools for managing the Totolaw system.
+This directory contains the setup script for creating the first system administrator.
 
-## System Admin CLI
+## Setup Script
 
-The `manage-admins.ts` script provides command-line tools for managing super administrators.
+The `setup-admin.ts` script provides an interactive way to create the initial super administrator for your Totolaw instance.
 
 ### Prerequisites
 
 - Database connection configured in environment variables
 - Node.js and npm installed
 - Project dependencies installed (`npm install`)
+- Database schema already pushed (`npm run db-push`)
 
-### Commands
+### Usage
 
-#### List All Admins
-
-```bash
-npm run admin:list
-```
-
-Shows all system admins with their status, email, name, and last login.
-
-**Example output:**
-```
-📋 System Administrators
-
-✅ Active 🔗 Linked
-  Email: admin@example.com
-  Name: John Doe
-  Last Login: 11/10/2025
-
-⏳ Pending ❌ Inactive
-  Email: pending@example.com
-  Name: Jane Smith
-  Last Login: Never
-```
-
-#### Add New Admin
+Run the setup script to create your first system administrator:
 
 ```bash
-npm run admin:add email@example.com "Admin Name"
+npm run setup-admin
 ```
 
-Adds a new system administrator. They will be automatically elevated to super admin when they log in.
+The script will interactively prompt you for:
+1. **Email address** - The admin's email for magic link authentication
+2. **Full name** - The admin's display name
 
-**Example:**
-```bash
-npm run admin:add chief-justice@courts.gov.fj "Chief Justice"
+**Example session:**
+```
+🛡️  Initial System Administrator Setup
+
+This will create the first super admin for your Totolaw instance.
+
+Enter admin email address: admin@courts.gov.fj
+Enter admin full name: Chief Justice
+
+✅ Super admin created successfully!
+📧 Email: admin@courts.gov.fj
+👤 Name: Chief Justice
+
+📝 Next steps:
+1. The admin can now log in at /auth/login
+2. They will receive a magic link at their email address
+3. After login, they will have full system access
 ```
 
-#### Remove/Deactivate Admin
+### What It Does
 
-```bash
-npm run admin:remove email@example.com
-```
+The script will:
+1. **Check for existing user** - If the email already exists, it updates them to super admin
+2. **Create new user** - If the email is new, it creates a new user with super admin privileges
+3. **Set permissions** - Marks the user with `is_super_admin = true`
+4. **Add metadata** - Records when and why the admin was added
 
-Deactivates a system admin and removes their super admin privileges immediately.
+### After Setup
 
-**Example:**
-```bash
-npm run admin:remove old-admin@example.com
-```
-
-#### Reactivate Admin
-
-```bash
-npm run admin:activate email@example.com
-```
-
-Reactivates a previously deactivated admin and restores their super admin privileges.
-
-**Example:**
-```bash
-npm run admin:activate returning-admin@example.com
-```
-
-#### View Audit Log
-
-```bash
-npm run admin:audit
-```
-
-Shows the last 20 audit log entries for system admin actions.
-
-**Example output:**
-```
-📜 System Admin Audit Log (Last 20 entries)
-
-[11/10/2025, 10:30:00 AM] created
-  New system admin added: admin@example.com
-  Entity: system_admin (abc-123-def)
-  IP: 192.168.1.1
-
-[11/10/2025, 10:25:00 AM] login
-  System admin admin@example.com logged in
-  Entity: system_admin (abc-123-def)
-```
-
-### Usage Examples
-
-#### Setup Initial Admins
-
-```bash
-# Add multiple admins
-npm run admin:add cj@courts.gov.fj "Chief Justice"
-npm run admin:add admin@courts.gov.fj "Senior Administrator"
-npm run admin:add tech@totolaw.org "Technical Lead"
-
-# Verify they were added
-npm run admin:list
-```
-
-#### Remove Admin Access
-
-```bash
-# Deactivate an admin
-npm run admin:remove former-admin@example.com
-
-# Check the audit log
-npm run admin:audit
-```
-
-#### Restore Admin Access
-
-```bash
-# Reactivate an admin
-npm run admin:activate returning-admin@example.com
-
-# Verify they're active
-npm run admin:list
-```
-
-### Direct Script Execution
-
-You can also run the script directly with tsx:
-
-```bash
-# List admins
-tsx scripts/manage-admins.ts list
-
-# Add admin with notes
-tsx scripts/manage-admins.ts add email@example.com "Name"
-
-# Remove admin
-tsx scripts/manage-admins.ts remove email@example.com
-```
+Once the initial admin is created:
+- They can log in at `/auth/login` using their email
+- They'll receive a magic link for authentication
+- They'll have full system access to manage the entire system
 
 ### Error Handling
 
-The script will exit with error messages for common issues:
-
-- **Email already exists**: Can't add duplicate admin
-- **Admin not found**: Can't remove/activate non-existent admin
-- **Missing parameters**: Required parameters not provided
-
-**Example errors:**
-```
-❌ Error: admin@example.com is already registered as a system admin
-❌ Error: System admin notfound@example.com not found
-❌ Error: Email and name are required
-```
+The script validates input and provides clear error messages:
+- **Invalid email**: Must be a valid email format
+- **Invalid name**: Must be at least 2 characters
+- **Database errors**: Connection or query issues
 
 ### Security Notes
 
-- ⚠️ **Database access required**: Script needs database credentials
-- ⚠️ **No confirmation prompts**: Actions are immediate
-- ⚠️ **Audit logged**: All actions are logged in the database
-- ⚠️ **Use with care**: This modifies production data
+- ⚠️ **Run only once**: This is for initial setup only
+- ⚠️ **Database access required**: Needs valid database connection
+- ⚠️ **Super admin power**: This user will have complete system access
 
-### Troubleshooting
+### Adding More Admins
 
-#### Script won't run
-
-**Check:**
-1. Environment variables are set
-2. Database is accessible
-3. Dependencies are installed (`npm install`)
-
-```bash
-# Test database connection
-npm run admin:list
-```
-
-#### Can't add admin
-
-**Common causes:**
-- Email already exists (check with `npm run admin:list`)
-- Invalid email format
-- Database connection issues
-
-#### Admin not elevated after adding
-
-**Solution:**
-Admin must log in first. The auto-elevation happens during login.
-
-```bash
-# Verify admin was added
-npm run admin:list
-
-# Check if email matches exactly (case-insensitive)
-```
-
-### Integration with Other Tools
-
-#### Use in CI/CD
-
-```bash
-# In your deployment script
-npm run admin:add deploy-admin@example.com "Deploy Admin"
-```
-
-#### Use in Setup Scripts
-
-```bash
-#!/bin/bash
-# setup-admins.sh
-
-npm run admin:add admin1@example.com "Admin One"
-npm run admin:add admin2@example.com "Admin Two"
-npm run admin:list
-```
-
-#### Use with Docker
-
-```bash
-# In Dockerfile or docker-compose
-docker exec totolaw npm run admin:add admin@example.com "Admin"
-```
-
-### Related Documentation
-
-- [System Admin Team Guide](../docs/system-admin-team.md)
-- [Super Admin Quick Start](../docs/super-admin-quickstart.md)
-- [Multi-Tenant RBAC](../docs/multi-tenant-rbac.md)
-
-### Support
-
-For issues or questions:
-1. Check the [System Admin documentation](../docs/system-admin-team.md)
-2. Review the audit log: `npm run admin:audit`
-3. Verify database connectivity
-4. Check environment variables
+After the initial setup, additional super admins can be managed via the UI at `/dashboard/system-admin`
 
 ---
 
-**Totolaw System Administration Tools** 🛠️
+**Totolaw System Administration Setup** 🛡️  
+**Made with ❤️ for Pacific Island Court Systems** 🌴

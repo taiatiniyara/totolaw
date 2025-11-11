@@ -10,13 +10,15 @@ interface LogoProps {
 
 export default function Logo({ className, width = 120, height = 40 }: LogoProps) {
   return (
-    <Image 
-      className={cn("object-contain", className)} 
-      src={logo} 
-      alt="Totolaw Logo" 
-      width={width}
-      height={height}
-      priority
-    />
+    <a href="/">
+      <Image
+        className={cn("object-contain", className)}
+        src={logo}
+        alt="Totolaw Logo"
+        width={width}
+        height={height}
+        priority
+      />
+    </a>
   );
 }
