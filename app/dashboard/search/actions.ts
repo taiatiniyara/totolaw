@@ -23,7 +23,8 @@ export interface SearchResults {
     id: string;
     caseId: string;
     caseTitle: string;
-    date: Date;
+    scheduledDate: Date;
+    scheduledTime: string;
     location: string | null;
   }>;
   evidence: Array<{
@@ -95,7 +96,8 @@ export async function globalSearch(
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.date,
+        scheduledDate: hearings.scheduledDate,
+        scheduledTime: hearings.scheduledTime,
         location: hearings.location,
         organisationId: hearings.organisationId,
       })

@@ -9,9 +9,10 @@
     "lint": "eslint",
     "db-push": "drizzle-kit push --config ./lib/drizzle/config.ts",
     "db-view": "drizzle-kit studio --config ./lib/drizzle/config.ts",
-    "deploy": "next build && pm2 restart totolaw --update-env && git add . && git commit -m 'deploy' && git push",
+    "deploy": "tsc --noEmit && next build && pm2 restart totolaw --update-env && git add . && git commit -m 'deploy' && git push",
     "setup-admin": "tsx scripts/setup-admin.ts",
-    "test-email": "tsx scripts/test-email.ts"
+    "test-email": "tsx scripts/test-email.ts",
+    "check-errors": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

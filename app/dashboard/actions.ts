@@ -151,7 +151,7 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
     const { gte, asc, eq } = await import("drizzle-orm");
 
     const conditions = withOrgFilter(context.organisationId, hearings, [
-      gte(hearings.date, new Date())
+      gte(hearings.scheduledDate, new Date())
     ]);
 
     const results = await db
@@ -159,14 +159,15 @@ export async function getUpcomingHearings(limit: number = 5): Promise<ActionResu
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.date,
+        scheduledDate: hearings.scheduledDate,
+        scheduledTime: hearings.scheduledTime,
         location: hearings.location,
         organisationId: hearings.organisationId,
       })
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
       .where(conditions)
-      .orderBy(asc(hearings.date))
+      .orderBy(asc(hearings.scheduledDate))
       .limit(limit);
 
     return { success: true, data: results };

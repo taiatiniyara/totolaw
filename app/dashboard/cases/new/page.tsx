@@ -1,32 +1,53 @@
 /**
- * Create New Case Page
+ * Create New Case Page (Enhanced for Fiji Court System)
  * 
- * Form to create a new court case with validation and permission checks
+ * Form to create a new court case with court level, parties, and offences
  */
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/common";
-import { FormField, FormActions } from "@/components/forms";
-import { createCase } from "../actions";
+import { createCase, getCourtOrganisations } from "../actions";
+import { CaseForm } from "./case-form";
 
 async function handleSubmit(formData: FormData) {
   "use server";
   
   const title = formData.get("title") as string;
   const type = formData.get("type") as string;
+  const courtLevel = formData.get("courtLevel") as string;
+  const division = formData.get("division") as string;
   const status = formData.get("status") as string;
 
-  if (!title || !type || !status) {
+  // Parse parties JSON
+  const partiesJson = formData.get("parties") as string;
+  let parties;
+  try {
+    parties = JSON.parse(partiesJson || "{}");
+  } catch {
+    parties = {};
+  }
+
+  // Parse offences
+  const offencesStr = formData.get("offences") as string;
+  const offences = offencesStr ? offencesStr.split(",").map((o: string) => o.trim()).filter(Boolean) : [];
+
+  const assignedJudgeId = formData.get("assignedJudgeId") as string;
+
+  if (!title || !type || !courtLevel) {
     throw new Error("Missing required fields");
   }
 
   const result = await createCase({
     title,
     type,
+    courtLevel,
+    division: division || undefined,
     status,
+    parties,
+    offences: offences.length > 0 ? offences : undefined,
+    assignedJudgeId: assignedJudgeId || undefined,
   });
 
   if (result.success) {
@@ -45,6 +66,9 @@ export default async function NewCasePage() {
     redirect("/auth/login");
   }
 
+  const courtsResult = await getCourtOrganisations();
+  const courts = courtsResult.success ? courtsResult.data : [];
+
   return (
     <ProtectedRoute requiredPermission="cases:create">
       <div className="space-y-6">
@@ -56,62 +80,9 @@ export default async function NewCasePage() {
         />
 
         {/* Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Case Information</CardTitle>
-            <CardDescription>
-              Fill in the required information to create a new case
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form action={handleSubmit} className="space-y-6">
-              <FormField
-                label="Case Title"
-                name="title"
-                placeholder="e.g., State vs. John Doe"
-                required
-                helpText="Enter a descriptive title for the case"
-              />
-
-              <FormField
-                label="Case Type"
-                name="type"
-                type="select"
-                placeholder="Select case type"
-                required
-                helpText="Select the type of legal case"
-                options={[
-                  { value: "criminal", label: "Criminal" },
-                  { value: "civil", label: "Civil" },
-                  { value: "family", label: "Family" },
-                  { value: "traffic", label: "Traffic" },
-                  { value: "administrative", label: "Administrative" },
-                  { value: "appeal", label: "Appeal" },
-                ]}
-              />
-
-              <FormField
-                label="Initial Status"
-                name="status"
-                type="select"
-                placeholder="Select status"
-                required
-                defaultValue="pending"
-                helpText="Set the initial status of the case"
-                options={[
-                  { value: "pending", label: "Pending" },
-                  { value: "active", label: "Active" },
-                  { value: "under-review", label: "Under Review" },
-                ]}
-              />
-
-              <FormActions
-                cancelHref="/dashboard/cases"
-                submitLabel="Create Case"
-              />
-            </form>
-          </CardContent>
-        </Card>
+        <form action={handleSubmit}>
+          <CaseForm courts={courts || []} />
+        </form>
       </div>
     </ProtectedRoute>
   );

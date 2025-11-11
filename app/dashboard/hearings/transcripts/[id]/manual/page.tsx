@@ -126,7 +126,7 @@ export default async function ManualTranscriptionPage({ params }: PageProps) {
             <h1 className="text-3xl font-bold">Manual Transcription</h1>
             <p className="text-gray-600">
               {caseRecord.title} - Hearing on{" "}
-              {new Date(hearing.date).toLocaleDateString()}
+              {new Date(hearing.scheduledDate).toLocaleDateString()}
             </p>
           </div>
         </div>

@@ -186,14 +186,13 @@ export default function SearchPage() {
                           <Heading as="h3">{hearing.caseTitle}</Heading>
                           <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
                             <span>
-                              {new Date(hearing.date).toLocaleDateString("en-US", {
+                              {new Date(hearing.scheduledDate).toLocaleDateString("en-US", {
                                 weekday: "short",
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
                               })}
+                              {hearing.scheduledTime && ` at ${hearing.scheduledTime}`}
                             </span>
                             {hearing.location && (
                               <span className="flex items-center gap-1">

@@ -27,6 +27,9 @@ interface HearingWithCase {
   caseId: string;
   caseTitle: string;
   date: Date;
+  scheduledTime: string;
+  actionType: string;
+  status: string;
   location: string | null;
   judgeId: string | null;
   bailDecision: string | null;
@@ -67,7 +70,7 @@ export async function getHearings(options?: {
     // Build base conditions
     const conditions = [];
     if (options?.upcoming) {
-      conditions.push(gte(hearings.date, new Date()));
+      conditions.push(gte(hearings.scheduledDate, new Date()));
     }
     if (options?.caseId) {
       conditions.push(eq(hearings.caseId, options.caseId));
@@ -79,7 +82,10 @@ export async function getHearings(options?: {
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.date,
+        date: hearings.scheduledDate,
+        scheduledTime: hearings.scheduledTime,
+        actionType: hearings.actionType,
+        status: hearings.status,
         location: hearings.location,
         judgeId: hearings.judgeId,
         bailDecision: hearings.bailDecision,
@@ -88,7 +94,7 @@ export async function getHearings(options?: {
       .from(hearings)
       .innerJoin(cases, eq(hearings.caseId, cases.id))
       .where(withOrgFilter(context.organisationId, hearings, conditions.length > 0 ? conditions : undefined))
-      .orderBy(desc(hearings.date))
+      .orderBy(desc(hearings.scheduledDate))
       .limit(options?.limit || 1000);
 
     const results = await query;
@@ -132,7 +138,10 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.date,
+        date: hearings.scheduledDate,
+        scheduledTime: hearings.scheduledTime,
+        actionType: hearings.actionType,
+        status: hearings.status,
         location: hearings.location,
         judgeId: hearings.judgeId,
         bailDecision: hearings.bailDecision,
@@ -159,14 +168,25 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
 }
 
 /**
- * Create a new hearing
+ * Create a new hearing (Enhanced for Fiji court system)
  */
 export async function createHearing(data: {
   caseId: string;
-  date: Date;
+  scheduledDate: Date;
+  scheduledTime?: string;
+  estimatedDuration?: number;
+  courtRoomId?: string;
   location?: string;
+  actionType: string;
+  status?: string;
   judgeId?: string;
+  magistrateId?: string;
+  clerkId?: string;
+  bailConsidered?: boolean;
   bailDecision?: string;
+  bailAmount?: number;
+  bailConditions?: string;
+  notes?: string;
 }): Promise<ActionResult<{ id: string }>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
@@ -209,18 +229,32 @@ export async function createHearing(data: {
     // Generate ID
     const hearingId = crypto.randomUUID();
 
-    // Insert hearing
+    // Insert hearing with new Fiji fields
     await db
       .insert(hearings)
       .values(
         withOrgId(context.organisationId, {
           id: hearingId,
           caseId: data.caseId,
-          date: data.date,
+          scheduledDate: data.scheduledDate,
+          scheduledTime: data.scheduledTime,
+          estimatedDuration: data.estimatedDuration,
+          courtRoomId: data.courtRoomId,
           location: data.location,
+          actionType: data.actionType,
+          status: data.status || "scheduled",
           judgeId: data.judgeId,
+          magistrateId: data.magistrateId,
+          clerkId: data.clerkId,
+          bailConsidered: data.bailConsidered || false,
           bailDecision: data.bailDecision,
-        })
+          bailAmount: data.bailAmount,
+          bailConditions: data.bailConditions,
+          notes: data.notes,
+          createdBy: session.user.id,
+          // Legacy field for compatibility
+          date: data.scheduledDate,
+        }) as any
       );
 
     revalidatePath("/dashboard/hearings");

@@ -5,14 +5,18 @@
  * 
  * Server actions for managing cases with multi-tenant organisation isolation.
  * All queries include organisation filtering for data security.
+ * 
+ * Enhanced for Fiji court system support.
  */
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/connection";
 import { cases } from "@/lib/drizzle/schema/db-schema";
+import { organisations } from "@/lib/drizzle/schema/organisation-schema";
 import { getUserTenantContext } from "@/lib/services/tenant.service";
 import { hasPermission } from "@/lib/services/authorization.service";
 import { withOrgFilter, withOrgId, validateOrgAccess } from "@/lib/utils/query-helpers";
+import { generateCaseNumber } from "@/lib/utils/case-number";
 import { eq, desc, or, like, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 
@@ -27,7 +31,7 @@ export type ActionResult<T = any> = {
  */
 export async function getCases(filters?: {
   status?: string;
-  assignedTo?: string;
+  assignedJudge?: string;
   search?: string;
   limit?: number;
   offset?: number;
@@ -65,7 +69,7 @@ export async function getCases(filters?: {
       }
       
       // Return only user's cases
-      filters = { ...filters, assignedTo: session.user.id };
+      filters = { ...filters, assignedJudge: session.user.id };
     }
 
     // Build query conditions
@@ -75,8 +79,8 @@ export async function getCases(filters?: {
       conditions.push(eq(cases.status, filters.status));
     }
     
-    if (filters?.assignedTo) {
-      conditions.push(eq(cases.assignedTo, filters.assignedTo));
+    if (filters?.assignedJudge) {
+      conditions.push(eq(cases.assignedJudgeId, filters.assignedJudge));
     }
     
     if (filters?.search) {
@@ -159,7 +163,9 @@ export async function getCaseById(
       );
       
       if (!canViewOwn || 
-          (caseRecord.assignedTo !== session.user.id && caseRecord.filedBy !== session.user.id)) {
+          (caseRecord.assignedJudgeId !== session.user.id && 
+           caseRecord.assignedClerkId !== session.user.id && 
+           caseRecord.filedBy !== session.user.id)) {
         return { success: false, error: "Permission denied" };
       }
     }
@@ -172,13 +178,25 @@ export async function getCaseById(
 }
 
 /**
- * Create a new case
+ * Create a new case (Enhanced for Fiji court system)
  */
 export async function createCase(data: {
   title: string;
   type: string;
+  courtLevel: string;
+  division?: string;
   status?: string;
-  assignedTo?: string;
+  parties: {
+    prosecution?: { name: string; counsel?: string }[];
+    defense?: { name: string; counsel?: string }[];
+    plaintiff?: { name: string; counsel?: string }[];
+    defendant?: { name: string; counsel?: string }[];
+    appellant?: { name: string; counsel?: string }[];
+    respondent?: { name: string; counsel?: string }[];
+  };
+  offences?: string[];
+  assignedJudgeId?: string;
+  assignedClerkId?: string;
 }): Promise<ActionResult<typeof cases.$inferSelect>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
@@ -203,8 +221,17 @@ export async function createCase(data: {
       return { success: false, error: "Permission denied" };
     }
 
+    // Generate case number based on court level and type
+    const caseNumber = await generateCaseNumber(
+      context.organisationId,
+      data.courtLevel,
+      data.division || data.type,
+      new Date().getFullYear()
+    );
+
     // Generate ID
     const caseId = crypto.randomUUID();
+    const now = new Date();
 
     // Insert with organisation context
     const [newCase] = await db
@@ -212,12 +239,19 @@ export async function createCase(data: {
       .values(
         withOrgId(context.organisationId, {
           id: caseId,
+          caseNumber,
           title: data.title,
           type: data.type,
-          status: data.status || "pending",
-          assignedTo: data.assignedTo,
+          courtLevel: data.courtLevel,
+          division: data.division,
+          status: data.status || "open",
+          parties: data.parties,
+          offences: data.offences,
+          assignedJudgeId: data.assignedJudgeId,
+          assignedClerkId: data.assignedClerkId,
           filedBy: session.user.id,
-        })
+          filedDate: now,
+        }) as any
       )
       .returning();
 
@@ -239,7 +273,8 @@ export async function updateCase(
     title: string;
     type: string;
     status: string;
-    assignedTo: string;
+    assignedJudgeId: string;
+    assignedClerkId: string;
   }>
 ): Promise<ActionResult<typeof cases.$inferSelect>> {
   try {
@@ -392,5 +427,40 @@ export async function getCaseStats(): Promise<
   } catch (error) {
     console.error("Error fetching case stats:", error);
     return { success: false, error: "Failed to fetch statistics" };
+  }
+}
+
+/**
+ * Get court organisations for selection
+ */
+export async function getCourtOrganisations(): Promise<
+  ActionResult<{
+    id: string;
+    name: string;
+    courtLevel?: string | null;
+    courtType?: string | null;
+  }[]>
+> {
+  try {
+    const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const courts = await db
+      .select({
+        id: organisations.id,
+        name: organisations.name,
+        courtLevel: organisations.courtLevel,
+        courtType: organisations.courtType,
+      })
+      .from(organisations)
+      .where(eq(organisations.isActive, true))
+      .orderBy(organisations.name);
+
+    return { success: true, data: courts };
+  } catch (error) {
+    console.error("Error fetching courts:", error);
+    return { success: false, error: "Failed to fetch courts" };
   }
 }

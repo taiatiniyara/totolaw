@@ -56,8 +56,8 @@ export default async function CasesPage() {
               >
                 <div className="flex gap-4 text-sm text-muted-foreground">
                   <span>Filed: {new Date(caseItem.createdAt).toLocaleDateString()}</span>
-                  {caseItem.assignedTo && (
-                    <span>Assigned to: {caseItem.assignedTo}</span>
+                  {caseItem.assignedJudgeId && (
+                    <span>Assigned Judge: {caseItem.assignedJudgeId}</span>
                   )}
                 </div>
               </ListItemCard>

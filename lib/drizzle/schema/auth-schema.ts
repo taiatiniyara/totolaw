@@ -19,6 +19,9 @@ export const user = pgTable("user", {
   adminAddedBy: text("admin_added_by").references((): any => user.id, { onDelete: "set null" }),
   adminAddedAt: timestamp("admin_added_at"),
   lastLogin: timestamp("last_login"),
+  // Judicial designation (for judges/magistrates)
+  judicialTitle: text("judicial_title"), // "Justice", "Resident Magistrate", "Magistrate", "Chief Registrar", etc.
+  designation: text("designation"), // "Judge", "Magistrate", "Registrar", "Prosecutor", "Defense Attorney", etc.
 });
 
 export const session = pgTable("session", {

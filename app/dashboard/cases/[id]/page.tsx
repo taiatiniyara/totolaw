@@ -173,13 +173,13 @@ export default async function CaseDetailsPage({ params }: CasePageProps) {
                 </div>
               )}
 
-              {caseItem.assignedTo && (
+              {caseItem.assignedJudgeId && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <User className="h-4 w-4" />
-                    <span>Assigned To</span>
+                    <span>Assigned Judge</span>
                   </div>
-                  <p className="font-medium">{caseItem.assignedTo}</p>
+                  <p className="font-medium">{caseItem.assignedJudgeId}</p>
                 </div>
               )}
             </div>

@@ -9,18 +9,24 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
-// --- Organisations (Countries/Islands)
+// --- Organisations (Countries/Islands/Courts)
 export const organisations = pgTable(
   "organisations",
   {
     id: text("id").primaryKey(),
-    name: text("name").notNull(), // e.g., "Fiji", "Samoa", "Tonga"
-    code: varchar("code", { length: 10 }).notNull().unique(), // e.g., "FJ", "WS", "TO"
-    type: varchar("type", { length: 50 }).notNull(), // "country", "province", "district"
+    name: text("name").notNull(), // e.g., "Fiji Court of Appeal", "Suva High Court", "Nadi Magistrates Court"
+    code: varchar("code", { length: 10 }).notNull().unique(), // e.g., "FJ-COA", "FJ-HC-SUVA", "FJ-MC-NADI"
+    type: varchar("type", { length: 50 }).notNull(), // "country", "court_system", "court", "tribunal"
+    
+    // Court-specific fields
+    courtLevel: varchar("court_level", { length: 50 }), // "court_of_appeal", "high_court", "magistrates", "tribunal"
+    courtType: varchar("court_type", { length: 50 }), // "criminal", "civil", "family", "agricultural", "small_claims"
+    jurisdiction: text("jurisdiction"), // Geographic or subject matter jurisdiction
+    
     description: text("description"),
-    parentId: text("parent_id"), // For hierarchical structures
+    parentId: text("parent_id"), // For hierarchical structures (e.g., Suva High Court -> Fiji Court System)
     isActive: boolean("is_active").default(true).notNull(),
-    settings: text("settings"), // JSON string for org-specific settings
+    settings: text("settings"), // JSON string for org-specific settings (e.g., case number format)
     createdBy: text("created_by").references(() => user.id),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -32,6 +38,7 @@ export const organisations = pgTable(
     codeIdx: index("org_code_idx").on(table.code),
     parentIdx: index("org_parent_idx").on(table.parentId),
     activeIdx: index("org_active_idx").on(table.isActive),
+    courtLevelIdx: index("org_court_level_idx").on(table.courtLevel),
   })
 );
 

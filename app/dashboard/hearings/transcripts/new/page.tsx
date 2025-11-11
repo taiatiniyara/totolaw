@@ -124,7 +124,7 @@ export default async function NewTranscriptPage({
               name="title"
               placeholder="e.g., Preliminary Hearing - January 15, 2025"
               required
-              defaultValue={`${hearing.location || "Hearing"} - ${new Date(hearing.date).toLocaleDateString()}`}
+              defaultValue={`${hearing.location || "Hearing"} - ${new Date(hearing.scheduledDate).toLocaleDateString()}`}
             />
           </div>
 
