@@ -8,6 +8,7 @@
     "start": "next start -p 3440",
     "lint": "eslint",
     "db-push": "drizzle-kit push --config ./lib/drizzle/config.ts",
+    "db-view": "drizzle-kit studio --config ./lib/drizzle/config.ts",
     "db:reset": "tsx scripts/reset-database.ts",
     "deploy": "next build && pm2 restart totolaw --update-env && git add . && git commit -m 'deploy' && git push",
     "admin:list": "tsx scripts/manage-admins.ts list",
