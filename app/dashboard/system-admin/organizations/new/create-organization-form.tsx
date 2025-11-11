@@ -207,25 +207,37 @@ export function CreateOrganizationForm({ organizations }: CreateOrganizationForm
       {/* Parent Organization (Optional) */}
       <div className="space-y-2">
         <Label htmlFor="parentId">Parent Organization (Optional)</Label>
-        <Select
-          value={formData.parentId}
-          onValueChange={(value) => setFormData({ ...formData, parentId: value })}
-          disabled={isSubmitting}
-        >
-          <SelectTrigger id="parentId">
-            <SelectValue placeholder="None (top-level organization)" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">None (top-level organization)</SelectItem>
-            {organizations
-              .filter((org) => org.id !== formData.parentId)
-              .map((org) => (
-                <SelectItem key={org.id} value={org.id}>
-                  {org.name} ({org.code})
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
+        <div className="space-y-2">
+          <Select
+            value={formData.parentId || undefined}
+            onValueChange={(value) => setFormData({ ...formData, parentId: value })}
+            disabled={isSubmitting}
+          >
+            <SelectTrigger id="parentId">
+              <SelectValue placeholder="None (top-level organization)" />
+            </SelectTrigger>
+            <SelectContent>
+              {organizations
+                .filter((org) => org.id !== formData.parentId)
+                .map((org) => (
+                  <SelectItem key={org.id} value={org.id}>
+                    {org.name} ({org.code})
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+          {formData.parentId && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setFormData({ ...formData, parentId: "" })}
+              disabled={isSubmitting}
+            >
+              Clear selection
+            </Button>
+          )}
+        </div>
         <p className="text-sm text-muted-foreground">
           If this organization is part of a larger entity, select the parent
         </p>
