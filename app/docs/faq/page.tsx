@@ -166,12 +166,14 @@ export default function FAQPage() {
                   <AccordionItem value="case-statuses">
                     <AccordionTrigger>What do the different case statuses mean?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
-                      <ul className="space-y-2">
-                        <li><strong>Open:</strong> Case has been filed but not yet started</li>
-                        <li><strong>In Progress:</strong> Case is actively being worked on</li>
+                      <p>Your organisation can define custom case statuses. Common ones include:</p>
+                      <ul className="space-y-2 ml-4">
+                        <li><strong>Open/New:</strong> Case has been filed but work hasn't started</li>
+                        <li><strong>Active/In Progress:</strong> Case is actively being worked on</li>
                         <li><strong>Pending:</strong> Waiting for external action or information</li>
-                        <li><strong>Closed:</strong> Case has been resolved</li>
+                        <li><strong>Closed/Resolved:</strong> Case has been completed</li>
                       </ul>
+                      <p className="mt-2">Status values are flexible and can be customized by your administrator.</p>
                     </AccordionContent>
                   </AccordionItem>
 
@@ -285,16 +287,17 @@ export default function FAQPage() {
                     <AccordionTrigger>What are the different user roles?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Totolaw has several user roles:
+                        Each organisation defines its own roles with specific permissions. Common roles include:
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
-                        <li><strong>Admin:</strong> Full access to all features and settings</li>
-                        <li><strong>Manager:</strong> Can manage cases, users, and most features</li>
-                        <li><strong>Staff:</strong> Can create and edit cases and hearings</li>
-                        <li><strong>Viewer:</strong> Read-only access to assigned cases</li>
+                        <li><strong>Admin:</strong> Full access to all features including user management and settings</li>
+                        <li><strong>Manager:</strong> Can manage cases, hearings, and evidence</li>
+                        <li><strong>Staff:</strong> Can create and edit cases, hearings, and upload evidence</li>
+                        <li><strong>Viewer:</strong> Read-only access to view cases and information</li>
                       </ul>
                       <p className="mt-2">
-                        Your role is assigned by your organisation's administrator based on your responsibilities.
+                        Your role is assigned by your organisation's administrator. Permissions are granular and can be
+                        customized for each role (e.g., cases:read, cases:create, cases:update, cases:delete).
                       </p>
                     </AccordionContent>
                   </AccordionItem>

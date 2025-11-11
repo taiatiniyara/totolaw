@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { LandingHeader } from "@/components/landing-header";
-import { ArrowLeft, FileText, Plus, Search, Eye, Edit, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, FileText, Plus, Eye, Edit, CheckCircle2 } from "lucide-react";
 
 export default function CasesGuidePage() {
   return (
@@ -44,20 +44,21 @@ export default function CasesGuidePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Cases are the central unit of work in Totolaw. Each case represents a legal matter with its own:
+                  Cases are the central unit of work in Totolaw. Each case represents a legal matter tracked within your organisation.
+                  Cases contain:
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Case number and title</span>
+                    <span>Title and case type</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Parties involved</span>
+                    <span>Current status</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Case status</span>
+                    <span>Assignment tracking</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -65,11 +66,11 @@ export default function CasesGuidePage() {
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Evidence and documents</span>
+                    <span>Linked evidence files</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Notes and updates</span>
+                    <span>Creation and update dates</span>
                   </div>
                 </div>
               </CardContent>
@@ -117,7 +118,7 @@ export default function CasesGuidePage() {
                     <div>
                       <h4 className="font-semibold">Fill in Case Details</h4>
                       <p className="text-sm text-muted-foreground">
-                        Enter the case number, title, description, and parties involved
+                        Enter the case title, select the case type (Civil, Criminal, etc.), and set the status
                       </p>
                     </div>
                   </div>
@@ -127,9 +128,9 @@ export default function CasesGuidePage() {
                       4
                     </div>
                     <div>
-                      <h4 className="font-semibold">Set Case Status</h4>
+                      <h4 className="font-semibold">Assign the Case (Optional)</h4>
                       <p className="text-sm text-muted-foreground">
-                        Choose the appropriate status: Open, In Progress, Closed, etc.
+                        You can assign the case to a specific user in your organisation for tracking
                       </p>
                     </div>
                   </div>
@@ -193,32 +194,28 @@ export default function CasesGuidePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  To edit a case, open the case details page and click the "Edit" button. You can update:
+                  To edit a case, open the case details page and click the "Edit" button (if you have permission). You can update:
                 </p>
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
-                    <span>Case title and description</span>
+                    <span>Case title</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
-                    <span>Parties involved (plaintiff, defendant, attorneys)</span>
+                    <span>Case type (Civil, Criminal, Family, etc.)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
-                    <span>Case status</span>
+                    <span>Case status (Open, Active, Pending, Closed)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-1">•</span>
-                    <span>Important dates</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    <span>Notes and additional information</span>
+                    <span>Assignment (who is responsible for the case)</span>
                   </li>
                 </ul>
                 <p className="text-sm text-muted-foreground pt-2">
-                  Note: Some fields may be restricted based on your role and permissions.
+                  Note: You need appropriate permissions (cases:update) to edit cases. Admins and Managers typically have this access.
                 </p>
               </CardContent>
             </Card>
@@ -226,23 +223,31 @@ export default function CasesGuidePage() {
             {/* Common Actions */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-2xl">Common Case Actions</CardTitle>
+                <CardTitle className="text-2xl">Working with Cases</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="p-4 rounded-lg border space-y-2">
                     <FileText className="h-6 w-6 text-primary" />
-                    <h4 className="font-semibold">Add Notes</h4>
+                    <h4 className="font-semibold">View Case Details</h4>
                     <p className="text-sm text-muted-foreground">
-                      Keep track of case developments with timestamped notes
+                      Click any case to see full details including type, status, dates, and assignments
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border space-y-2">
-                    <Search className="h-6 w-6 text-primary" />
+                    <CheckCircle2 className="h-6 w-6 text-primary" />
+                    <h4 className="font-semibold">Update Status</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Change case status to track progress (Open, Active, Pending, Closed)
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-lg border space-y-2">
+                    <FileText className="h-6 w-6 text-primary" />
                     <h4 className="font-semibold">Link Evidence</h4>
                     <p className="text-sm text-muted-foreground">
-                      Attach relevant documents and evidence to the case
+                      Upload evidence files and link them to specific cases
                     </p>
                   </div>
 
@@ -250,15 +255,7 @@ export default function CasesGuidePage() {
                     <FileText className="h-6 w-6 text-primary" />
                     <h4 className="font-semibold">Schedule Hearings</h4>
                     <p className="text-sm text-muted-foreground">
-                      Create hearings directly from the case page
-                    </p>
-                  </div>
-
-                  <div className="p-4 rounded-lg border space-y-2">
-                    <FileText className="h-6 w-6 text-primary" />
-                    <h4 className="font-semibold">Update Status</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Change case status as it progresses through the court system
+                      Create and schedule hearings linked to the case
                     </p>
                   </div>
                 </div>
@@ -271,21 +268,24 @@ export default function CasesGuidePage() {
                 <CardTitle className="text-2xl">Understanding Case Status</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Case status helps track where each case is in its lifecycle. Common statuses include:
+                </p>
                 <div className="p-3 rounded-lg border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-950">
-                  <p className="font-semibold">Open</p>
-                  <p className="text-sm">Case has been filed but not yet assigned or started</p>
+                  <p className="font-semibold">Open / New</p>
+                  <p className="text-sm">Case has been filed but work hasn't started yet</p>
                 </div>
                 <div className="p-3 rounded-lg border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950">
-                  <p className="font-semibold">In Progress</p>
-                  <p className="text-sm">Case is actively being worked on</p>
+                  <p className="font-semibold">Active / In Progress</p>
+                  <p className="text-sm">Case is actively being worked on with hearings and evidence collection</p>
                 </div>
                 <div className="p-3 rounded-lg border-l-4 border-l-purple-500 bg-purple-50 dark:bg-purple-950">
                   <p className="font-semibold">Pending</p>
-                  <p className="text-sm">Waiting for external action or information</p>
+                  <p className="text-sm">Awaiting external action, information, or next steps</p>
                 </div>
                 <div className="p-3 rounded-lg border-l-4 border-l-green-500 bg-green-50 dark:bg-green-950">
-                  <p className="font-semibold">Closed</p>
-                  <p className="text-sm">Case has been resolved and is no longer active</p>
+                  <p className="font-semibold">Closed / Resolved</p>
+                  <p className="text-sm">Case has been completed and is no longer active</p>
                 </div>
               </CardContent>
             </Card>
@@ -299,23 +299,27 @@ export default function CasesGuidePage() {
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Use clear, descriptive case titles that include key information</span>
+                    <span>Use clear, descriptive case titles (e.g., "State v. Smith - Theft Case")</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Keep case status updated to reflect current state</span>
+                    <span>Select the correct case type (Civil, Criminal, Family, etc.) for better organization</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Add detailed notes for important developments</span>
+                    <span>Update case status regularly to reflect progress</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Link all relevant evidence and documents to the case</span>
+                    <span>Assign cases to the appropriate staff member for accountability</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span>Use the search feature to avoid creating duplicate cases</span>
+                    <span>Link all evidence files to cases for easy access</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span>Use search to find existing cases before creating duplicates</span>
                   </li>
                 </ul>
               </CardContent>

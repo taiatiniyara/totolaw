@@ -39,29 +39,17 @@ Visit [http://localhost:3441](http://localhost:3441) to access the application.
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in the `/docs` folder:
+User-friendly documentation is available within the application:
 
-### Getting Started
-- [Getting Started](./docs/getting-started.md) - Installation and setup guide
-- [Authentication](./docs/authentication.md) - Magic link authentication setup
-- [Deployment](./docs/deployment.md) - Production deployment guide
-- [Troubleshooting](./docs/troubleshooting.md) - Common issues and solutions
+- Visit `/docs` in the app for comprehensive guides
+- Access help from the dashboard sidebar
+- Getting Started guide at `/docs/getting-started`
+- Feature-specific guides for Cases, Hearings, and Evidence
+- FAQ at `/docs/faq`
 
-### Core Features
-- [Architecture](./docs/architecture.md) - Technical architecture and design
-- [Database Schema](./docs/database.md) - Database structure and migrations
-- [API Documentation](./docs/api.md) - API routes and services
-
-### User & Organisation Management
-- [System Admin Guide](./docs/system-admin-guide.md) - Complete super admin management guide
-- [Multi-Tenant RBAC](./docs/multi-tenant-rbac.md) - Role-based access control
-- [Organisation Management](./docs/organisation-management.md) - Managing organisations
-- [User Invitation System](./docs/user-invitation-system.md) - Invitations and join requests
-- [Permissions Reference](./docs/permissions-reference.md) - All available permissions
-
-### Court Features
-- [Court Transcription](./docs/court-transcription.md) - Automated and manual transcription
-- [Manual Transcription](./docs/manual-transcription.md) - Manual transcription editor guide
+For administrators:
+- Use `npm run setup-admin` to manage system administrators
+- Check the migration scripts in `/migrations` for database schema details
 
 ## 🛠️ Tech Stack
 

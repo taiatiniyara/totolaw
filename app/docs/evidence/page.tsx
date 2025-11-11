@@ -129,7 +129,7 @@ export default function EvidenceGuidePage() {
                     <div>
                       <h4 className="font-semibold">Link to Case</h4>
                       <p className="text-sm text-muted-foreground">
-                        Select which case(s) the evidence relates to
+                        Select which case the evidence relates to (required)
                       </p>
                     </div>
                   </div>
@@ -139,9 +139,9 @@ export default function EvidenceGuidePage() {
                       5
                     </div>
                     <div>
-                      <h4 className="font-semibold">Add Metadata</h4>
+                      <h4 className="font-semibold">Add Description</h4>
                       <p className="text-sm text-muted-foreground">
-                        Add description, tags, and classification
+                        Add a description to provide context about the evidence file
                       </p>
                     </div>
                   </div>
@@ -308,9 +308,9 @@ export default function EvidenceGuidePage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="p-3 rounded-lg border">
-                    <h4 className="font-semibold">Tags</h4>
+                    <h4 className="font-semibold">Case Linking</h4>
                     <p className="text-sm text-muted-foreground">
-                      Add custom tags to categorize evidence (e.g., "witness statement", "physical evidence")
+                      Each evidence file is linked to a specific case. View all evidence for a case on the case details page.
                     </p>
                   </div>
 
@@ -322,16 +322,16 @@ export default function EvidenceGuidePage() {
                   </div>
 
                   <div className="p-3 rounded-lg border">
-                    <h4 className="font-semibold">Case Linking</h4>
+                    <h4 className="font-semibold">File Information</h4>
                     <p className="text-sm text-muted-foreground">
-                      Link evidence to multiple cases if relevant to more than one matter
+                      Evidence includes file name, size, type, upload date, and who submitted it
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg border">
-                    <h4 className="font-semibold">Chronological Order</h4>
+                    <h4 className="font-semibold">Searchable</h4>
                     <p className="text-sm text-muted-foreground">
-                      Evidence is automatically organized by upload date, but you can add custom dates
+                      Use the global search feature to find evidence by file name or description
                     </p>
                   </div>
                 </div>

@@ -14,9 +14,6 @@ import {
   FileText,
   Calendar,
   Upload,
-  Users,
-  Search,
-  Settings,
   Shield,
   HelpCircle,
   ArrowRight,
@@ -83,37 +80,13 @@ export default function PublicDocsPage() {
                       <ArrowRight className="h-5 w-5 text-muted-foreground" />
                     </div>
                   </Link>
-                  <Link 
-                    href="/docs/navigation" 
-                    className="block p-4 rounded-lg border hover:bg-accent transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-lg">Navigating the Dashboard</p>
-                        <p className="text-sm text-muted-foreground">Understand the layout and navigation</p>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  </Link>
-                  <Link 
-                    href="/docs/roles-permissions" 
-                    className="block p-4 rounded-lg border hover:bg-accent transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-lg">Roles & Permissions</p>
-                        <p className="text-sm text-muted-foreground">Understand your access level and capabilities</p>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  </Link>
                 </div>
               </CardContent>
             </Card>
 
             {/* Feature Guides */}
             <div>
-              <h2 className="text-2xl font-semibold mb-6">Feature Guides</h2>
+              <h2 className="text-2xl font-semibold mb-6">Core Features</h2>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <Card className="hover:bg-accent cursor-pointer transition-colors">
                   <Link href="/docs/cases">
@@ -150,42 +123,6 @@ export default function PublicDocsPage() {
                     </CardHeader>
                   </Link>
                 </Card>
-
-                <Card className="hover:bg-accent cursor-pointer transition-colors">
-                  <Link href="/docs/search">
-                    <CardHeader>
-                      <Search className="h-10 w-10 text-primary mb-3" />
-                      <CardTitle className="text-xl">Search</CardTitle>
-                      <CardDescription className="text-base">
-                        Find cases, hearings, and documents
-                      </CardDescription>
-                    </CardHeader>
-                  </Link>
-                </Card>
-
-                <Card className="hover:bg-accent cursor-pointer transition-colors">
-                  <Link href="/docs/users">
-                    <CardHeader>
-                      <Users className="h-10 w-10 text-primary mb-3" />
-                      <CardTitle className="text-xl">User Management</CardTitle>
-                      <CardDescription className="text-base">
-                        Manage users and team members
-                      </CardDescription>
-                    </CardHeader>
-                  </Link>
-                </Card>
-
-                <Card className="hover:bg-accent cursor-pointer transition-colors">
-                  <Link href="/docs/settings">
-                    <CardHeader>
-                      <Settings className="h-10 w-10 text-primary mb-3" />
-                      <CardTitle className="text-xl">Settings</CardTitle>
-                      <CardDescription className="text-base">
-                        Configure your preferences
-                      </CardDescription>
-                    </CardHeader>
-                  </Link>
-                </Card>
               </div>
             </div>
 
@@ -195,23 +132,32 @@ export default function PublicDocsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <Shield className="h-6 w-6" />
-                    Security & Privacy
+                    Security & Access
                   </CardTitle>
                   <CardDescription className="text-base">
-                    Learn about data security and access controls
+                    Understanding security and permissions
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <Link href="/docs/security" className="block text-sm text-primary hover:underline">
-                      Security Features
-                    </Link>
-                    <Link href="/docs/privacy" className="block text-sm text-primary hover:underline">
-                      Privacy Policy
-                    </Link>
-                    <Link href="/docs/data-retention" className="block text-sm text-primary hover:underline">
-                      Data Retention
-                    </Link>
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg border">
+                      <p className="font-semibold text-sm mb-1">Multi-Tenant Security</p>
+                      <p className="text-xs text-muted-foreground">
+                        Each organisation's data is completely isolated and secure
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg border">
+                      <p className="font-semibold text-sm mb-1">Role-Based Access</p>
+                      <p className="text-xs text-muted-foreground">
+                        Admins, Managers, Staff, and Viewers have different permission levels
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg border">
+                      <p className="font-semibold text-sm mb-1">Passwordless Login</p>
+                      <p className="text-xs text-muted-foreground">
+                        Secure magic link authentication via email
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -231,12 +177,15 @@ export default function PublicDocsPage() {
                     <Link href="/docs/faq" className="block text-sm text-primary hover:underline">
                       Frequently Asked Questions
                     </Link>
-                    <Link href="/docs/troubleshooting" className="block text-sm text-primary hover:underline">
-                      Troubleshooting Guide
-                    </Link>
-                    <Link href="/docs/contact" className="block text-sm text-primary hover:underline">
-                      Contact Support
-                    </Link>
+                    <div className="pt-2 mt-2 border-t">
+                      <p className="text-sm text-muted-foreground mb-2">Need more help?</p>
+                      <p className="text-xs text-muted-foreground">
+                        Contact your system administrator or email{" "}
+                        <a href="mailto:support@totolaw.org" className="text-primary hover:underline">
+                          support@totolaw.org
+                        </a>
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

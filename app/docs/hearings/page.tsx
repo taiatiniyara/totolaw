@@ -44,7 +44,7 @@ export default function HearingsGuidePage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Hearings are scheduled court appearances linked to specific cases. Each hearing includes:
+                  Hearings are scheduled court appearances linked to specific cases. Each hearing tracks:
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
@@ -61,15 +61,15 @@ export default function HearingsGuidePage() {
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Hearing type</span>
+                    <span>Assigned judge</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Participants</span>
+                    <span>Bail decision (if applicable)</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 rounded-lg border">
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    <span>Transcripts</span>
+                    <span>Related evidence</span>
                   </div>
                 </div>
               </CardContent>
@@ -200,30 +200,30 @@ export default function HearingsGuidePage() {
               <CardContent>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="p-4 rounded-lg border space-y-2">
-                    <h4 className="font-semibold">Reschedule</h4>
+                    <h4 className="font-semibold">View Details</h4>
                     <p className="text-sm text-muted-foreground">
-                      Edit the hearing to change the date, time, or location
+                      Click any hearing to see full details including date, location, and linked case
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border space-y-2">
-                    <h4 className="font-semibold">Add Participants</h4>
+                    <h4 className="font-semibold">Edit Hearing</h4>
                     <p className="text-sm text-muted-foreground">
-                      Track who needs to attend the hearing
+                      Update date, time, location, or judge assignment (with proper permissions)
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border space-y-2">
-                    <h4 className="font-semibold">Add Transcripts</h4>
+                    <h4 className="font-semibold">Link Evidence</h4>
                     <p className="text-sm text-muted-foreground">
-                      Upload or create transcripts for the hearing
+                      Attach evidence files specific to this hearing
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border space-y-2">
-                    <h4 className="font-semibold">Mark Complete</h4>
+                    <h4 className="font-semibold">Dashboard View</h4>
                     <p className="text-sm text-muted-foreground">
-                      Update status after the hearing concludes
+                      Upcoming hearings appear on your dashboard for quick access
                     </p>
                   </div>
                 </div>

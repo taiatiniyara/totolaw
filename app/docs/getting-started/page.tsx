@@ -166,35 +166,47 @@ export default function GettingStartedPage() {
                   <div className="p-4 rounded-lg border">
                     <h4 className="font-semibold mb-1">Organisations</h4>
                     <p className="text-sm text-muted-foreground">
-                      Totolaw is multi-tenant. Each court or legal organisation has its own space with isolated data.
+                      Totolaw is multi-tenant. Each court or legal organisation has its own space with completely isolated data.
+                      You can join organisations via invitation or by requesting to join.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
                     <h4 className="font-semibold mb-1">Roles & Permissions</h4>
                     <p className="text-sm text-muted-foreground">
-                      Users have different roles (Admin, Manager, Staff, Viewer) with varying levels of access to features.
+                      Users have different roles (Admin, Manager, Staff, Viewer) with varying levels of access.
+                      Admins can manage users and settings, while Staff can work on cases and hearings.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
                     <h4 className="font-semibold mb-1">Cases</h4>
                     <p className="text-sm text-muted-foreground">
-                      The central unit of work. Each case represents a legal matter with its own details, hearings, and evidence.
+                      The central unit of work. Each case has a title, type, status, and can be assigned to specific users.
+                      Cases track all related information in one place.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
                     <h4 className="font-semibold mb-1">Hearings</h4>
                     <p className="text-sm text-muted-foreground">
-                      Court appearances scheduled for specific dates. Each hearing is linked to a case and can have transcripts.
+                      Court appearances scheduled for specific dates and locations. Each hearing is linked to a case.
+                      View hearings in a calendar or list format.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
                     <h4 className="font-semibold mb-1">Evidence</h4>
                     <p className="text-sm text-muted-foreground">
-                      Documents, images, audio files, and other materials relevant to a case. Securely stored and organized.
+                      Documents, images, audio files, and other materials linked to cases. All evidence is encrypted
+                      and stored securely with access controls.
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-lg border">
+                    <h4 className="font-semibold mb-1">Search</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Global search lets you quickly find cases, hearings, and evidence across your organisation's data.
                     </p>
                   </div>
                 </div>
@@ -209,23 +221,27 @@ export default function GettingStartedPage() {
               <CardContent className="space-y-3">
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
-                  <p>Use the sidebar menu to navigate between main sections</p>
+                  <p>Use the sidebar menu to navigate between Cases, Hearings, Evidence, and Search</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
-                  <p>Click your profile icon to access settings and logout</p>
+                  <p>The Dashboard shows a summary of recent activity and statistics</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
-                  <p>Use the Search feature to quickly find cases, hearings, or documents</p>
+                  <p>Use the Organisation Switcher (if you belong to multiple organisations)</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
+                  <p>Click your profile to access Settings and Logout</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
+                  <p>The Search feature lets you quickly find anything across your organisation</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
                   <p>On mobile, tap the menu icon to open the navigation sidebar</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
-                  <p>Look for the "Help & Docs" link in the sidebar for quick access to guides</p>
                 </div>
               </CardContent>
             </Card>
