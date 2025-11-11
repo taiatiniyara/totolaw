@@ -119,3 +119,40 @@ export const organisationInvitations = pgTable(
 
 export type OrganisationInvitation = typeof organisationInvitations.$inferSelect;
 export type NewOrganisationInvitation = typeof organisationInvitations.$inferInsert;
+
+// --- Organisation Join Requests (User-initiated)
+export const organisationJoinRequests = pgTable(
+  "organisation_join_requests",
+  {
+    id: text("id").primaryKey(),
+    organisationId: text("organisation_id")
+      .references(() => organisations.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: text("user_id")
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    status: varchar("status", { length: 20 }).default("pending").notNull(), // pending, approved, rejected
+    message: text("message"), // Optional message from user
+    reviewedBy: text("reviewed_by").references(() => user.id),
+    reviewedAt: timestamp("reviewed_at"),
+    rejectionReason: text("rejection_reason"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    orgIdx: index("org_join_request_org_idx").on(table.organisationId),
+    userIdx: index("org_join_request_user_idx").on(table.userId),
+    statusIdx: index("org_join_request_status_idx").on(table.status),
+    // Ensure user can only have one pending request per organisation
+    uniqueUserOrgPending: unique("unique_user_org_join_request").on(
+      table.userId,
+      table.organisationId
+    ),
+  })
+);
+
+export type OrganisationJoinRequest = typeof organisationJoinRequests.$inferSelect;
+export type NewOrganisationJoinRequest = typeof organisationJoinRequests.$inferInsert;

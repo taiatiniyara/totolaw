@@ -295,3 +295,46 @@ export async function getRolesAndPermissions() {
     permissionsByResource,
   };
 }
+
+// ========================================
+// User Invitation (System Admin)
+// ========================================
+
+/**
+ * Create a system admin invitation with full control
+ * Super admins can invite users to any organisation with any roles/permissions
+ */
+export async function createSystemAdminInvitation(
+  email: string,
+  organisationId: string,
+  roleIds: string[] = [],
+  permissionIds: string[] = []
+) {
+  const admin = await requireSuperAdmin();
+
+  try {
+    const { createInvitation } = await import("@/lib/services/invitation.service");
+    
+    const invitation = await createInvitation(
+      email,
+      organisationId,
+      admin.userId,
+      roleIds,
+      permissionIds
+    );
+
+    // Log the action
+    await logSystemAdminAction(
+      admin.userId,
+      "created_user_invitation",
+      "invitation",
+      invitation.id,
+      `Invited ${email} to organisation ${organisationId}`,
+      { email, organisationId, roleIds, permissionIds }
+    );
+
+    return { success: true, invitation };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}

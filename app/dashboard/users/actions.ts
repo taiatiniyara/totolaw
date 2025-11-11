@@ -10,9 +10,15 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/drizzle/connection";
 import { user as userTable } from "@/lib/drizzle/schema/auth-schema";
 import { organisationMembers } from "@/lib/drizzle/schema/organisation-schema";
-import { userRoles, roles } from "@/lib/drizzle/schema/rbac-schema";
+import { userRoles, roles, permissions } from "@/lib/drizzle/schema/rbac-schema";
 import { getUserTenantContext } from "@/lib/services/tenant.service";
 import { hasPermission } from "@/lib/services/authorization.service";
+import { 
+  createInvitation, 
+  listInvitationsForOrganisation, 
+  revokeInvitation,
+  listAllInvitations 
+} from "@/lib/services/invitation.service";
 import { eq, and } from "drizzle-orm";
 
 type ActionResult<T = unknown> = {
@@ -254,5 +260,172 @@ export async function getOrganisationRoles(): Promise<ActionResult<{ id: string;
   } catch (error) {
     console.error("Error fetching roles:", error);
     return { success: false, error: "Failed to fetch roles" };
+  }
+}
+
+// ========================================
+// User Invitation Actions
+// ========================================
+
+/**
+ * Create a user invitation
+ * Requires users:manage permission
+ */
+export async function inviteUser(
+  email: string,
+  roleIds: string[] = [],
+  permissionIds: string[] = []
+): Promise<ActionResult<any>> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
+    }
+
+    // Check permission
+    const canManage = await hasPermission(
+      session.user.id,
+      context.organisationId,
+      "users:manage",
+      context.isSuperAdmin
+    );
+
+    if (!canManage) {
+      return { success: false, error: "Insufficient permissions" };
+    }
+
+    // Create invitation
+    const invitation = await createInvitation(
+      email,
+      context.organisationId,
+      session.user.id,
+      roleIds,
+      permissionIds
+    );
+
+    return { success: true, data: invitation };
+  } catch (error: any) {
+    console.error("Error creating invitation:", error);
+    return { success: false, error: error.message || "Failed to create invitation" };
+  }
+}
+
+/**
+ * Get invitations for current organisation
+ * Requires users:read permission
+ */
+export async function getInvitations(status?: string): Promise<ActionResult<any[]>> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
+    }
+
+    // Check permission
+    const canView = await hasPermission(
+      session.user.id,
+      context.organisationId,
+      "users:read",
+      context.isSuperAdmin
+    );
+
+    if (!canView) {
+      return { success: false, error: "Insufficient permissions" };
+    }
+
+    // Super admins can see all invitations
+    const invitations = context.isSuperAdmin
+      ? await listAllInvitations(status)
+      : await listInvitationsForOrganisation(context.organisationId, status);
+
+    return { success: true, data: invitations };
+  } catch (error: any) {
+    console.error("Error fetching invitations:", error);
+    return { success: false, error: error.message || "Failed to fetch invitations" };
+  }
+}
+
+/**
+ * Revoke an invitation
+ * Requires users:manage permission
+ */
+export async function revokeUserInvitation(invitationId: string): Promise<ActionResult> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
+    }
+
+    // Check permission
+    const canManage = await hasPermission(
+      session.user.id,
+      context.organisationId,
+      "users:manage",
+      context.isSuperAdmin
+    );
+
+    if (!canManage) {
+      return { success: false, error: "Insufficient permissions" };
+    }
+
+    await revokeInvitation(invitationId);
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error revoking invitation:", error);
+    return { success: false, error: error.message || "Failed to revoke invitation" };
+  }
+}
+
+/**
+ * Get available permissions (for super admins)
+ */
+export async function getAvailablePermissions(): Promise<ActionResult<any[]>> {
+  try {
+    const session = await auth.api.getSession({ 
+      headers: await import("next/headers").then(m => m.headers()) 
+    });
+    
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    
+    // Only super admins can view all permissions
+    if (!context?.isSuperAdmin) {
+      return { success: false, error: "Insufficient permissions" };
+    }
+
+    const allPermissions = await db.select().from(permissions);
+
+    return { success: true, data: allPermissions };
+  } catch (error: any) {
+    console.error("Error fetching permissions:", error);
+    return { success: false, error: error.message || "Failed to fetch permissions" };
   }
 }
