@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./drizzle/connection";
 import { magicLink } from "better-auth/plugins";
 import { sendEmail } from "./services/email.service";
+import { magicLinkTemplate } from "./services/email-templates.service";
 import { nextCookies } from "better-auth/next-js";
 import * as schema from "./drizzle/schema/auth-schema";
 
@@ -43,12 +44,9 @@ export const auth = betterAuth({
         console.log("Token:", token);
         console.log("Email:", email);
         
-        await sendEmail(email, "Your Magic Login Link", [
-          `Bula vinaka,`,
-          `You requested a magic login link. Use the link below to log in:`,
-          `<a style="color: blue; text-decoration: underline; font-weight: bold;" href="${url}">Click Here</a>`,
-          `If you did not request this link, please ignore this email.`,
-        ]);
+        // Use the standardized magic link template
+        const template = magicLinkTemplate(email, url);
+        await sendEmail(email, template.subject, template.paragraphs);
       },
       rateLimit: {
         window: 15 * 60 * 1000, // 15 minutes

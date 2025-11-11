@@ -405,3 +405,56 @@ export function hearingReminderTemplate(
     ],
   };
 }
+
+/**
+ * Super Admin Added Notification
+ */
+export function superAdminAddedTemplate(
+  newAdminName: string,
+  newAdminEmail: string,
+  addedByName: string,
+  notes?: string
+): EmailTemplate {
+  const loginUrl = `${getBaseUrl()}/auth/login`;
+  const dashboardUrl = `${getBaseUrl()}/dashboard/system-admin`;
+
+  const paragraphs = [
+    `Hello ${newAdminName}! 🎉`,
+    `You have been granted <strong style="color: #7c3aed;">Super Administrator</strong> privileges on ${APP_NAME} by ${addedByName}.`,
+    `<div style="background-color: #f5f3ff; padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #7c3aed;">
+      <p style="margin: 4px 0;"><strong>🛡️ Super Admin Privileges</strong></p>
+      <p style="margin: 8px 0; font-size: 14px;">As a super admin, you now have full system access including:</p>
+      <ul style="margin: 8px 0; padding-left: 20px; font-size: 14px;">
+        <li>Manage all organizations</li>
+        <li>Manage system administrators</li>
+        <li>Access system-wide settings</li>
+        <li>View audit logs</li>
+        <li>Create and manage users across all organizations</li>
+      </ul>
+    </div>`,
+  ];
+
+  if (notes) {
+    paragraphs.push(
+      `<strong>Note from ${addedByName}:</strong>`,
+      `<div style="background-color: #f3f4f6; padding: 12px; border-radius: 6px; margin: 8px 0; font-style: italic;">
+        ${notes}
+      </div>`
+    );
+  }
+
+  paragraphs.push(
+    `To get started, log in to your account:`,
+    createButton("Log In to Dashboard", loginUrl, "#7c3aed"),
+    `<div style="background-color: #fef3c7; padding: 12px; border-radius: 6px; margin: 16px 0; border-left: 4px solid #f59e0b;">
+      <p style="margin: 0; font-size: 14px;"><strong>⚠️ Important:</strong> With great power comes great responsibility. Please use your super admin privileges carefully and in accordance with your organization's policies.</p>
+    </div>`,
+    `If you have any questions or need assistance, please contact the system administrator team.`,
+    `<a href="${dashboardUrl}" style="color: ${APP_COLOR}; text-decoration: none;">📊 Access System Admin Dashboard</a>`
+  );
+
+  return {
+    subject: `🛡️ You've been granted Super Admin access to ${APP_NAME}`,
+    paragraphs,
+  };
+}

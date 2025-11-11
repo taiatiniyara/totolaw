@@ -35,6 +35,7 @@ Available Templates:
   - welcome          : Welcome email
   - role-changed     : Role changed notification
   - user-removed     : User removed notification
+  - super-admin      : Super admin added notification
   - case-assigned    : Case assignment
   - hearing-reminder : Hearing reminder
   - system           : System notification
@@ -140,6 +141,15 @@ async function testEmail(template: string) {
         );
         break;
 
+      case "super-admin":
+        emailTemplate = templates.superAdminAddedTemplate(
+          "Test User",
+          recipientEmail,
+          "Chief Administrator",
+          "You have been granted super admin access to help manage the system."
+        );
+        break;
+
       case "case-assigned":
         emailTemplate = templates.caseAssignedTemplate(
           "Test User",
@@ -223,6 +233,7 @@ async function main() {
       "welcome",
       "role-changed",
       "user-removed",
+      "super-admin",
       "case-assigned",
       "hearing-reminder",
       "system",

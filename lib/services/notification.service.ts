@@ -301,6 +301,24 @@ async function getOrganisationAdmins(organisationId: string): Promise<Array<{ em
 }
 
 /**
+ * Send super admin added notification
+ */
+export async function notifySuperAdminAdded(
+  email: string,
+  newAdminName: string,
+  addedByName: string,
+  notes?: string
+): Promise<void> {
+  const template = templates.superAdminAddedTemplate(
+    newAdminName,
+    email,
+    addedByName,
+    notes
+  );
+  await sendEmail(email, template.subject, template.paragraphs);
+}
+
+/**
  * Batch notification helper
  * Send the same notification to multiple recipients
  */

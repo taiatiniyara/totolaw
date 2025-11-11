@@ -3,6 +3,7 @@ import { systemAdminAuditLog } from "../drizzle/schema/system-admin-schema";
 import { user } from "../drizzle/schema/auth-schema";
 import { eq } from "drizzle-orm";
 import { generateUUID } from "./uuid.service";
+import { notifySuperAdminAdded } from "./notification.service";
 
 export interface SuperAdminUser {
   id: string;
@@ -67,7 +68,11 @@ export async function grantSuperAdmin(userId: string, grantedBy: string, notes?:
   const existingUser = await db.select().from(user).where(eq(user.id, userId)).limit(1);
   if (existingUser.length === 0) throw new Error("User not found");
   if (existingUser[0].isSuperAdmin) return;
-  
+
+  // Get the granter's name for the email
+  const granterUser = await db.select().from(user).where(eq(user.id, grantedBy)).limit(1);
+  const granterName = granterUser.length > 0 ? granterUser[0].name : "System Administrator";
+
   await db.update(user).set({
     isSuperAdmin: true,
     adminAddedBy: grantedBy,
@@ -75,24 +80,37 @@ export async function grantSuperAdmin(userId: string, grantedBy: string, notes?:
     adminNotes: notes,
     updatedAt: new Date(),
   }).where(eq(user.id, userId));
-  
-  await logSystemAdminAction(grantedBy, "granted_super_admin", "user", userId, 
-    `Super admin privileges granted to ${existingUser[0].email}`, 
+
+  await logSystemAdminAction(grantedBy, "granted_super_admin", "user", userId,
+    `Super admin privileges granted to ${existingUser[0].email}`,
     { userId, email: existingUser[0].email, notes });
+
+  // Send email notification to the new super admin
+  try {
+    await notifySuperAdminAdded(
+      existingUser[0].email,
+      existingUser[0].name,
+      granterName,
+      notes
+    );
+  } catch (error) {
+    console.error("Failed to send super admin notification email:", error);
+    // Don't throw - we still want the admin to be added even if email fails
+  }
 }
 
 export async function revokeSuperAdmin(userId: string, revokedBy: string, reason?: string): Promise<void> {
   const existingUser = await db.select().from(user).where(eq(user.id, userId)).limit(1);
   if (existingUser.length === 0) throw new Error("User not found");
   if (!existingUser[0].isSuperAdmin) return;
-  
+
   const updateNotes = reason ? `${existingUser[0].adminNotes || ""}\nRevoked: ${reason}`.trim() : existingUser[0].adminNotes;
   await db.update(user).set({
     isSuperAdmin: false,
     adminNotes: updateNotes,
     updatedAt: new Date(),
   }).where(eq(user.id, userId));
-  
+
   await logSystemAdminAction(revokedBy, "revoked_super_admin", "user", userId,
     `Super admin privileges revoked from ${existingUser[0].email}`,
     { userId, email: existingUser[0].email, reason });
@@ -104,7 +122,11 @@ export async function grantSuperAdminByEmail(email: string, name: string, grante
     await grantSuperAdmin(existingUser[0].id, grantedBy, notes);
     return existingUser[0].id;
   }
-  
+
+  // Get the granter's name for the email
+  const granterUser = await db.select().from(user).where(eq(user.id, grantedBy)).limit(1);
+  const granterName = granterUser.length > 0 ? granterUser[0].name : "System Administrator";
+
   const userId = generateUUID();
   await db.insert(user).values({
     id: userId,
@@ -118,10 +140,24 @@ export async function grantSuperAdminByEmail(email: string, name: string, grante
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-  
+
   await logSystemAdminAction(grantedBy, "granted_super_admin", "user", userId,
     `Super admin privileges granted to new user ${email}`,
     { userId, email, name, notes });
+
+  // Send email notification to the new super admin
+  try {
+    await notifySuperAdminAdded(
+      email.toLowerCase(),
+      name,
+      granterName,
+      notes
+    );
+  } catch (error) {
+    console.error("Failed to send super admin notification email:", error);
+    // Don't throw - we still want the admin to be added even if email fails
+  }
+
   return userId;
 }
 
