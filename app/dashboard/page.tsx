@@ -10,19 +10,17 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heading } from "@/components/ui/heading";
+import { PageHeader, StatCard, LinkCard, } from "@/components/common";
 import { getCaseStats } from "./cases/actions";
 import { getCurrentOrganization, getUpcomingHearings, getRecentCases } from "./actions";
 import { 
   FileText, 
   Clock, 
   CheckCircle, 
-  TrendingUp,
   Calendar,
   Scale,
   Plus,
   Eye,
-  ArrowRight,
   MapPin
 } from "lucide-react";
 
@@ -42,88 +40,47 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Heading as="h1">Dashboard</Heading>
-          <p className="text-muted-foreground mt-1">
-            {org?.organizationName ? `${org.organizationName} - ${org.roleName}` : "Welcome to Totolaw"}
-          </p>
-        </div>
-        <Button asChild size="sm">
-          <Link href="/dashboard/cases">
-            <Plus className="mr-2 h-4 w-4" />
-            New Case
-          </Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description={org?.organizationName ? `${org.organizationName} - ${org.roleName}` : "Welcome to Totolaw"}
+        action={{
+          label: "New Case",
+          href: "/dashboard/cases",
+          icon: Plus,
+        }}
+      />
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Cases</CardTitle>
-            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-              <FileText className="h-5 w-5 text-primary" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              All cases in your organization
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
-            <div className="h-9 w-9 rounded-full bg-blue-500/10 flex items-center justify-center">
-              <Clock className="h-5 w-5 text-blue-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.active}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Currently in progress
-            </p>
-            {stats.active > 0 && (
-              <Badge variant="secondary" className="mt-2">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                Active
-              </Badge>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Cases</CardTitle>
-            <div className="h-9 w-9 rounded-full bg-orange-500/10 flex items-center justify-center">
-              <Clock className="h-5 w-5 text-orange-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.pending}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Awaiting action
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Closed Cases</CardTitle>
-            <div className="h-9 w-9 rounded-full bg-green-500/10 flex items-center justify-center">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.closed}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Completed cases
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Total Cases"
+          value={stats.total}
+          description="All cases in your organization"
+          icon={FileText}
+          iconColor="text-primary"
+        />
+        <StatCard
+          title="Active Cases"
+          value={stats.active}
+          description="Currently in progress"
+          icon={Clock}
+          iconColor="text-blue-500"
+          badge={stats.active > 0 ? { label: "Active" } : undefined}
+        />
+        <StatCard
+          title="Pending Cases"
+          value={stats.pending}
+          description="Awaiting action"
+          icon={Clock}
+          iconColor="text-orange-500"
+        />
+        <StatCard
+          title="Closed Cases"
+          value={stats.closed}
+          description="Completed cases"
+          icon={CheckCircle}
+          iconColor="text-green-500"
+        />
       </div>
 
       {/* Upcoming Hearings and Recent Cases */}
@@ -149,31 +106,23 @@ export default async function DashboardPage() {
               ) : (
                 <div className="space-y-3">
                   {upcomingHearings.map((hearing: any) => (
-                    <Link
+                    <LinkCard
                       key={hearing.id}
                       href={`/dashboard/hearings/${hearing.id}`}
-                      className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                      title={hearing.caseTitle}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {hearing.caseTitle}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            <span>{new Date(hearing.date).toLocaleDateString()}</span>
-                            {hearing.location && (
-                              <>
-                                <span>•</span>
-                                <MapPin className="h-3 w-3" />
-                                <span className="truncate">{hearing.location}</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        <span>{new Date(hearing.date).toLocaleDateString()}</span>
+                        {hearing.location && (
+                          <>
+                            <span>•</span>
+                            <MapPin className="h-3 w-3" />
+                            <span className="truncate">{hearing.location}</span>
+                          </>
+                        )}
                       </div>
-                    </Link>
+                    </LinkCard>
                   ))}
                 </div>
               )}
@@ -208,32 +157,24 @@ export default async function DashboardPage() {
               ) : (
                 <div className="space-y-3">
                   {recentCases.map((caseItem: any) => (
-                    <Link
+                    <LinkCard
                       key={caseItem.id}
                       href={`/dashboard/cases/${caseItem.id}`}
-                      className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                      title={caseItem.title}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {caseItem.title}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant={
-                              caseItem.status === 'active' ? 'default' :
-                              caseItem.status === 'closed' ? 'secondary' :
-                              'outline'
-                            } className="text-xs">
-                              {caseItem.status}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground">
-                              {caseItem.type}
-                            </span>
-                          </div>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant={
+                          caseItem.status === 'active' ? 'default' :
+                          caseItem.status === 'closed' ? 'secondary' :
+                          'outline'
+                        } className="text-xs">
+                          {caseItem.status}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {caseItem.type}
+                        </span>
                       </div>
-                    </Link>
+                    </LinkCard>
                   ))}
                 </div>
               )}

@@ -9,8 +9,9 @@ export const dynamic = 'force-dynamic';
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getUserTenantContext } from "@/lib/services/tenant.service";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader, InfoCard } from "@/components/common";
 import { Heading } from "@/components/ui/heading";
 import { 
   Settings as SettingsIcon, 
@@ -36,157 +37,119 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-6">
         {/* Header */}
-        <div>
-          <Heading as="h1">Settings</Heading>
-          <p className="text-muted-foreground">
-            Manage your account and organization preferences
-          </p>
-        </div>
+        <PageHeader
+          title="Settings"
+          description="Manage your account and organization preferences"
+        />
 
         {/* Settings Categories */}
         <div className="grid gap-4 md:grid-cols-2">
           {/* User Profile */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                User Profile
-              </CardTitle>
-              <CardDescription>
-                Manage your personal information and preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Name</span>
-                  <span className="font-medium">{session.user.name || "Not set"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Email</span>
-                  <span className="font-medium">{session.user.email}</span>
-                </div>
+          <InfoCard
+            title="User Profile"
+            description="Manage your personal information and preferences"
+            icon={User}
+            clickable={false}
+          >
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Name</span>
+                <span className="font-medium">{session.user.name || "Not set"}</span>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Email</span>
+                <span className="font-medium">{session.user.email}</span>
+              </div>
+            </div>
+          </InfoCard>
 
           {/* Organization Settings */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                Organization
-              </CardTitle>
-              <CardDescription>
-                Organization-wide settings and preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Organization ID</span>
-                  <span className="font-mono text-xs">
-                    {context?.organizationId?.slice(0, 8) || "N/A"}...
-                  </span>
-                </div>
-                <Badge variant="outline" className="mt-2">
-                  Admin Access Required
-                </Badge>
+          <InfoCard
+            title="Organization"
+            description="Organization-wide settings and preferences"
+            icon={Building2}
+            clickable={false}
+          >
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Organization ID</span>
+                <span className="font-mono text-xs">
+                  {context?.organizationId?.slice(0, 8) || "N/A"}...
+                </span>
               </div>
-            </CardContent>
-          </Card>
+              <Badge variant="outline" className="mt-2">
+                Admin Access Required
+              </Badge>
+            </div>
+          </InfoCard>
 
           {/* Notifications */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Notifications
-              </CardTitle>
-              <CardDescription>
-                Manage your notification preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-muted-foreground">
-                <p>Configure email notifications for:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Case updates</li>
-                  <li>Hearing reminders</li>
-                  <li>System announcements</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="Notifications"
+            description="Manage your notification preferences"
+            icon={Bell}
+            clickable={false}
+          >
+            <div className="text-sm text-muted-foreground">
+              <p>Configure email notifications for:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Case updates</li>
+                <li>Hearing reminders</li>
+                <li>System announcements</li>
+              </ul>
+            </div>
+          </InfoCard>
 
           {/* Security */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Security
-              </CardTitle>
-              <CardDescription>
-                Manage security and authentication settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-muted-foreground">
-                <p>Security features:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Magic link authentication</li>
-                  <li>Session management</li>
-                  <li>Access logs</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="Security"
+            description="Manage security and authentication settings"
+            icon={Shield}
+            clickable={false}
+          >
+            <div className="text-sm text-muted-foreground">
+              <p>Security features:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Magic link authentication</li>
+                <li>Session management</li>
+                <li>Access logs</li>
+              </ul>
+            </div>
+          </InfoCard>
 
           {/* Appearance */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5" />
-                Appearance
-              </CardTitle>
-              <CardDescription>
-                Customize the look and feel of the application
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-muted-foreground">
-                <p>Appearance options:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Theme selection</li>
-                  <li>Layout preferences</li>
-                  <li>Language settings</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="Appearance"
+            description="Customize the look and feel of the application"
+            icon={Palette}
+            clickable={false}
+          >
+            <div className="text-sm text-muted-foreground">
+              <p>Appearance options:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Theme selection</li>
+                <li>Layout preferences</li>
+                <li>Language settings</li>
+              </ul>
+            </div>
+          </InfoCard>
 
           {/* Regional Settings */}
-          <Card className="hover:bg-accent transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5" />
-                Regional Settings
-              </CardTitle>
-              <CardDescription>
-                Configure timezone and localization
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-muted-foreground">
-                <p>Regional preferences:</p>
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Timezone selection</li>
-                  <li>Date format</li>
-                  <li>Currency format</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+          <InfoCard
+            title="Regional Settings"
+            description="Configure timezone and localization"
+            icon={Globe}
+            clickable={false}
+          >
+            <div className="text-sm text-muted-foreground">
+              <p>Regional preferences:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Timezone selection</li>
+                <li>Date format</li>
+                <li>Currency format</li>
+              </ul>
+            </div>
+          </InfoCard>
         </div>
 
         {/* Coming Soon Notice */}

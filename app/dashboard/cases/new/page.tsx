@@ -8,14 +8,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Heading } from "@/components/ui/heading";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PageHeader } from "@/components/common";
+import { FormField, FormActions } from "@/components/forms";
 import { createCase } from "../actions";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 async function handleSubmit(formData: FormData) {
   "use server";
@@ -54,19 +49,11 @@ export default async function NewCasePage() {
     <ProtectedRoute requiredPermission="cases:create">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/dashboard/cases">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div>
-            <Heading as="h1">Create New Case</Heading>
-            <p className="text-muted-foreground">
-              Enter the details for the new court case
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Create New Case"
+          description="Enter the details for the new court case"
+          backButton={{ href: "/dashboard/cases" }}
+        />
 
         {/* Form */}
         <Card>
@@ -78,72 +65,50 @@ export default async function NewCasePage() {
           </CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-6">
-              {/* Case Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title">
-                  Case Title <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="title"
-                  name="title"
-                  placeholder="e.g., State vs. John Doe"
-                  required
-                />
-                <p className="text-xs text-muted-foreground">
-                  Enter a descriptive title for the case
-                </p>
-              </div>
+              <FormField
+                label="Case Title"
+                name="title"
+                placeholder="e.g., State vs. John Doe"
+                required
+                helpText="Enter a descriptive title for the case"
+              />
 
-              {/* Case Type */}
-              <div className="space-y-2">
-                <Label htmlFor="type">
-                  Case Type <span className="text-destructive">*</span>
-                </Label>
-                <Select name="type" required>
-                  <SelectTrigger id="type">
-                    <SelectValue placeholder="Select case type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="criminal">Criminal</SelectItem>
-                    <SelectItem value="civil">Civil</SelectItem>
-                    <SelectItem value="family">Family</SelectItem>
-                    <SelectItem value="traffic">Traffic</SelectItem>
-                    <SelectItem value="administrative">Administrative</SelectItem>
-                    <SelectItem value="appeal">Appeal</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Select the type of legal case
-                </p>
-              </div>
+              <FormField
+                label="Case Type"
+                name="type"
+                type="select"
+                placeholder="Select case type"
+                required
+                helpText="Select the type of legal case"
+                options={[
+                  { value: "criminal", label: "Criminal" },
+                  { value: "civil", label: "Civil" },
+                  { value: "family", label: "Family" },
+                  { value: "traffic", label: "Traffic" },
+                  { value: "administrative", label: "Administrative" },
+                  { value: "appeal", label: "Appeal" },
+                ]}
+              />
 
-              {/* Case Status */}
-              <div className="space-y-2">
-                <Label htmlFor="status">
-                  Initial Status <span className="text-destructive">*</span>
-                </Label>
-                <Select name="status" defaultValue="pending" required>
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="under-review">Under Review</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Set the initial status of the case
-                </p>
-              </div>
+              <FormField
+                label="Initial Status"
+                name="status"
+                type="select"
+                placeholder="Select status"
+                required
+                defaultValue="pending"
+                helpText="Set the initial status of the case"
+                options={[
+                  { value: "pending", label: "Pending" },
+                  { value: "active", label: "Active" },
+                  { value: "under-review", label: "Under Review" },
+                ]}
+              />
 
-              {/* Actions */}
-              <div className="flex gap-3 justify-end">
-                <Button type="button" variant="outline" asChild>
-                  <Link href="/dashboard/cases">Cancel</Link>
-                </Button>
-                <Button type="submit">Create Case</Button>
-              </div>
+              <FormActions
+                cancelHref="/dashboard/cases"
+                submitLabel="Create Case"
+              />
             </form>
           </CardContent>
         </Card>

@@ -1,9 +1,8 @@
 import { getAllEvidence } from "./actions";
 import { PermissionGate } from "@/components/auth/permission-gate";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heading } from "@/components/ui/heading";
+import { PageHeader, ListItemCard, EmptyState } from "@/components/common";
 import Link from "next/link";
 import { FileText, Upload, Download } from "lucide-react";
 
@@ -22,13 +21,10 @@ export default async function EvidencePage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Heading as="h1">Evidence</Heading>
-          <p className="text-muted-foreground">
-            Manage case evidence and uploaded files
-          </p>
-        </div>
+      <PageHeader
+        title="Evidence"
+        description="Manage case evidence and uploaded files"
+      >
         <PermissionGate permission="evidence:create">
           <Link href="/dashboard/evidence/upload">
             <Button>
@@ -37,73 +33,57 @@ export default async function EvidencePage() {
             </Button>
           </Link>
         </PermissionGate>
-      </div>
+      </PageHeader>
 
       {evidenceList.length === 0 ? (
-        <Card>
-          <CardContent className="py-12">
-            <div className="text-center text-muted-foreground">
-              <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No evidence files found</p>
-            </div>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FileText}
+          title="No evidence files found"
+          description="Upload evidence files to get started"
+        />
       ) : (
         <div className="grid gap-4">
           {evidenceList.map((item) => (
-            <Card key={item.id}>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-muted-foreground" />
-                      <Heading as="h3">{item.fileName}</Heading>
-                    </div>
-                    
-                    {item.description && (
-                      <p className="text-sm text-muted-foreground ml-8">
-                        {item.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex items-center gap-4 ml-8 text-sm text-muted-foreground">
-                      <Link
-                        href={`/dashboard/cases/${item.caseId}`}
-                        className="hover:underline"
-                      >
-                        Case: {item.caseTitle}
-                      </Link>
-                      <span>•</span>
-                      <span>
-                        {(item.fileSize / 1024).toFixed(1)} KB
-                      </span>
-                      <span>•</span>
-                      <Badge variant="outline">{item.fileType}</Badge>
-                      <span>•</span>
-                      <span>
-                        {new Date(item.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Link href={item.filePath} target="_blank" download>
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
-                      </Button>
-                    </Link>
-                    <PermissionGate permission="evidence:delete">
-                      <Link href={`/dashboard/evidence/${item.id}`}>
-                        <Button variant="ghost" size="sm">
-                          View Details
-                        </Button>
-                      </Link>
-                    </PermissionGate>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ListItemCard
+              key={item.id}
+              title={item.fileName}
+              description={item.description}
+              icon={FileText}
+            >
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                <Link
+                  href={`/dashboard/cases/${item.caseId}`}
+                  className="hover:underline text-primary"
+                >
+                  Case: {item.caseTitle}
+                </Link>
+                <span>•</span>
+                <span>
+                  {(item.fileSize / 1024).toFixed(1)} KB
+                </span>
+                <span>•</span>
+                <Badge variant="outline">{item.fileType}</Badge>
+                <span>•</span>
+                <span>
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href={item.filePath} target="_blank" download>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </Link>
+                <PermissionGate permission="evidence:delete">
+                  <Link href={`/dashboard/evidence/${item.id}`}>
+                    <Button variant="ghost" size="sm">
+                      View Details
+                    </Button>
+                  </Link>
+                </PermissionGate>
+              </div>
+            </ListItemCard>
           ))}
         </div>
       )}

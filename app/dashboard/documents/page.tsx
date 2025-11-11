@@ -7,14 +7,13 @@
 export const dynamic = 'force-dynamic';
 
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heading } from "@/components/ui/heading";
+import { PageHeader, InfoCard } from "@/components/common";
 import { FileText, Upload, FolderOpen, Search } from "lucide-react";
+import { Heading } from "@/components/ui/heading";
 
 export default async function DocumentsPage() {
   const session = await auth.api.getSession({
@@ -29,64 +28,36 @@ export default async function DocumentsPage() {
     <ProtectedRoute requiredPermission="evidence:read">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <Heading as="h1">Documents</Heading>
-            <p className="text-muted-foreground">
-              Manage all case documents and evidence files
-            </p>
-          </div>
-          <Button asChild>
-            <Link href="/dashboard/evidence/upload">
-              <Upload className="mr-2 h-4 w-4" />
-              Upload Document
-            </Link>
-          </Button>
-        </div>
+        <PageHeader
+          title="Documents"
+          description="Manage all case documents and evidence files"
+          action={{
+            label: "Upload Document",
+            href: "/dashboard/evidence/upload",
+            icon: Upload,
+          }}
+        />
 
         {/* Quick Actions */}
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/evidence">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <FileText className="h-5 w-5" />
-                  All Evidence
-                </CardTitle>
-                <CardDescription>
-                  View all evidence files across all cases
-                </CardDescription>
-              </CardHeader>
-            </Link>
-          </Card>
-
-          <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/cases">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <FolderOpen className="h-5 w-5" />
-                  Browse by Case
-                </CardTitle>
-                <CardDescription>
-                  View documents organized by case
-                </CardDescription>
-              </CardHeader>
-            </Link>
-          </Card>
-
-          <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/search">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Search className="h-5 w-5" />
-                  Search Documents
-                </CardTitle>
-                <CardDescription>
-                  Search for specific documents
-                </CardDescription>
-              </CardHeader>
-            </Link>
-          </Card>
+          <InfoCard
+            title="All Evidence"
+            description="View all evidence files across all cases"
+            icon={FileText}
+            href="/dashboard/evidence"
+          />
+          <InfoCard
+            title="Browse by Case"
+            description="View documents organized by case"
+            icon={FolderOpen}
+            href="/dashboard/cases"
+          />
+          <InfoCard
+            title="Search Documents"
+            description="Search for specific documents"
+            icon={Search}
+            href="/dashboard/search"
+          />
         </div>
 
         {/* Document Categories */}

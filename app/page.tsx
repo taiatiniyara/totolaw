@@ -70,19 +70,19 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 w-full max-w-3xl">
             <div className="text-center">
-              <div className="text-3xl font-bold">Multi-Tenant</div>
+              <Heading as="h3">Multi-Tenant</Heading>
               <div className="text-sm text-muted-foreground">Architecture</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold">Secure</div>
+              <Heading as="h3">Secure</Heading>
               <div className="text-sm text-muted-foreground">Passwordless Auth</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold">RBAC</div>
+              <Heading as="h3">RBAC</Heading>
               <div className="text-sm text-muted-foreground">Access Control</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold">Cloud-Ready</div>
+              <Heading as="h3">Cloud-Ready</Heading>
               <div className="text-sm text-muted-foreground">Deployment</div>
             </div>
           </div>

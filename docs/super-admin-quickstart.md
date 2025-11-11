@@ -2,22 +2,26 @@
 
 ## 🚀 First Time Setup (5 minutes)
 
-### 1. Add Your Team to Database
+### 1. Add Your Team Using CLI
 
-Edit `migrations/003_setup_system_admins.sql` and add your team's emails:
-
-```sql
-INSERT INTO system_admins (id, email, name, is_active, added_at, created_at, updated_at)
-VALUES
-  (gen_random_uuid()::text, 'your-email@example.com', 'Your Name', true, NOW(), NOW(), NOW());
-```
-
-### 2. Run Migration
+Use the admin management CLI to add your team:
 
 ```bash
-npm run db:push
-# or
-psql $DATABASE_URL -f migrations/003_setup_system_admins.sql
+npm run admin:add your-email@example.com "Your Name"
+```
+
+Or add multiple admins:
+
+```bash
+npm run admin:add chief-justice@courts.gov.fj "Chief Justice"
+npm run admin:add admin@courts.gov.fj "Senior Administrator"
+npm run admin:add tech@totolaw.org "Technical Lead"
+```
+
+### 2. Verify Admins Were Added
+
+```bash
+npm run admin:list
 ```
 
 ### 3. Log In

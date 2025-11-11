@@ -11,7 +11,8 @@ import {
   Search, 
   Users, 
   Settings, 
-  Shield
+  Shield,
+  HelpCircle
 } from "lucide-react";
 
 const iconMap = {
@@ -23,6 +24,7 @@ const iconMap = {
   Users,
   Settings,
   Shield,
+  HelpCircle,
 };
 
 type IconName = keyof typeof iconMap;

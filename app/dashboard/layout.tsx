@@ -148,6 +148,13 @@ export default async function DashboardLayout({
                   </NavLink>
                 </>
               )}
+
+              <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
+                SUPPORT
+              </div>
+              <NavLink href="/dashboard/help" icon="HelpCircle">
+                Help & Docs
+              </NavLink>
             </div>
           </ScrollArea>
 
@@ -233,6 +240,13 @@ export default async function DashboardLayout({
                       </NavLink>
                     </>
                   )}
+
+                  <div className="mb-2 mt-4 px-3 text-xs font-semibold text-muted-foreground">
+                    SUPPORT
+                  </div>
+                  <NavLink href="/dashboard/help" icon="HelpCircle">
+                    Help & Docs
+                  </NavLink>
                 </div>
               </ScrollArea>
 

@@ -8,15 +8,8 @@ export const dynamic = 'force-dynamic';
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
 import { PermissionGate } from "@/components/auth/permission-gate";
+import { PageHeader, ListItemCard, EmptyState } from "@/components/common";
 import { getCases } from "./actions";
 import { Plus, FileText } from "lucide-react";
 
@@ -26,13 +19,10 @@ export default async function CasesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Heading as="h1">Cases</Heading>
-          <p className="text-muted-foreground">
-            Manage and track all court cases
-          </p>
-        </div>
+      <PageHeader
+        title="Cases"
+        description="Manage and track all court cases"
+      >
         <PermissionGate permission="cases:create">
           <Button asChild>
             <Link href="/dashboard/cases/new">
@@ -41,68 +31,54 @@ export default async function CasesPage() {
             </Link>
           </Button>
         </PermissionGate>
-      </div>
+      </PageHeader>
 
       {/* Cases List */}
       {!result.success ? (
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-destructive">{result.error}</p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FileText}
+          title="Error loading cases"
+          description={result.error || "An error occurred"}
+        />
       ) : result.data && result.data.length > 0 ? (
         <div className="grid gap-4">
           {result.data.map((caseItem) => (
-            <Card key={caseItem.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="h-5 w-5" />
-                      {caseItem.title}
-                    </CardTitle>
-                    <CardDescription>
-                      {caseItem.type} • {caseItem.status}
-                    </CardDescription>
-                  </div>
-                  <PermissionGate permission="cases:read">
-                    <Button asChild variant="outline" size="sm">
-                      <Link href={`/dashboard/cases/${caseItem.id}`}>
-                        View Details
-                      </Link>
-                    </Button>
-                  </PermissionGate>
-                </div>
-              </CardHeader>
-              <CardContent>
+            <PermissionGate key={caseItem.id} permission="cases:read">
+              <ListItemCard
+                title={caseItem.title}
+                description={`${caseItem.type} • ${caseItem.status}`}
+                icon={FileText}
+                action={{
+                  label: "View Details",
+                  href: `/dashboard/cases/${caseItem.id}`,
+                  variant: "outline",
+                }}
+              >
                 <div className="flex gap-4 text-sm text-muted-foreground">
                   <span>Filed: {new Date(caseItem.createdAt).toLocaleDateString()}</span>
                   {caseItem.assignedTo && (
                     <span>Assigned to: {caseItem.assignedTo}</span>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </ListItemCard>
+            </PermissionGate>
           ))}
         </div>
       ) : (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <Heading as="h3" className="mb-2">No cases found</Heading>
-            <p className="text-sm text-muted-foreground mb-4">
-              Get started by creating your first case
-            </p>
-            <PermissionGate permission="cases:create">
-              <Button asChild>
-                <Link href="/dashboard/cases/new">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Case
-                </Link>
-              </Button>
-            </PermissionGate>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FileText}
+          title="No cases found"
+          description="Get started by creating your first case"
+        >
+          <PermissionGate permission="cases:create">
+            <Button asChild>
+              <Link href="/dashboard/cases/new">
+                <Plus className="mr-2 h-4 w-4" />
+                Create Case
+              </Link>
+            </Button>
+          </PermissionGate>
+        </EmptyState>
       )}
     </div>
   );

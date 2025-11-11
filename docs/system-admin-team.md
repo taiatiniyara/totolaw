@@ -95,7 +95,19 @@ npm run db:migrate
 
 ### Step 2: Add Initial System Admins
 
-Edit the migration file `migrations/003_setup_system_admins.sql` and replace the placeholder emails with your actual super admin team:
+Use the admin management CLI to add your super admin team:
+
+```bash
+# Add admins using the CLI
+npm run admin:add chief-justice@courts.gov.fj "Chief Justice"
+npm run admin:add senior-administrator@courts.gov.fj "Senior Admin"
+npm run admin:add tech-lead@totolaw.org "Technical Lead"
+
+# Verify they were added
+npm run admin:list
+```
+
+Alternatively, you can add admins directly in the database:
 
 ```sql
 INSERT INTO system_admins (id, email, name, is_active, added_at, created_at, updated_at)
@@ -105,14 +117,7 @@ VALUES
   (gen_random_uuid()::text, 'tech-lead@totolaw.org', 'Technical Lead', true, NOW(), NOW(), NOW());
 ```
 
-### Step 3: Run the Setup Migration
-
-```bash
-# Apply the system admin setup migration
-psql $DATABASE_URL -f migrations/003_setup_system_admins.sql
-```
-
-### Step 4: Share Login Link
+### Step 3: Share Login Link
 
 Send your team members the login link:
 ```
@@ -121,7 +126,7 @@ https://your-domain.com/auth/login
 
 They should use the **magic link** authentication with their registered email addresses.
 
-### Step 5: Verify Setup
+### Step 4: Verify Setup
 
 After team members log in, verify they have super admin access:
 
