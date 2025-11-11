@@ -37,6 +37,7 @@ export async function sendMagicLinkAction(
     });
 
     if (response.error) {
+      console.error("Magic link error:", response.error);
       return {
         success: false,
         error: response.error.message || "Failed to send magic link",
