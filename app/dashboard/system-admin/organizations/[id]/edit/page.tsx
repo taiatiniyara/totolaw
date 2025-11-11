@@ -15,17 +15,20 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditOrganizationPage({ params }: PageProps) {
   // Require super admin access
   await requireSuperAdmin();
 
+  // Await params (Next.js 15+)
+  const { id } = await params;
+
   // Fetch the organization
-  const orgResult = await getOrganizationById(params.id);
+  const orgResult = await getOrganizationById(id);
   
   if (orgResult.error || !orgResult.organization) {
     return (
