@@ -387,6 +387,7 @@ export default function Home() {
                 <li><a href="#features" className="hover:text-primary transition-colors">Features</a></li>
                 <li><a href="#benefits" className="hover:text-primary transition-colors">Benefits</a></li>
                 <li><a href="#about" className="hover:text-primary transition-colors">About</a></li>
+                <li><a href="/organizations" className="hover:text-primary transition-colors">Organizations</a></li>
               </ul>
             </div>
             

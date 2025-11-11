@@ -41,6 +41,9 @@ export function LandingHeader({ variant = "home" }: LandingHeaderProps) {
           <nav className="hidden md:flex items-center gap-6">
             {variant === "home" ? (
               <>
+                <a href="/organizations" className="text-sm font-medium hover:text-primary transition-colors">
+                  Organizations
+                </a>
                 <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
                   Docs
                 </a>
@@ -50,6 +53,12 @@ export function LandingHeader({ variant = "home" }: LandingHeaderProps) {
               </>
             ) : (
               <>
+                <a href="/" className="text-sm font-medium hover:text-primary transition-colors">
+                  Home
+                </a>
+                <a href="/organizations" className="text-sm font-medium hover:text-primary transition-colors">
+                  Organizations
+                </a>
                 <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
                   Docs
                 </a>
