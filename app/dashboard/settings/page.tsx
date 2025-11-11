@@ -20,8 +20,11 @@ import {
   Bell, 
   Shield, 
   Palette,
-  Globe
+  Globe,
+  Users,
+  Key
 } from "lucide-react";
+import Link from "next/link";
 
 export default async function SettingsPage() {
   const session = await auth.api.getSession({
@@ -99,6 +102,44 @@ export default async function SettingsPage() {
               </ul>
             </div>
           </InfoCard>
+
+          {/* Roles & Permissions */}
+          <Link href="/dashboard/settings/roles">
+            <InfoCard
+              title="Roles & Permissions"
+              description="Manage roles and permissions in your organisation"
+              icon={Users}
+              clickable={true}
+            >
+              <div className="text-sm text-muted-foreground">
+                <p>Access control:</p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>Create and manage roles</li>
+                  <li>Assign permissions</li>
+                  <li>View permission reference</li>
+                </ul>
+              </div>
+            </InfoCard>
+          </Link>
+
+          {/* Permissions Reference */}
+          <Link href="/dashboard/settings/permissions">
+            <InfoCard
+              title="Permissions Reference"
+              description="View all available system permissions"
+              icon={Key}
+              clickable={true}
+            >
+              <div className="text-sm text-muted-foreground">
+                <p>Permission documentation:</p>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>Browse all permissions</li>
+                  <li>Search by resource or action</li>
+                  <li>Permission format guide</li>
+                </ul>
+              </div>
+            </InfoCard>
+          </Link>
 
           {/* Security */}
           <InfoCard

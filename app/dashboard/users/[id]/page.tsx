@@ -10,13 +10,17 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { getUserTenantContext } from "@/lib/services/tenant.service";
+import { hasPermission } from "@/lib/services/authorization.service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getUserById } from "../actions";
-import { ArrowLeft, Mail, User, Shield } from "lucide-react";
+import { getUserRoles } from "@/lib/services/authorization.service";
+import { ManageUserRolesDialog } from "@/components/auth/manage-user-roles-dialog";
+import { ArrowLeft, Mail, User, Shield, Calendar } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,6 +34,19 @@ export default async function UserDetailPage({ params }: PageProps) {
   if (!session) {
     redirect("/auth/login");
   }
+
+  const context = await getUserTenantContext(session.user.id);
+  if (!context) {
+    redirect("/dashboard/no-organisation");
+  }
+
+  // Check if user can manage roles
+  const canManageRoles = await hasPermission(
+    session.user.id,
+    context.organisationId,
+    "roles:assign",
+    context.isSuperAdmin
+  );
 
   const { id } = await params;
   const result = await getUserById(id);
@@ -61,6 +78,9 @@ export default async function UserDetailPage({ params }: PageProps) {
         .slice(0, 2)
     : user.email.slice(0, 2).toUpperCase();
 
+  // Get detailed role information
+  const userRolesData = await getUserRoles(user.id, context.organisationId);
+
   return (
     <ProtectedRoute requiredPermission="users:read">
       <div className="space-y-6">
@@ -75,6 +95,14 @@ export default async function UserDetailPage({ params }: PageProps) {
             <Heading as="h1">User Details</Heading>
             <p className="text-muted-foreground">View user information and roles</p>
           </div>
+          {canManageRoles && (
+            <ManageUserRolesDialog
+              userId={user.id}
+              userName={user.name || user.email}
+              organisationId={context.organisationId}
+              variant="default"
+            />
+          )}
         </div>
 
         {/* User Info Card */}
@@ -100,27 +128,84 @@ export default async function UserDetailPage({ params }: PageProps) {
         {/* Roles Card */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Roles & Permissions
-            </CardTitle>
-            <CardDescription>
-              Roles assigned to this user in the current organisation
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Roles & Permissions
+                </CardTitle>
+                <CardDescription>
+                  Roles assigned to this user in the current organisation
+                </CardDescription>
+              </div>
+              {canManageRoles && userRolesData.length > 0 && (
+                <ManageUserRolesDialog
+                  userId={user.id}
+                  userName={user.name || user.email}
+                  organisationId={context.organisationId}
+                  variant="outline"
+                />
+              )}
+            </div>
           </CardHeader>
           <CardContent>
-            {user.roles && user.roles.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {user.roles.map((role) => (
-                  <Badge key={role} variant="secondary" className="text-sm">
-                    {role}
-                  </Badge>
-                ))}
+            {userRolesData.length === 0 ? (
+              <div className="text-center py-8">
+                <Shield className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No Roles Assigned</h3>
+                <p className="text-muted-foreground mb-4">
+                  This user doesn't have any roles assigned yet
+                </p>
+                {canManageRoles && (
+                  <ManageUserRolesDialog
+                    userId={user.id}
+                    userName={user.name || user.email}
+                    organisationId={context.organisationId}
+                    variant="default"
+                  />
+                )}
               </div>
             ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No roles assigned to this user</p>
+              <div className="space-y-3">
+                {userRolesData.map(({ role, userRole }) => (
+                  <div
+                    key={userRole.id}
+                    className="flex items-start gap-4 p-4 border rounded-lg"
+                  >
+                    <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="font-semibold">{role.name}</h4>
+                        <Badge variant="secondary" className="text-xs">
+                          {role.slug}
+                        </Badge>
+                        {role.isSystem && (
+                          <Badge variant="outline" className="text-xs">
+                            System
+                          </Badge>
+                        )}
+                      </div>
+                      {role.description && (
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {role.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>
+                            Assigned {new Date(userRole.assignedAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {userRole.expiresAt && (
+                          <div>
+                            Expires {new Date(userRole.expiresAt).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </CardContent>
