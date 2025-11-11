@@ -25,7 +25,17 @@ export function StatCard({
   badge,
   children,
 }: StatCardProps) {
-  const bgColor = iconColor.replace("text-", "bg-").replace("-500", "-500/10");
+  // Convert text color to background color with opacity
+  const getBgColor = () => {
+    if (iconColor.includes("-")) {
+      // For colors like "text-blue-500", convert to "bg-blue-500/10"
+      return iconColor.replace("text-", "bg-") + "/10";
+    }
+    // For colors like "text-primary", convert to "bg-primary/10"
+    return iconColor.replace("text-", "bg-") + "/10";
+  };
+
+  const bgColor = getBgColor();
 
   return (
     <Card>
