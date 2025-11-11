@@ -12,7 +12,7 @@ import { ArrowLeft, Upload, CheckCircle2, Shield, FileText, Image, Video, Music 
 export default function EvidenceGuidePage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <LandingHeader />
+      <LandingHeader variant="docs" />
       
       <div className="flex-1 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">

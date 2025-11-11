@@ -1,5 +1,7 @@
 # Getting Started with Totolaw
 
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+
 This guide will help you set up and run Totolaw on your local development environment.
 
 ## Prerequisites

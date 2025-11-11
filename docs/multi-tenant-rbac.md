@@ -1,5 +1,7 @@
 # Multi-Tenant & Role-Based Access Control Architecture
 
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+
 This document describes the multi-tenant organization and role-based access control (RBAC) architecture that enables the Totolaw platform to scale across multiple Pacific Islands.
 
 ## Overview

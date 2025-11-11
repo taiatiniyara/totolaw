@@ -12,7 +12,7 @@ import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2 } from "lucide-react";
 export default function GettingStartedPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <LandingHeader />
+      <LandingHeader variant="docs" />
       
       <div className="flex-1 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -46,8 +46,10 @@ export default function GettingStartedPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  Totolaw is a comprehensive case management system designed specifically for Pacific Island court systems. 
-                  It helps you organize cases, schedule hearings, manage evidence, and collaborate with your team.
+                  <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
+                  It's a comprehensive case management system designed specifically for Pacific Island court systems, 
+                  enabling faster, more efficient justice delivery. It helps you organize cases, schedule hearings, 
+                  manage evidence, and collaborate with your team.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="flex items-start gap-3 p-3 rounded-lg border">

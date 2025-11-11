@@ -1,5 +1,7 @@
 # Architecture
 
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+
 This document describes the technical architecture, design patterns, and technology stack of the Totolaw platform.
 
 ## System Overview

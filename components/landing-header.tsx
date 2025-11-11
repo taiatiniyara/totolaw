@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button";
 import Logo from "@/components/logo";
 import { LayoutDashboard } from "lucide-react";
 
-export function LandingHeader() {
+interface LandingHeaderProps {
+  variant?: "home" | "docs";
+}
+
+export function LandingHeader({ variant = "home" }: LandingHeaderProps) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
@@ -35,15 +39,25 @@ export function LandingHeader() {
             <Logo width={140} height={45} className="h-10" />
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
-              Features
-            </a>
-            <a href="#benefits" className="text-sm font-medium hover:text-primary transition-colors">
-              Benefits
-            </a>
-            <a href="#about" className="text-sm font-medium hover:text-primary transition-colors">
-              About
-            </a>
+            {variant === "home" ? (
+              <>
+                <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
+                  Docs
+                </a>
+                <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
+                  Github
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
+                  Docs
+                </a>
+                <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
+                  Github
+                </a>
+              </>
+            )}
             {!isChecking && (
               isLoggedIn ? (
                 <Button onClick={() => router.push("/dashboard")} variant="default">
@@ -58,9 +72,9 @@ export function LandingHeader() {
             )}
           </nav>
           {!isChecking && (
-            <Button 
-              onClick={() => router.push(isLoggedIn ? "/dashboard" : "/auth/login")} 
-              variant="default" 
+            <Button
+              onClick={() => router.push(isLoggedIn ? "/dashboard" : "/auth/login")}
+              variant="default"
               className="md:hidden"
             >
               {isLoggedIn ? (

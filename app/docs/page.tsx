@@ -26,7 +26,7 @@ import {
 export default function PublicDocsPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <LandingHeader />
+      <LandingHeader variant="docs" />
       
       <div className="flex-1 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -36,6 +36,9 @@ export default function PublicDocsPage() {
               <Heading as="h1" className="text-4xl md:text-5xl">
                 Documentation & User Guides
               </Heading>
+              <p className="text-lg font-semibold text-primary max-w-2xl mx-auto">
+                Totolo - Fast, Efficient Justice for the Pacific
+              </p>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Learn how to use Totolaw effectively with our comprehensive guides
               </p>

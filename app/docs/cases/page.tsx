@@ -12,7 +12,7 @@ import { ArrowLeft, FileText, Plus, Search, Eye, Edit, CheckCircle2 } from "luci
 export default function CasesGuidePage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <LandingHeader />
+      <LandingHeader variant="docs" />
       
       <div className="flex-1 py-12">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">

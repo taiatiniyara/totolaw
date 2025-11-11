@@ -40,13 +40,16 @@ export default function Home() {
           </Badge>
           
           <Heading as="h1" className="text-4xl md:text-6xl lg:text-7xl max-w-4xl">
-            Modern Case Management for
-            <span className="text-primary"> Pacific Courts</span>
+            Modern Case Management for Pacific Courts
           </Heading>
           
+          <p className="text-xl md:text-2xl font-semibold text-primary max-w-3xl">
+            Totolo - Fast, Efficient Justice for the Pacific
+          </p>
+          
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-            Streamline judicial workflows with secure, multi-tenant case management. 
-            Built specifically for Pacific Island court systems.
+            From the Fijian word "Totolo" meaning "fast" or "quick", Totolaw helps the Pacific 
+            achieve more efficient execution of justice with secure, streamlined case management.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
@@ -205,8 +208,9 @@ export default function Home() {
               Built for Pacific Island Courts
             </Heading>
             <p className="text-lg text-muted-foreground">
-              Totolaw ("toto" meaning "write/record" in many Pacific languages) is purpose-built 
-              to serve the unique needs of Pacific Island court systems.
+              <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
+              The platform is purpose-built to serve the unique needs of Pacific Island court systems, 
+              enabling faster, more efficient justice delivery.
             </p>
             
             <div className="space-y-4">
@@ -370,7 +374,10 @@ export default function Home() {
             <div className="space-y-4">
               <Logo width={140} height={45} className="h-10" />
               <p className="text-sm text-muted-foreground">
-                Modern case management for Pacific Island court systems
+                <strong>Totolo</strong> - Fast, efficient justice for the Pacific
+              </p>
+              <p className="text-xs text-muted-foreground">
+                From the Fijian word meaning "fast" or "quick"
               </p>
             </div>
             

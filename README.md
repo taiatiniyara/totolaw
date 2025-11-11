@@ -6,7 +6,9 @@ Totolaw is a modern, secure web application designed to streamline court case ma
 
 ## 🌴 About
 
-Totolaw ("toto" meaning "write/record" in many Pacific languages) is purpose-built to serve the unique needs of Pacific Island court systems, providing:
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+
+Purpose-built to serve the unique needs of Pacific Island court systems, Totolaw provides:
 
 - **Multi-Tenant Architecture** - Separate organizations for each court system (Fiji, Samoa, Tonga, Vanuatu)
 - **Role-Based Access Control** - Granular permissions for judges, magistrates, clerks, prosecutors, and administrators

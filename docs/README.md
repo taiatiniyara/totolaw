@@ -1,6 +1,10 @@
 # Totolaw Documentation
 
-Welcome to the Totolaw documentation. This comprehensive guide covers installation, usage, and administration of the case management platform for Pacific Island court systems.
+Welcome to the Totolaw documentation. 
+
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+
+This comprehensive guide covers installation, usage, and administration of the case management platform for Pacific Island court systems.
 
 ## 📚 Quick Navigation
 
