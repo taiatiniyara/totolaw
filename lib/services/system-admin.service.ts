@@ -1,7 +1,7 @@
 import { db } from "../drizzle/connection";
 import { systemAdminAuditLog } from "../drizzle/schema/system-admin-schema";
 import { user } from "../drizzle/schema/auth-schema";
-import { eq } from "drizzle-orm";
+import { eq, isNotNull } from "drizzle-orm";
 import { generateUUID } from "./uuid.service";
 import { notifySuperAdminAdded } from "./notification.service";
 
@@ -10,10 +10,12 @@ export interface SuperAdminUser {
   email: string;
   name: string;
   isSuperAdmin: boolean;
+  isActive: boolean; // Alias for isSuperAdmin for UI consistency
   adminNotes?: string | null;
   adminAddedBy?: string | null;
   adminAddedAt?: Date | null;
   lastLogin?: Date | null;
+  userId?: string | null; // Alias for id for UI consistency
 }
 
 export async function isSuperAdmin(userId: string): Promise<boolean> {
@@ -42,10 +44,12 @@ export async function getSuperAdminById(userId: string): Promise<SuperAdminUser 
     email: result[0].email,
     name: result[0].name,
     isSuperAdmin: result[0].isSuperAdmin,
+    isActive: result[0].isSuperAdmin,
     adminNotes: result[0].adminNotes,
     adminAddedBy: result[0].adminAddedBy,
     adminAddedAt: result[0].adminAddedAt,
     lastLogin: result[0].lastLogin,
+    userId: result[0].id,
   };
 }
 
@@ -57,10 +61,12 @@ export async function getSuperAdminByEmail(email: string): Promise<SuperAdminUse
     email: result[0].email,
     name: result[0].name,
     isSuperAdmin: result[0].isSuperAdmin,
+    isActive: result[0].isSuperAdmin,
     adminNotes: result[0].adminNotes,
     adminAddedBy: result[0].adminAddedBy,
     adminAddedAt: result[0].adminAddedAt,
     lastLogin: result[0].lastLogin,
+    userId: result[0].id,
   };
 }
 
@@ -162,16 +168,20 @@ export async function grantSuperAdminByEmail(email: string, name: string, grante
 }
 
 export async function listSuperAdmins(): Promise<SuperAdminUser[]> {
-  const results = await db.select().from(user).where(eq(user.isSuperAdmin, true)).orderBy(user.adminAddedAt);
+  // Return all users who have ever been admins (including inactive ones)
+  // by checking if adminAddedAt is not null
+  const results = await db.select().from(user).where(isNotNull(user.adminAddedAt)).orderBy(user.adminAddedAt);
   return results.map((u) => ({
     id: u.id,
     email: u.email,
     name: u.name,
     isSuperAdmin: u.isSuperAdmin,
+    isActive: u.isSuperAdmin, // Active means currently a super admin
     adminNotes: u.adminNotes,
     adminAddedBy: u.adminAddedBy,
     adminAddedAt: u.adminAddedAt,
     lastLogin: u.lastLogin,
+    userId: u.id, // Alias for consistency
   }));
 }
 

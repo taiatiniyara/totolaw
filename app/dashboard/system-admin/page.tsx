@@ -212,7 +212,7 @@ export default async function SystemAdminDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {admins.map((admin) => (
+            {admins.filter((admin) => admin.isActive).map((admin) => (
               <DataRow
                 key={admin.id}
                 icon={Shield}

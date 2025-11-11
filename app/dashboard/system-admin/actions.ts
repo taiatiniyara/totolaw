@@ -107,7 +107,7 @@ export async function getSystemOverview() {
       totalRoles: allRoles.length,
       totalPermissions: allPermissions.length,
       totalAdmins: admins.length,
-      activeAdmins: admins.length, // All listed admins are active (isSuperAdmin=true)
+      activeAdmins: admins.filter((a) => a.isActive).length,
     },
     currentAdmin: {
       email: admin.email,
