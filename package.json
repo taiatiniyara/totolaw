@@ -10,7 +10,8 @@
     "db-push": "drizzle-kit push --config ./lib/drizzle/config.ts",
     "db-view": "drizzle-kit studio --config ./lib/drizzle/config.ts",
     "deploy": "next build && pm2 restart totolaw --update-env && git add . && git commit -m 'deploy' && git push",
-    "setup-admin": "tsx scripts/setup-admin.ts"
+    "setup-admin": "tsx scripts/setup-admin.ts",
+    "test-email": "tsx scripts/test-email.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

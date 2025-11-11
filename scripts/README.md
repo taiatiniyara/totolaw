@@ -1,8 +1,16 @@
-# Initial System Admin Setup
+# Totolaw Scripts
 
-This directory contains the setup script for creating the first system administrator.
+This directory contains utility scripts for system administration and testing.
 
-## Setup Script
+## Available Scripts
+
+### 1. System Admin Setup (`setup-admin.ts`)
+
+Create the initial system administrator for your Totolaw instance.
+
+### 2. Email Testing (`test-email.ts`)
+
+Test the email notification system and verify SMTP configuration.
 
 The `setup-admin.ts` script provides an interactive way to create the initial super administrator for your Totolaw instance.
 
@@ -78,5 +86,104 @@ After the initial setup, additional super admins can be managed via the UI at `/
 
 ---
 
-**Totolaw System Administration Setup** 🛡️  
+## Email Testing Script
+
+The `test-email.ts` script allows you to test the email notification system and verify your SMTP configuration.
+
+### Prerequisites
+
+- SMTP settings configured in `.env` file
+- Valid email credentials
+- Project dependencies installed
+
+### Usage
+
+**Test a single template:**
+```bash
+tsx scripts/test-email.ts your-email@example.com invitation
+```
+
+**Test all templates:**
+```bash
+tsx scripts/test-email.ts your-email@example.com all
+```
+
+**View available templates:**
+```bash
+tsx scripts/test-email.ts
+```
+
+### Available Templates
+
+- `invitation` - User invitation email
+- `join-submitted` - Join request confirmation
+- `join-received` - Admin notification for join requests
+- `join-approved` - Join request approved
+- `join-rejected` - Join request rejected
+- `magic-link` - Magic link authentication
+- `password-reset` - Password reset
+- `welcome` - Welcome email
+- `role-changed` - Role update notification
+- `user-removed` - User removal notification
+- `case-assigned` - Case assignment
+- `hearing-reminder` - Hearing reminder
+- `system` - System notification
+
+### Example Session
+
+```
+🚀 Totolaw Email Testing Utility
+
+==================================================
+✅ SMTP Configuration:
+   Host: smtp.gmail.com
+   Port: 465
+   User: admin@example.com
+==================================================
+
+📧 Testing invitation template...
+📮 Sending to: test@example.com
+✅ invitation email sent successfully!
+📋 Subject: You're invited to join Supreme Court of Fiji on Totolaw
+
+==================================================
+📬 Check your inbox at: test@example.com
+
+💡 Tips:
+   - Check spam folder if you don't see the email
+   - For Gmail, enable 'Less secure app access' if needed
+   - Check your SMTP provider dashboard for delivery status
+   - Review console logs for any error messages
+```
+
+### Troubleshooting
+
+If emails aren't sending:
+
+1. **Verify environment variables:**
+   ```bash
+   echo $SMTP_HOST
+   echo $SMTP_USER
+   ```
+
+2. **Check credentials:** Make sure SMTP credentials are correct
+
+3. **Test connection:** Try sending a test email
+
+4. **Check firewall:** Ensure ports 465 (SSL) or 587 (TLS) are open
+
+5. **Review logs:** Check console output for error messages
+
+### SMTP Configuration
+
+See `.env.example` for complete SMTP configuration examples for:
+- Gmail
+- SendGrid
+- AWS SES
+- Mailgun
+- Other providers
+
+---
+
+**Totolaw System Administration Scripts** 🛡️  
 **Made with ❤️ for Pacific Island Court Systems** 🌴

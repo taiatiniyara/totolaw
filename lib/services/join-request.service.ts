@@ -14,7 +14,12 @@ import { user } from "../drizzle/schema/auth-schema";
 import { eq, and } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { generateUUID } from "./uuid.service";
-import { sendEmail } from "./email.service";
+import { 
+  notifyJoinRequestSubmitted,
+  notifyAdminsOfJoinRequest,
+  notifyJoinRequestApproved,
+  notifyJoinRequestRejected
+} from "./notification.service";
 
 export interface JoinRequestData {
   id: string;
@@ -108,12 +113,21 @@ export async function createJoinRequest(
     message,
   });
 
+  // Send confirmation email to user
+  await notifyJoinRequestSubmitted(
+    requestingUser[0].email,
+    requestingUser[0].name || requestingUser[0].email,
+    org[0].name
+  );
+
   // Notify organisation admins
-  await notifyOrganisationAdmins(
+  await notifyAdminsOfJoinRequest(
     organisationId,
     requestingUser[0].name || requestingUser[0].email,
     requestingUser[0].email,
-    org[0].name
+    org[0].name,
+    message,
+    requestId
   );
 
   return {
@@ -129,20 +143,7 @@ export async function createJoinRequest(
   };
 }
 
-/**
- * Notify organisation admins about new join request
- */
-async function notifyOrganisationAdmins(
-  organisationId: string,
-  userName: string,
-  userEmail: string,
-  organisationName: string
-): Promise<void> {
-  // Get all organisation admins (users with users:manage permission)
-  // For now, we'll skip this and add it later when we have a proper way to query admins
-  // This is a placeholder for future enhancement
-  console.log(`New join request from ${userName} (${userEmail}) for ${organisationName}`);
-}
+
 
 /**
  * Get join request by ID
@@ -271,9 +272,9 @@ export async function approveJoinRequest(
     .where(eq(organisationJoinRequests.id, requestId));
 
   // Send approval email to user
-  await sendApprovalEmail(
+  await notifyJoinRequestApproved(
     request.user.email,
-    request.user.name,
+    request.user.name || request.user.email,
     request.organisation.name
   );
 }
@@ -309,67 +310,11 @@ export async function rejectJoinRequest(
     .where(eq(organisationJoinRequests.id, requestId));
 
   // Send rejection email to user
-  await sendRejectionEmail(
+  await notifyJoinRequestRejected(
     request.user.email,
-    request.user.name,
+    request.user.name || request.user.email,
     request.organisation.name,
     reason
-  );
-}
-
-/**
- * Send approval email
- */
-async function sendApprovalEmail(
-  email: string,
-  userName: string,
-  organisationName: string
-): Promise<void> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const loginUrl = `${baseUrl}/auth/login`;
-
-  const paragraphs = [
-    `Great news, ${userName}!`,
-    `Your request to join <strong>${organisationName}</strong> has been <strong>approved</strong>.`,
-    `You can now log in and access the organisation's resources:`,
-    `<a href="${loginUrl}" style="display: inline-block; padding: 12px 24px; background-color: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 16px 0;">Log In</a>`,
-    `Welcome to ${organisationName}!`,
-  ];
-
-  await sendEmail(
-    email,
-    `Your request to join ${organisationName} has been approved`,
-    paragraphs
-  );
-}
-
-/**
- * Send rejection email
- */
-async function sendRejectionEmail(
-  email: string,
-  userName: string,
-  organisationName: string,
-  reason?: string
-): Promise<void> {
-  const paragraphs = [
-    `Hello ${userName},`,
-    `We regret to inform you that your request to join <strong>${organisationName}</strong> has been declined.`,
-  ];
-
-  if (reason) {
-    paragraphs.push(`<p><strong>Reason:</strong> ${reason}</p>`);
-  }
-
-  paragraphs.push(
-    `If you have any questions or would like to discuss this further, please contact the organisation administrators.`,
-    `Thank you for your interest in ${organisationName}.`
-  );
-
-  await sendEmail(
-    email,
-    `Your request to join ${organisationName}`,
-    paragraphs
   );
 }
 

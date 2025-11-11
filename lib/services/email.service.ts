@@ -1,22 +1,37 @@
 import nodemailer from "nodemailer";
 
-const host = process.env.SMTP_HOST;
-const port = Number(process.env.SMTP_PORT);
-const user = process.env.SMTP_USER;
-const pass = process.env.SMTP_PASS;
+let transporter: nodemailer.Transporter | null = null;
 
-if (!host || !port || !user || !pass) {
-  throw new Error("SMTP configuration is missing in environment variables.");
+function getTransporter(): nodemailer.Transporter {
+  if (transporter) {
+    return transporter;
+  }
+
+  const host = process.env.SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT);
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !port || !user || !pass) {
+    throw new Error(
+      "SMTP configuration is missing in environment variables.\n" +
+      "Required: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS\n" +
+      "See .env.example for configuration examples."
+    );
+  }
+
+  transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: true,
+    auth: {
+      user,
+      pass,
+    },
+  });
+
+  return transporter;
 }
-const transporter = nodemailer.createTransport({
-  host,
-  port,
-  secure: true,
-  auth: {
-    user,
-    pass,
-  },
-});
 
 function htmlTemplate(paragraphs: string[]): string {
   return `
@@ -52,6 +67,9 @@ export async function sendEmail(
 ): Promise<string> {
   const htmlContent = htmlTemplate(paragraphs);
   try {
+    const transporter = getTransporter();
+    const user = process.env.SMTP_USER;
+    
     await transporter.sendMail({
       from: `Totolaw <${user}>`,
       to,

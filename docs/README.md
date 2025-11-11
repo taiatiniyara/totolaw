@@ -19,14 +19,17 @@ This comprehensive guide covers installation, usage, and administration of the c
 
 ### 👑 System Administration
 - **[System Admin Guide](./system-admin-guide.md)** - Complete super admin management guide (⭐ Key Document)
-- **[Organisation Management](./organisation-management.md)** - Creating and managing organisations
+- **[Organisation Management](./organization-management.md)** - Creating and managing organisations
+- **[User Invitation System](./user-invitation-system.md)** - Invitations and join requests
 
 ### 🏗️ Technical Documentation
 - **[Architecture](./architecture.md)** - Technical architecture and design patterns
 - **[Database](./database.md)** - Database schema and relationships
 - **[API Documentation](./api.md)** - API routes and server actions
+- **[Email Notifications](./email-notifications.md)** - Email notification system (⭐ New)
 
 ### 📝 Feature Documentation
+- **[Features Overview](./features.md)** - Complete feature list and capabilities (⭐ New)
 - **[Court Transcription](./court-transcription.md)** - Manual transcription features
 - **[Manual Transcription](./manual-transcription.md)** - Detailed manual transcription guide
 
@@ -109,12 +112,22 @@ Granular access control within each organisation:
 - ✅ **Search** - Global search across cases, hearings, evidence
 - ✅ **Court Transcription** - Manual transcription tools for hearings
 
+### User Onboarding
+- ✅ **Admin Invitations** - Email-based user invitation system
+- ✅ **Join Requests** - User-initiated organisation join requests
+- ✅ **Role Assignment** - Automatic role assignment on acceptance/approval
+- ✅ **Email Notifications** - Comprehensive notification system for invitations, join requests, role changes, etc.
+
 ### Admin Features
 - ✅ **Organisation Management** - Create/manage organisations
 - ✅ **Role Management** - View and configure roles/permissions
 - ✅ **User Administration** - Manage users across all organisations
+- ✅ **Invitation Management** - Track and revoke invitations
+- ✅ **Join Request Review** - Approve/reject user requests
 - ✅ **Audit Logging** - Track all system admin actions
 - ✅ **Super Admin Dashboard** - System-wide overview and controls
+
+[Complete feature list →](./features.md)
 
 ---
 
@@ -132,12 +145,23 @@ Granular access control within each organisation:
 
 ## 📚 Scripts & Tools
 
-### Admin Management (CLI)
+### Admin Management
 ```bash
-npm run admin:list      # List all super admins
-npm run admin:add       # Add new super admin
-npm run admin:remove    # Remove super admin privileges
-npm run admin:audit     # View audit log
+npm run setup-admin     # Interactive super admin setup
+```
+
+### Database Management
+```bash
+npm run db-push         # Push schema changes to database
+npm run db-view         # Open Drizzle Studio (database GUI)
+```
+
+### Development
+```bash
+npm run dev             # Start development server (port 3441)
+npm run build           # Build for production
+npm start               # Start production server (port 3440)
+npm run deploy          # Build and deploy with PM2
 ```
 
 [Full admin guide →](./system-admin-guide.md)

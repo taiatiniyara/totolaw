@@ -220,51 +220,69 @@ Super admins can:
 
 ## Organisation Join Requests
 
-In addition to admin-initiated invitations, users can also request to join organisations through a self-service flow.
+In addition to admin-initiated invitations, users can also request to join organisations through a self-service flow. This provides a discovery mechanism for users to find and request access to organisations.
 
 ### For Users
 
 **Path**: `/organisations/join`
 
 **Features**:
-- Browse available organisations
-- Search organisations by name
-- View current membership and request status
-- Submit join requests with optional message
-- Cancel pending requests
-- See rejection reasons (if applicable)
+- 🔍 Browse all active organisations
+- 🔎 Search organisations by name
+- 👤 View current membership and request status
+- ✉️ Submit join requests with optional message
+- ❌ Cancel pending requests
+- 📝 See rejection reasons (if applicable)
+- 🔄 Real-time status updates
 
 **Status Indicators**:
-- 🟢 **Member** - Already a member of the organisation
-- 🟡 **Pending** - Join request awaiting review
-- 🔴 **Rejected** - Previous request was rejected
-- ⚪ **Available** - Can submit a join request
+- 🟢 **Member** - Already a member of the organisation (shows "View Dashboard" button)
+- 🟡 **Pending** - Join request awaiting admin review (shows "Cancel Request" button)
+- 🔴 **Rejected** - Previous request was rejected (shows rejection reason and "Request Again" button)
+- ⚪ **Available** - Can submit a join request (shows "Request to Join" button)
 
 ### For Administrators
 
 **Path**: `/dashboard/users/requests`
 
 **Features**:
-- Review pending join requests
-- View user details and optional message
-- Approve requests and assign roles
-- Reject requests with optional reason
-- Track approval history
-- (Super admins) View requests across all organisations
+- 📋 Review all pending join requests for your organisation
+- 👤 View requester details (name, email, request date)
+- 💬 Read optional messages from users
+- ✅ Approve requests and assign multiple roles
+- ❌ Reject requests with optional reason
+- 📊 Track approval history and statistics
+- 🌐 (Super admins only) View requests across all organisations
 
 **Approval Process**:
-1. Admin reviews request details
-2. Optionally assigns roles during approval
-3. User receives notification email
-4. User is added to organisation
-5. Roles are activated
+1. Admin navigates to `/dashboard/users/requests`
+2. Reviews pending request details:
+   - User name and email
+   - Request submission date
+   - Optional message from user
+3. Clicks **"Approve"** button
+4. Selects roles to assign to user
+5. Confirms approval
+6. System actions:
+   - Creates organisation membership for user
+   - Assigns selected roles
+   - Sends approval email notification to user
+   - Updates request status to "approved"
+   - Records admin who approved and timestamp
 
 **Rejection Process**:
-1. Admin reviews request
-2. Optionally provides rejection reason
-3. User receives notification email
-4. Request marked as rejected
-5. User can submit new request later
+1. Admin reviews request details
+2. Clicks **"Reject"** button
+3. Optionally provides a rejection reason
+4. Confirms rejection
+5. System actions:
+   - Updates request status to "rejected"
+   - Stores rejection reason
+   - Sends rejection email to user (includes reason if provided)
+   - Records admin who rejected and timestamp
+   - User can submit a new request later
+
+**Required Permission**: `users:read` to view requests, `users:manage` to approve/reject
 
 ### Database Schema
 
@@ -335,31 +353,70 @@ In addition to admin-initiated invitations, users can also request to join organ
 
 ### Usage Examples
 
-**User Requesting**:
+**User Requesting to Join**:
 ```typescript
-// Browse and request
+// User submits join request
 const result = await requestToJoinOrganisation(
   "org-id-123",
-  "I'm a registered lawyer interested in family law cases"
+  "I'm a registered lawyer interested in family law cases. I have 5 years of experience."
 );
+
+if (result.success) {
+  // Request submitted successfully
+  // Admin receives notification email
+}
 ```
 
-**Admin Approving**:
+**User Canceling Request**:
 ```typescript
-// Approve with role assignment
+// User cancels their pending request
+const result = await cancelMyJoinRequest("request-id-789");
+
+if (result.success) {
+  // Request cancelled successfully
+}
+```
+
+**Admin Approving Request**:
+```typescript
+// Admin approves and assigns roles
 const result = await approveJoinRequestAction(
   "request-id-456",
-  ["lawyer-role-id", "viewer-role-id"]
+  ["lawyer-role-id", "case-viewer-role-id"]
 );
+
+if (result.success) {
+  // User added to organisation with roles
+  // User receives approval email notification
+}
 ```
 
-**Admin Rejecting**:
+**Admin Rejecting Request**:
 ```typescript
-// Reject with reason
+// Admin rejects with a reason
 const result = await rejectJoinRequestAction(
   "request-id-456",
-  "We only accept lawyers registered with the bar association"
+  "We only accept lawyers registered with the Fiji Bar Association. Please submit proof of registration."
 );
+
+if (result.success) {
+  // Request rejected
+  // User receives rejection email with reason
+  // User can submit a new request
+}
+```
+
+**Getting User's Own Requests**:
+```typescript
+// User views their own requests across all organisations
+const result = await getMyJoinRequests();
+
+if (result.success) {
+  // result.data contains array of requests with status
+  result.data.forEach(request => {
+    console.log(request.organisationName, request.status);
+  });
+}
 ```
 
 ## Future Enhancements

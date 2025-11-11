@@ -118,16 +118,81 @@ When you create a new organisation, the system automatically:
 4. ✅ Prepares the organisation for user management
 5. ✅ Logs the creation action in audit trail
 
-## Adding Users to New Organisations
+## Adding Users to Organisations
 
-After creating an organisation:
+Totolaw supports two methods for adding users to organisations:
 
-1. Navigate to **Users** page
-2. Click **"Invite User"**
-3. Enter user email and details
-4. Select the new organisation
-5. Assign appropriate roles
-6. User receives invitation email
+### Method 1: Admin-Initiated Invitations
+
+After creating an organisation, admins can invite users:
+
+1. Navigate to **Dashboard → Users → Invite User**
+2. Enter user email address
+3. Select roles to assign (optional)
+4. *(Super admins only)* Grant direct permissions
+5. Click **"Send Invitation"**
+6. User receives invitation email with secure link
+7. User accepts invitation and gains access
+
+**Features:**
+- ✉️ Email notifications with secure tokens
+- ⏰ 7-day expiration (configurable)
+- 🔄 Revoke pending invitations
+- 📊 Track invitation status
+- 👥 Multiple role assignment
+
+**Paths:**
+- Invite User: `/dashboard/users/invite`
+- Manage Invitations: `/dashboard/users/invitations`
+
+### Method 2: User-Initiated Join Requests
+
+Users can browse and request to join organisations:
+
+1. User navigates to **Organisations → Join Organisation**
+2. User searches/browses available organisations
+3. User submits join request with optional message
+4. Admin receives notification email
+5. Admin reviews request at **Dashboard → Users → Join Requests**
+6. Admin approves (assigns roles) or rejects (with reason)
+7. User receives notification about decision
+
+**Features:**
+- 🔍 Organisation search and discovery
+- 📝 Optional message to admins
+- ✅ Approval workflow with role assignment
+- ❌ Rejection with reason
+- 🔄 Cancel pending requests
+- 🚫 Duplicate prevention
+
+**Paths:**
+- Browse Organisations: `/organisations/join`
+- Review Requests (Admin): `/dashboard/users/requests`
+
+### Comparison: Invitations vs Join Requests
+
+| Feature | Admin Invitations | Join Requests |
+|---------|------------------|---------------|
+| **Initiated by** | Admin | User |
+| **Email required** | Yes | No (user already has account) |
+| **Role assignment** | During invitation | During approval |
+| **Direct permissions** | Yes (super admin) | No |
+| **Best for** | Onboarding known users | Self-service discovery |
+| **Admin control** | Full control | Approval required |
+
+### Which Method to Use?
+
+**Use Admin Invitations when:**
+- Onboarding staff members
+- You know the user's email in advance
+- You want to pre-assign specific roles
+- You need to grant direct permissions (super admin)
+
+**Use Join Requests when:**
+- Allowing self-service discovery
+- Users browsing available organisations
+- Open registration with approval workflow
+- Reducing admin workload for user addition
 
 ## Organisation Hierarchy
 
@@ -186,9 +251,10 @@ Only users with **Super Admin** status can:
 
 ## Related Documentation
 
-- [Super Admin Access](./super-admin-access.md) - Understanding omnipotent access
+- [System Admin Guide](./system-admin-guide.md) - Complete super admin management
+- [User Invitation System](./user-invitation-system.md) - Detailed guide on invitations and join requests
 - [Multi-Tenant RBAC](./multi-tenant-rbac.md) - Role-based access control
-- [System Admin Team](./system-admin-team.md) - Managing super admins
+- [Permissions Reference](./permissions-reference.md) - All available permissions
 
 ## API Endpoints
 

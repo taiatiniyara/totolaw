@@ -14,7 +14,7 @@ import { user } from "../drizzle/schema/auth-schema";
 import { roles, userRoles, permissions, userPermissions } from "../drizzle/schema/rbac-schema";
 import { eq, and } from "drizzle-orm";
 import { generateUUID } from "./uuid.service";
-import { sendEmail } from "./email.service";
+import { notifyUserInvitation } from "./notification.service";
 import crypto from "crypto";
 
 export interface InvitationData {
@@ -159,12 +159,13 @@ export async function createInvitation(
     .where(eq(user.id, invitedBy))
     .limit(1);
 
-  // Send invitation email
-  await sendInvitationEmail(
+  // Send invitation email using notification service
+  await notifyUserInvitation(
     email,
     org[0].name,
-    inviter.length > 0 ? inviter[0].name : "System Administrator",
-    token
+    inviter.length > 0 ? inviter[0].name || "System Administrator" : "System Administrator",
+    token,
+    expiresInDays
   );
 
   return {
@@ -183,34 +184,7 @@ export async function createInvitation(
   };
 }
 
-/**
- * Send invitation email
- */
-async function sendInvitationEmail(
-  email: string,
-  organisationName: string,
-  inviterName: string,
-  token: string
-): Promise<void> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const invitationUrl = `${baseUrl}/auth/accept-invitation?token=${token}`;
 
-  const paragraphs = [
-    `You have been invited by ${inviterName} to join <strong>${organisationName}</strong> on Totolaw.`,
-    `To accept this invitation and create your account, please click the link below:`,
-    `<a href="${invitationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #7c3aed; color: white; text-decoration: none; border-radius: 6px; margin: 16px 0;">Accept Invitation</a>`,
-    `Or copy and paste this link into your browser:`,
-    `<code style="background-color: #f3f4f6; padding: 8px; border-radius: 4px; display: block; margin: 8px 0;">${invitationUrl}</code>`,
-    `This invitation will expire in 7 days.`,
-    `If you did not expect this invitation, you can safely ignore this email.`,
-  ];
-
-  await sendEmail(
-    email,
-    `You're invited to join ${organisationName} on Totolaw`,
-    paragraphs
-  );
-}
 
 /**
  * Get invitation by token

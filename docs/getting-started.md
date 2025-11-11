@@ -196,6 +196,10 @@ npm start           # Start production server on port 3440
 
 # Database
 npm run db-push     # Push schema changes to database
+npm run db-view     # Open Drizzle Studio to view/edit database
+
+# Admin Management
+npm run setup-admin  # Interactive setup to create/manage super admins
 
 # Code Quality
 npm run lint        # Run ESLint
@@ -264,30 +268,107 @@ If you encounter TypeScript or build errors:
 3. Reinstall dependencies: `npm install`
 4. Try building again: `npm run build`
 
+## Setting Up Your First Super Admin
+
+After initial setup, you'll need to create a super admin account to access the system admin features:
+
+```bash
+npm run setup-admin
+```
+
+This interactive script will:
+1. Prompt for your email address
+2. Create a super admin account (if it doesn't exist)
+3. Grant omnipotent access to all organisations
+4. Send you a magic link to log in
+
+Super admins have full access to:
+- All organisations without requiring membership
+- System administration dashboard at `/dashboard/system-admin`
+- User invitation to any organisation
+- Direct permission grants
+- Cross-organisation user management
+
 ## Next Steps
 
 Once you have Totolaw running:
 
-1. 🎯 Check [Development Summary](../DEVELOPMENT_SUMMARY.md) for all available features
-2. 📖 Read the [Authentication Guide](./authentication.md)
-3. 🏗️ Learn about the [Architecture](./architecture.md)
-4. � Understand [Multi-Tenant RBAC](./multi-tenant-rbac.md)
-5. 📚 Explore the [API Documentation](./api.md)
-6. 🗄️ Review the [Database Schema](./database.md)
-7. 🚀 Prepare for [Deployment](./deployment.md)
+1. 🔐 Create a super admin account using `npm run setup-admin`
+2. 🏢 Create your first organisation(s) from the system admin dashboard
+3. 👥 Invite users to organisations with appropriate roles
+4. 📖 Read the [Authentication Guide](./authentication.md)
+5. 🏗️ Learn about the [Architecture](./architecture.md)
+6. 🔒 Understand [Multi-Tenant RBAC](./multi-tenant-rbac.md)
+7. 👥 Review [User Invitation System](./user-invitation-system.md)
+8. 🏢 Learn [Organisation Management](./organization-management.md)
+9. 📚 Explore the [API Documentation](./api.md)
+10. 🗄️ Review the [Database Schema](./database.md)
+11. 🚀 Prepare for [Deployment](./deployment.md)
 
 ## Available Features
 
 All core features are implemented and ready to use:
-- ✅ Multi-tenant organisations with data isolation
+
+### Authentication & Security
+- ✅ Passwordless magic link authentication
+- ✅ Email-based secure login
+- ✅ Session management with Better Auth
+- ✅ CSRF protection and rate limiting
+
+### Organisation Management
+- ✅ Multi-tenant organisations with complete data isolation
+- ✅ Organisation hierarchy support
+- ✅ Organisation switcher in navigation
+- ✅ Admin-initiated user invitations
+- ✅ User-initiated join requests
+- ✅ Invitation management dashboard
+- ✅ Join request approval workflow
+
+### User Management
 - ✅ Role-based access control (RBAC)
-- ✅ Case management (CRUD operations)
-- ✅ Hearing management with calendar
+- ✅ User invitation system with email notifications
+- ✅ Organisation join requests with admin approval
+- ✅ Multiple role assignments per user
+- ✅ Direct permission grants (super admin)
+- ✅ User status tracking and management
+- ✅ System admin (omnipotent) access
+
+### Case Management
+- ✅ Comprehensive case CRUD operations
+- ✅ Case type and status tracking
+- ✅ Case assignment to judges/attorneys
+- ✅ Case statistics on dashboard
+- ✅ Case search functionality
+
+### Hearing Management
+- ✅ Hearing scheduling and management
+- ✅ Calendar view for hearings
+- ✅ Court transcription (manual and automated)
+- ✅ Transcript viewer and editor
+- ✅ Hearing location tracking
+- ✅ Upcoming hearings dashboard widget
+
+### Evidence & Documents
 - ✅ Evidence upload and file management
-- ✅ User management and role assignments
-- ✅ Global search functionality
-- ✅ Organisation switching
-- ✅ Dashboard with statistics
+- ✅ Document categorization
+- ✅ File type validation
+- ✅ Evidence search and filtering
+- ✅ Evidence linking to cases
+
+### Search & Discovery
+- ✅ Global search across cases, hearings, and evidence
+- ✅ Real-time search with debouncing
+- ✅ Categorized search results
+- ✅ Quick navigation from search results
+
+### User Interface
+- ✅ Modern, responsive dashboard
+- ✅ Statistics and analytics widgets
+- ✅ Mobile-friendly interface
+- ✅ Dark mode support (via system preferences)
+- ✅ Accessible UI components (Radix UI)
+- ✅ Permission-based UI rendering
+- ✅ Built-in help documentation
 
 ## Getting Help
 

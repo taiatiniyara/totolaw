@@ -41,15 +41,27 @@ Visit [http://localhost:3441](http://localhost:3441) to access the application.
 
 Comprehensive documentation is available in the `/docs` folder:
 
+### Getting Started
 - [Getting Started](./docs/getting-started.md) - Installation and setup guide
 - [Authentication](./docs/authentication.md) - Magic link authentication setup
-- [Architecture](./docs/architecture.md) - Technical architecture and design
-- [API Documentation](./docs/api.md) - API routes and services
 - [Deployment](./docs/deployment.md) - Production deployment guide
+- [Troubleshooting](./docs/troubleshooting.md) - Common issues and solutions
+
+### Core Features
+- [Architecture](./docs/architecture.md) - Technical architecture and design
 - [Database Schema](./docs/database.md) - Database structure and migrations
+- [API Documentation](./docs/api.md) - API routes and services
+
+### User & Organisation Management
 - [System Admin Guide](./docs/system-admin-guide.md) - Complete super admin management guide
 - [Multi-Tenant RBAC](./docs/multi-tenant-rbac.md) - Role-based access control
 - [Organisation Management](./docs/organisation-management.md) - Managing organisations
+- [User Invitation System](./docs/user-invitation-system.md) - Invitations and join requests
+- [Permissions Reference](./docs/permissions-reference.md) - All available permissions
+
+### Court Features
+- [Court Transcription](./docs/court-transcription.md) - Automated and manual transcription
+- [Manual Transcription](./docs/manual-transcription.md) - Manual transcription editor guide
 
 ## 🛠️ Tech Stack
 
@@ -86,6 +98,18 @@ Comprehensive documentation is available in the `/docs` folder:
 - 👨‍⚖️ Judge and attorney assignments
 - 📄 Document and evidence management
 - 🔍 Global search across cases, hearings, and evidence
+- 📝 Court transcription with manual and automated options
+- 📅 Calendar view for upcoming hearings
+- 📊 Case statistics and analytics on dashboard
+
+### User Management
+- 👥 **Admin-Initiated Invitations** - Admins invite users via email with role assignment
+- 🚪 **User-Initiated Join Requests** - Users browse and request to join organisations
+- ✅ Approval workflow with role assignment
+- ✉️ Email notifications for all invitation and request actions
+- 📋 Invitation and request management dashboards
+- 🔐 Token-based secure invitation system
+- ⏰ Automatic expiration and duplicate prevention
 
 ### User Experience
 - 🎨 Modern, responsive dashboard with statistics
@@ -94,6 +118,8 @@ Comprehensive documentation is available in the `/docs` folder:
 - ♿ Accessible UI components
 - 🌐 Organisation switcher in navigation
 - 📊 Real-time search with debouncing
+- 💬 Help documentation built into dashboard
+- 🎯 Intuitive navigation with permission-based access
 
 ## 🔧 Configuration
 
@@ -112,13 +138,11 @@ npm run build        # Build for production
 npm start            # Start production server (port 3440)
 npm run lint         # Run ESLint
 npm run db-push      # Push database schema changes
+npm run db-view      # Open Drizzle Studio to view/edit database
 npm run deploy       # Build and deploy with PM2
 
 # Admin Management
-npm run admin:list   # List all super admins
-npm run admin:add    # Add new super admin
-npm run admin:remove # Remove super admin privileges
-npm run admin:audit  # View audit log
+npm run setup-admin  # Interactive admin setup script
 ```
 
 ## 🌐 Environment Variables

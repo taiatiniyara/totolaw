@@ -740,6 +740,124 @@ rbac_audit_log {
 }
 ```
 
+## User Onboarding & Role Assignment
+
+Totolaw provides two mechanisms for adding users to organisations and assigning roles:
+
+### Admin-Initiated Invitations
+
+**Process:**
+1. Admin navigates to `/dashboard/users/invite`
+2. Enters user email and selects roles to assign
+3. *(Super admin only)* Can grant direct permissions
+4. User receives invitation email with secure token
+5. User accepts invitation and account is created/linked
+6. Roles are automatically assigned upon acceptance
+7. User gains immediate access to organisation
+
+**Benefits:**
+- Full admin control over user access
+- Pre-assign roles before user joins
+- Direct permission grants (super admin)
+- Ideal for onboarding known staff members
+
+**Implementation:**
+```typescript
+// Invite user with roles
+await inviteUser(
+  'user@example.com',
+  [judgeRoleId, viewerRoleId],  // Multiple roles
+  []                             // Direct permissions (super admin only)
+);
+```
+
+### User-Initiated Join Requests
+
+**Process:**
+1. User navigates to `/organisations/join`
+2. Searches/browses available organisations
+3. Submits join request with optional message
+4. Admin receives notification at `/dashboard/users/requests`
+5. Admin reviews request and user details
+6. Admin approves (assigns roles) or rejects (with reason)
+7. User receives notification and gains access if approved
+
+**Benefits:**
+- Self-service discovery mechanism
+- Reduces admin workload
+- Approval workflow maintains control
+- Ideal for open registration with review
+
+**Implementation:**
+```typescript
+// User submits request
+await requestToJoinOrganisation(
+  organisationId,
+  "I'm a registered lawyer with 5 years experience"
+);
+
+// Admin approves with roles
+await approveJoinRequestAction(
+  requestId,
+  [lawyerRoleId, caseViewerRoleId]
+);
+```
+
+### When to Use Each Method
+
+| Scenario | Use Invitations | Use Join Requests |
+|----------|----------------|-------------------|
+| **Onboarding staff** | ✅ Yes | ❌ No |
+| **Known users** | ✅ Yes | ⚠️ Optional |
+| **Self-service access** | ❌ No | ✅ Yes |
+| **Open registration** | ❌ No | ✅ Yes |
+| **Pre-assign specific roles** | ✅ Yes | ⚠️ During approval |
+| **Grant direct permissions** | ✅ Yes (super admin) | ❌ No |
+
+### Role Assignment Best Practices
+
+**Multiple Roles:**
+```typescript
+// Users can have multiple roles in an organisation
+await assignRoles(userId, organisationId, [
+  judgeRoleId,      // Primary role
+  viewerRoleId,     // Additional access
+  reporterRoleId    // Reporting capability
+]);
+```
+
+**Scoped Roles:**
+```typescript
+// Limit role to specific division/context
+await assignRole(userId, judgeRoleId, orgId, adminId, {
+  scope: JSON.stringify({ 
+    division: 'criminal',
+    location: 'suva-court'
+  })
+});
+```
+
+**Temporary Roles:**
+```typescript
+// Assign role with expiration
+const expiresAt = new Date();
+expiresAt.setDate(expiresAt.getDate() + 90);  // 90 days
+
+await assignRole(userId, roleId, orgId, adminId, undefined, expiresAt);
+```
+
+**Direct Permissions (Super Admin Only):**
+```typescript
+// Grant specific permission outside of roles
+await grantPermission(
+  userId,
+  organisationId,
+  'cases:delete',  // Permission slug
+  true,            // Grant (false = deny)
+  adminId
+);
+```
+
 ## Best Practices
 
 ### 1. Always Use Context
@@ -779,23 +897,21 @@ await hasPermission(userId, orgId, 'cases:create');
 await hasPermission(userId, orgId, permissionId);
 ```
 
-### 4. Scope Roles When Possible
+### 4. Leverage Invitations for Onboarding
 
 ```typescript
-// Limit judge to criminal division only
-await assignRole(userId, judgeRoleId, orgId, adminId, {
-  scope: JSON.stringify({ division: 'criminal' })
-});
+// ✅ Good: Invite with roles pre-assigned
+await inviteUser(email, [adminRoleId, managerRoleId]);
+
+// User automatically gets roles when accepting
 ```
 
-### 5. Use Temporary Roles
+### 5. Use Join Requests for Discovery
 
 ```typescript
-// Assign temporary role for 30 days
-const expiresAt = new Date();
-expiresAt.setDate(expiresAt.getDate() + 30);
-
-await assignRole(userId, roleId, orgId, adminId, undefined, expiresAt);
+// ✅ Good: Allow users to discover and request access
+// They browse /organisations/join
+// Admins review at /dashboard/users/requests
 ```
 
 ## Future Enhancements
