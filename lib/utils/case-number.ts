@@ -1,5 +1,5 @@
 /**
- * Case Number Generation Utilities
+ * Case Number Generation Utilities (Server-Only)
  * 
  * Generates case numbers according to Fiji court formats:
  * - High Court Criminal: HAC 179/2024
@@ -13,6 +13,14 @@
 import { db } from "@/lib/drizzle/connection";
 import { cases } from "@/lib/drizzle/schema/db-schema";
 import { eq, and, sql } from "drizzle-orm";
+
+// Re-export client-safe utilities
+export {
+  getCaseNumberFormat,
+  parseCaseNumber,
+  validateCaseNumber,
+  CASE_NUMBER_EXAMPLES,
+} from "./case-number-format";
 
 interface CaseNumberConfig {
   prefix: string;
@@ -185,96 +193,3 @@ export async function generateCaseNumber(
   return formatCaseNumber(config, sequence, caseYear);
 }
 
-/**
- * Parse a case number to extract its components
- */
-export function parseCaseNumber(caseNumber: string): {
-  prefix?: string;
-  sequence: number;
-  year: number;
-} | null {
-  // Try different patterns
-  
-  // Pattern 1: "HAC 179/2024" or "C & ED 03/2025"
-  const pattern1 = /^([A-Z &]+)\s+(\d+)\/(\d{2,4})$/;
-  const match1 = caseNumber.match(pattern1);
-  if (match1) {
-    return {
-      prefix: match1[1],
-      sequence: parseInt(match1[2]),
-      year: parseInt(match1[3]),
-    };
-  }
-  
-  // Pattern 2: "707/21" (no prefix)
-  const pattern2 = /^(\d+)\/(\d{2,4})$/;
-  const match2 = caseNumber.match(pattern2);
-  if (match2) {
-    return {
-      sequence: parseInt(match2[1]),
-      year: parseInt(match2[2]),
-    };
-  }
-  
-  return null;
-}
-
-/**
- * Validate a case number format
- */
-export function validateCaseNumber(
-  caseNumber: string,
-  courtLevel: string,
-  courtType?: string
-): boolean {
-  const parsed = parseCaseNumber(caseNumber);
-  if (!parsed) return false;
-  
-  const formatKey = getFormatKey(courtLevel, courtType);
-  const config = CASE_NUMBER_FORMATS[formatKey];
-  
-  if (!config) return false;
-  
-  // Check prefix matches
-  if (config.prefix && parsed.prefix !== config.prefix) {
-    return false;
-  }
-  
-  // Check if no prefix expected
-  if (!config.prefix && parsed.prefix) {
-    return false;
-  }
-  
-  return true;
-}
-
-/**
- * Get the case number format description for display
- */
-export function getCaseNumberFormat(courtLevel: string, courtType?: string): string {
-  const formatKey = getFormatKey(courtLevel, courtType);
-  const config = CASE_NUMBER_FORMATS[formatKey];
-  
-  if (!config) return "Unknown format";
-  
-  const seqPlaceholder = "X".repeat(config.padLength);
-  const yearPlaceholder = config.yearDigits === 2 ? "YY" : "YYYY";
-  
-  if (config.prefix) {
-    return `${config.prefix} ${seqPlaceholder}${config.separator}${yearPlaceholder}`;
-  } else {
-    return `${seqPlaceholder}${config.separator}${yearPlaceholder}`;
-  }
-}
-
-/**
- * Examples for testing/documentation
- */
-export const CASE_NUMBER_EXAMPLES = {
-  high_court_criminal: "HAC 179/2024",
-  high_court_civil: "HBC 188/2023",
-  high_court_appeal: "HAA 19/2025",
-  court_of_appeal: "ABU 002/20",
-  magistrates: "707/21",
-  tribunal_agricultural: "C & ED 03/2025",
-};

@@ -52,10 +52,10 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
   }
 
   const hearing = result.data;
-  const isPast = new Date(hearing.date) < new Date();
+  const isPast = new Date(hearing.scheduledDate) < new Date();
   const isToday = () => {
     const today = new Date();
-    const hearingDate = new Date(hearing.date);
+    const hearingDate = new Date(hearing.scheduledDate);
     return (
       hearingDate.getDate() === today.getDate() &&
       hearingDate.getMonth() === today.getMonth() &&
@@ -115,14 +115,13 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
                   <span>Date & Time</span>
                 </div>
                 <p className="font-medium">
-                  {new Date(hearing.date).toLocaleString('en-US', {
+                  {new Date(hearing.scheduledDate).toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    day: 'numeric'
                   })}
+                  {hearing.scheduledTime && ` at ${hearing.scheduledTime}`}
                 </p>
                 {isToday() && (
                   <Badge variant="default">Today</Badge>
@@ -131,6 +130,40 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
                   <Badge variant="secondary">Past</Badge>
                 )}
               </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <FileText className="h-4 w-4" />
+                  <span>Action Type</span>
+                </div>
+                <p className="font-medium">
+                  {hearing.actionType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>Status</span>
+                </div>
+                <Badge variant={
+                  hearing.status === 'COMPLETED' ? 'default' :
+                  hearing.status === 'CANCELLED' ? 'destructive' :
+                  hearing.status === 'IN_PROGRESS' ? 'secondary' : 'outline'
+                }>
+                  {hearing.status.replace(/_/g, ' ')}
+                </Badge>
+              </div>
+
+              {hearing.estimatedDuration && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>Estimated Duration</span>
+                  </div>
+                  <p className="font-medium">{hearing.estimatedDuration} minutes</p>
+                </div>
+              )}
 
               {hearing.location && (
                 <div className="space-y-2">
@@ -154,33 +187,98 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
                   {hearing.caseTitle}
                 </Link>
               </div>
-
-              {hearing.bailDecision && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <FileText className="h-4 w-4" />
-                    <span>Bail Decision</span>
-                  </div>
-                  <p className="font-medium capitalize">{hearing.bailDecision}</p>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>Scheduled On</span>
-                </div>
-                <p className="font-medium">
-                  {new Date(hearing.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Bail Information */}
+        {hearing.bailConsidered && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Bail Information</CardTitle>
+              <CardDescription>Bail considerations and decisions for this hearing</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-6 md:grid-cols-2">
+                {hearing.bailDecision && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <FileText className="h-4 w-4" />
+                      <span>Bail Decision</span>
+                    </div>
+                    <Badge variant={
+                      hearing.bailDecision === 'GRANTED' ? 'default' :
+                      hearing.bailDecision === 'DENIED' ? 'destructive' : 'outline'
+                    }>
+                      {hearing.bailDecision.replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
+                )}
+
+                {hearing.bailAmount && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>Bail Amount</span>
+                    </div>
+                    <p className="font-medium">FJD {hearing.bailAmount.toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+
+              {hearing.bailConditions && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>Bail Conditions</span>
+                  </div>
+                  <p className="text-sm whitespace-pre-wrap">{hearing.bailConditions}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Outcome & Next Actions */}
+        {(hearing.outcome || hearing.nextActionRequired) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Outcome & Next Steps</CardTitle>
+              <CardDescription>Hearing results and required follow-up actions</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {hearing.outcome && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="h-4 w-4" />
+                    <span>Outcome</span>
+                  </div>
+                  <p className="text-sm whitespace-pre-wrap">{hearing.outcome}</p>
+                </div>
+              )}
+
+              {hearing.nextActionRequired && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="h-4 w-4" />
+                    <span>Next Action Required</span>
+                  </div>
+                  <p className="text-sm whitespace-pre-wrap">{hearing.nextActionRequired}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Additional Notes */}
+        {hearing.notes && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Additional Notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm whitespace-pre-wrap">{hearing.notes}</p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Quick Actions */}
         <Card>

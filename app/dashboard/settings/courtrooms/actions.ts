@@ -107,6 +107,7 @@ export async function createCourtRoom(data: {
   courtLevel: string;
   location?: string;
   capacity?: number;
+  isActive?: boolean;
 }): Promise<ActionResult<typeof courtRooms.$inferSelect>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
@@ -143,7 +144,7 @@ export async function createCourtRoom(data: {
           courtLevel: data.courtLevel,
           location: data.location,
           capacity: data.capacity,
-          isActive: true,
+          isActive: data.isActive ?? true,
         }) as any
       )
       .returning();

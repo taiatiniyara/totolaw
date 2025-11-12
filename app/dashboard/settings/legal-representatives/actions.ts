@@ -120,6 +120,8 @@ export async function createLegalRepresentative(data: {
   phone?: string;
   address?: string;
   practiceAreas?: string[];
+  notes?: string;
+  isActive?: boolean;
 }): Promise<ActionResult<typeof legalRepresentatives.$inferSelect>> {
   try {
     const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
@@ -158,7 +160,8 @@ export async function createLegalRepresentative(data: {
           phone: data.phone,
           address: data.address,
           practiceAreas: data.practiceAreas,
-          isActive: true,
+          notes: data.notes,
+          isActive: data.isActive ?? true,
           createdBy: session.user.id,
         }) as any
       )

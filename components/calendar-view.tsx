@@ -12,7 +12,8 @@ interface Hearing {
   id: string;
   caseId: string;
   caseTitle: string;
-  date: Date;
+  scheduledDate: Date;
+  scheduledTime?: string;
   location: string | null;
 }
 
@@ -68,7 +69,7 @@ export function CalendarView({ hearings }: CalendarViewProps) {
   // Get hearings for a specific date
   const getHearingsForDate = (date: Date) => {
     return hearings.filter((hearing) => {
-      const hearingDate = new Date(hearing.date);
+      const hearingDate = new Date(hearing.scheduledDate);
       return (
         hearingDate.getFullYear() === date.getFullYear() &&
         hearingDate.getMonth() === date.getMonth() &&
@@ -285,7 +286,7 @@ export function CalendarView({ hearings }: CalendarViewProps) {
             <div className="text-2xl font-bold">
               {
                 hearings.filter((h) => {
-                  const hDate = new Date(h.date);
+                  const hDate = new Date(h.scheduledDate);
                   return (
                     hDate.getMonth() === currentDate.getMonth() &&
                     hDate.getFullYear() === currentDate.getFullYear()
@@ -306,7 +307,7 @@ export function CalendarView({ hearings }: CalendarViewProps) {
           <CardContent>
             <div className="text-2xl font-bold">
               {
-                hearings.filter((h) => new Date(h.date) >= today).length
+                hearings.filter((h) => new Date(h.scheduledDate) >= today).length
               }
             </div>
             <p className="text-xs text-muted-foreground mt-1">

@@ -26,13 +26,23 @@ interface HearingWithCase {
   id: string;
   caseId: string;
   caseTitle: string;
-  date: Date;
+  scheduledDate: Date;
   scheduledTime: string;
+  estimatedDuration: number | null;
+  courtRoomId: string | null;
+  location: string | null;
   actionType: string;
   status: string;
-  location: string | null;
   judgeId: string | null;
+  magistrateId: string | null;
+  clerkId: string | null;
+  outcome: string | null;
+  nextActionRequired: string | null;
+  bailConsidered: boolean | null;
   bailDecision: string | null;
+  bailAmount: number | null;
+  bailConditions: string | null;
+  notes: string | null;
   createdAt: Date;
 }
 
@@ -82,13 +92,23 @@ export async function getHearings(options?: {
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.scheduledDate,
+        scheduledDate: hearings.scheduledDate,
         scheduledTime: hearings.scheduledTime,
+        estimatedDuration: hearings.estimatedDuration,
+        courtRoomId: hearings.courtRoomId,
+        location: hearings.location,
         actionType: hearings.actionType,
         status: hearings.status,
-        location: hearings.location,
         judgeId: hearings.judgeId,
+        magistrateId: hearings.magistrateId,
+        clerkId: hearings.clerkId,
+        outcome: hearings.outcome,
+        nextActionRequired: hearings.nextActionRequired,
+        bailConsidered: hearings.bailConsidered,
         bailDecision: hearings.bailDecision,
+        bailAmount: hearings.bailAmount,
+        bailConditions: hearings.bailConditions,
+        notes: hearings.notes,
         createdAt: hearings.createdAt,
       })
       .from(hearings)
@@ -138,13 +158,23 @@ export async function getHearingById(hearingId: string): Promise<ActionResult<He
         id: hearings.id,
         caseId: hearings.caseId,
         caseTitle: cases.title,
-        date: hearings.scheduledDate,
+        scheduledDate: hearings.scheduledDate,
         scheduledTime: hearings.scheduledTime,
+        estimatedDuration: hearings.estimatedDuration,
+        courtRoomId: hearings.courtRoomId,
+        location: hearings.location,
         actionType: hearings.actionType,
         status: hearings.status,
-        location: hearings.location,
         judgeId: hearings.judgeId,
+        magistrateId: hearings.magistrateId,
+        clerkId: hearings.clerkId,
+        outcome: hearings.outcome,
+        nextActionRequired: hearings.nextActionRequired,
+        bailConsidered: hearings.bailConsidered,
         bailDecision: hearings.bailDecision,
+        bailAmount: hearings.bailAmount,
+        bailConditions: hearings.bailConditions,
+        notes: hearings.notes,
         createdAt: hearings.createdAt,
       })
       .from(hearings)
@@ -186,6 +216,8 @@ export async function createHearing(data: {
   bailDecision?: string;
   bailAmount?: number;
   bailConditions?: string;
+  outcome?: string;
+  nextActionRequired?: string;
   notes?: string;
 }): Promise<ActionResult<{ id: string }>> {
   try {
@@ -250,10 +282,10 @@ export async function createHearing(data: {
           bailDecision: data.bailDecision,
           bailAmount: data.bailAmount,
           bailConditions: data.bailConditions,
+          outcome: data.outcome,
+          nextActionRequired: data.nextActionRequired,
           notes: data.notes,
           createdBy: session.user.id,
-          // Legacy field for compatibility
-          date: data.scheduledDate,
         }) as any
       );
 
@@ -273,10 +305,23 @@ export async function createHearing(data: {
 export async function updateHearing(
   hearingId: string,
   data: {
-    date?: Date;
+    scheduledDate?: Date;
+    scheduledTime?: string;
+    estimatedDuration?: number;
+    courtRoomId?: string;
     location?: string;
+    actionType?: string;
+    status?: string;
     judgeId?: string;
+    magistrateId?: string;
+    clerkId?: string;
+    bailConsidered?: boolean;
     bailDecision?: string;
+    bailAmount?: number;
+    bailConditions?: string;
+    outcome?: string;
+    nextActionRequired?: string;
+    notes?: string;
   }
 ): Promise<ActionResult> {
   try {
@@ -317,14 +362,17 @@ export async function updateHearing(
       return { success: false, error: "Hearing not found or access denied" };
     }
 
-    // Update hearing
+    // Update hearing with all Fiji fields
     await db
       .update(hearings)
-      .set(data)
+      .set(data as any)
       .where(eq(hearings.id, hearingId));
 
     revalidatePath("/dashboard/hearings");
     revalidatePath(`/dashboard/hearings/${hearingId}`);
+    if (hearing.caseId) {
+      revalidatePath(`/dashboard/cases/${hearing.caseId}`);
+    }
 
     return { success: true };
   } catch (error) {

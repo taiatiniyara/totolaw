@@ -73,14 +73,13 @@ export default async function HearingsPage() {
                   <div className="flex items-center gap-4 flex-wrap">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {new Date(hearing.date).toLocaleString('en-US', {
+                      {new Date(hearing.scheduledDate).toLocaleDateString('en-US', {
                         weekday: 'short',
                         year: 'numeric',
                         month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
+                        day: 'numeric'
                       })}
+                      {hearing.scheduledTime && ` at ${hearing.scheduledTime}`}
                     </span>
                     {hearing.location && (
                       <span className="flex items-center gap-1">
@@ -98,10 +97,10 @@ export default async function HearingsPage() {
                 }}
               >
                 <div className="flex gap-2 items-center mb-2">
-                  {isToday(hearing.date) && (
+                  {isToday(hearing.scheduledDate) && (
                     <Badge variant="default">Today</Badge>
                   )}
-                  {isPast(hearing.date) && !isToday(hearing.date) && (
+                  {isPast(hearing.scheduledDate) && !isToday(hearing.scheduledDate) && (
                     <Badge variant="secondary">Past</Badge>
                   )}
                 </div>

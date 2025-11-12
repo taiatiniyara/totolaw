@@ -1,21 +1,18 @@
 /**
  * Edit Hearing Page
  * 
- * Form to reschedule or update a hearing
+ * Form to reschedule or update a hearing with comprehensive Fiji court tracking
  */
 
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Heading } from "@/components/ui/heading";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PageHeader } from "@/components/common";
+import { HearingFormServer } from "../../hearing-form-server";
 import { getHearingById, updateHearing } from "../../actions";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { getCases } from "../../../cases/actions";
+import { getCourtRooms } from "../../../settings/courtrooms/actions";
 
 interface EditHearingPageProps {
   params: Promise<{
@@ -23,25 +20,45 @@ interface EditHearingPageProps {
   }>;
 }
 
-async function handleSubmit(hearingId: string, formData: FormData) {
+async function handleUpdateHearing(hearingId: string, formData: FormData) {
   "use server";
-  
-  const dateStr = formData.get("date") as string;
-  const timeStr = formData.get("time") as string;
+
+  const scheduledDate = formData.get("scheduledDate") as string;
+  const scheduledTime = formData.get("scheduledTime") as string;
+  const estimatedDuration = formData.get("estimatedDuration") as string;
+  const courtRoomId = formData.get("courtRoomId") as string;
   const location = formData.get("location") as string;
+  const actionType = formData.get("actionType") as string;
+  const status = formData.get("status") as string;
+  const judgeId = formData.get("judgeId") as string;
+  const magistrateId = formData.get("magistrateId") as string;
+  const clerkId = formData.get("clerkId") as string;
+  const bailConsidered = formData.get("bailConsidered") === "on";
   const bailDecision = formData.get("bailDecision") as string;
-
-  if (!dateStr || !timeStr) {
-    throw new Error("Missing required fields");
-  }
-
-  // Combine date and time
-  const dateTime = new Date(`${dateStr}T${timeStr}`);
+  const bailAmount = formData.get("bailAmount") as string;
+  const bailConditions = formData.get("bailConditions") as string;
+  const outcome = formData.get("outcome") as string;
+  const nextActionRequired = formData.get("nextActionRequired") as string;
+  const notes = formData.get("notes") as string;
 
   const result = await updateHearing(hearingId, {
-    date: dateTime,
+    scheduledDate: new Date(scheduledDate),
+    scheduledTime,
+    estimatedDuration: estimatedDuration ? parseInt(estimatedDuration) : undefined,
+    courtRoomId: courtRoomId || undefined,
     location: location || undefined,
+    actionType,
+    status,
+    judgeId: judgeId || undefined,
+    magistrateId: magistrateId || undefined,
+    clerkId: clerkId || undefined,
+    bailConsidered: bailConsidered || undefined,
     bailDecision: bailDecision || undefined,
+    bailAmount: bailAmount ? parseFloat(bailAmount) : undefined,
+    bailConditions: bailConditions || undefined,
+    outcome: outcome || undefined,
+    nextActionRequired: nextActionRequired || undefined,
+    notes: notes || undefined,
   });
 
   if (result.success) {
@@ -70,130 +87,63 @@ export default async function EditHearingPage({ params }: EditHearingPageProps) 
 
   const hearing = result.data;
   
-  // Extract date and time from hearing.date
-  const hearingDate = new Date(hearing.date);
-  const dateValue = hearingDate.toISOString().split('T')[0];
-  const timeValue = hearingDate.toTimeString().slice(0, 5);
+  // Get all cases for selection
+  const casesResult = await getCases({ limit: 100 });
+  const cases = casesResult.success && casesResult.data ? casesResult.data : [];
+
+  // Get all courtrooms for selection
+  const courtroomsResult = await getCourtRooms();
+  const courtrooms = courtroomsResult.success && courtroomsResult.data ? courtroomsResult.data : [];
+
+  // Prepare initial form data
+  const initialData = {
+    caseId: hearing.caseId,
+    scheduledDate: new Date(hearing.scheduledDate).toISOString().split('T')[0],
+    scheduledTime: hearing.scheduledTime,
+    estimatedDuration: hearing.estimatedDuration,
+    courtRoomId: hearing.courtRoomId,
+    location: hearing.location,
+    actionType: hearing.actionType,
+    status: hearing.status,
+    judgeId: hearing.judgeId,
+    magistrateId: hearing.magistrateId,
+    clerkId: hearing.clerkId,
+    bailConsidered: hearing.bailConsidered,
+    bailDecision: hearing.bailDecision,
+    bailAmount: hearing.bailAmount,
+    bailConditions: hearing.bailConditions,
+    outcome: hearing.outcome,
+    nextActionRequired: hearing.nextActionRequired,
+    notes: hearing.notes,
+  };
 
   return (
     <ProtectedRoute requiredPermission="hearings:update">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href={`/dashboard/hearings/${id}`}>
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div>
-            <Heading as="h1">Edit Hearing</Heading>
-            <p className="text-muted-foreground">
-              Reschedule or update hearing details
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Edit Hearing"
+          description={`Update hearing details for ${hearing.caseTitle}`}
+          backButton={{ href: `/dashboard/hearings/${id}` }}
+        />
 
         {/* Form */}
         <Card>
           <CardHeader>
             <CardTitle>Hearing Details</CardTitle>
             <CardDescription>
-              Update the hearing information as needed
+              Update the hearing information including action types, outcomes, and bail decisions
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form action={handleSubmit.bind(null, id)} className="space-y-6">
-              {/* Case (readonly) */}
-              <div className="space-y-2">
-                <Label>Case</Label>
-                <div className="p-3 bg-muted rounded-md">
-                  <p className="font-medium">{hearing.caseTitle}</p>
-                  <Link 
-                    href={`/dashboard/cases/${hearing.caseId}`}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    View Case
-                  </Link>
-                </div>
-              </div>
-
-              {/* Date */}
-              <div className="space-y-2">
-                <Label htmlFor="date">
-                  Date <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="date"
-                  name="date"
-                  type="date"
-                  defaultValue={dateValue}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Update the hearing date
-                </p>
-              </div>
-
-              {/* Time */}
-              <div className="space-y-2">
-                <Label htmlFor="time">
-                  Time <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="time"
-                  name="time"
-                  type="time"
-                  defaultValue={timeValue}
-                  required
-                />
-                <p className="text-xs text-muted-foreground">
-                  Update the hearing time
-                </p>
-              </div>
-
-              {/* Location */}
-              <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  defaultValue={hearing.location || ""}
-                  placeholder="e.g., Courtroom 3, High Court Building"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Specify the hearing location
-                </p>
-              </div>
-
-              {/* Bail Decision */}
-              <div className="space-y-2">
-                <Label htmlFor="bailDecision">Bail Decision</Label>
-                <Select name="bailDecision" defaultValue={hearing.bailDecision || ""}>
-                  <SelectTrigger id="bailDecision">
-                    <SelectValue placeholder="Select bail decision (optional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">None</SelectItem>
-                    <SelectItem value="granted">Granted</SelectItem>
-                    <SelectItem value="denied">Denied</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="not-applicable">Not Applicable</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Update bail decision if applicable
-                </p>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-3 justify-end">
-                <Button type="button" variant="outline" asChild>
-                  <Link href={`/dashboard/hearings/${id}`}>Cancel</Link>
-                </Button>
-                <Button type="submit">Save Changes</Button>
-              </div>
-            </form>
+            <HearingFormServer
+              action={handleUpdateHearing.bind(null, id)}
+              mode="edit"
+              initialData={initialData}
+              cases={cases}
+              courtrooms={courtrooms}
+              cancelHref={`/dashboard/hearings/${id}`}
+            />
           </CardContent>
         </Card>
       </div>
