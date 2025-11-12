@@ -8,7 +8,15 @@ Totolaw implements a comprehensive security model with **passwordless authentica
 
 ### Magic Link Authentication
 
-Totolaw uses **Better Auth** with the magic link plugin for passwordless authentication.
+Totolaw uses **Better Auth** with the magic link plugin for passwordless authentication. This provides a secure, user-friendly alternative to traditional passwords.
+
+#### Benefits
+
+- **Passwordless** - No passwords to remember or manage
+- **Secure** - One-time-use tokens with expiration
+- **Simple UX** - Single-click login from email
+- **Email Verification** - Built-in email verification
+- **Phishing Resistant** - Tokens expire and are single-use
 
 #### How It Works
 
@@ -22,31 +30,41 @@ Totolaw uses **Better Auth** with the magic link plugin for passwordless authent
 ┌──────────────────────────────────┐
 │  2. Server generates unique      │
 │     magic link token             │
+│     - Random secure token        │
+│     - 15-minute expiration       │
+│     - Stored in database         │
 └────────────┬─────────────────────┘
              │
              ▼
 ┌──────────────────────────────────┐
 │  3. Email sent with magic link   │
 │     Link: /auth/magic-link?token=│
+│     - Sends via configured SMTP  │
+│     - Rate limited (5 per 15min) │
 └────────────┬─────────────────────┘
              │
              ▼
 ┌──────────────────────────────────┐
 │  4. User clicks link             │
+│     - Opens in browser           │
+│     - Token extracted from URL   │
 └────────────┬─────────────────────┘
              │
              ▼
 ┌──────────────────────────────────┐
 │  5. Server validates token       │
-│     - Checks expiration          │
-│     - Verifies signature         │
+│     - Checks database            │
+│     - Verifies not expired       │
+│     - Verifies not already used  │
+│     - Marks token as used        │
 └────────────┬─────────────────────┘
              │
              ▼
 ┌──────────────────────────────────┐
 │  6. Session created              │
-│     - Cookie set                 │
-│     - User redirected            │
+│     - Session record in DB       │
+│     - HTTP-only cookie set       │
+│     - User redirected to app     │
 └──────────────────────────────────┘
 ```
 
@@ -57,95 +75,256 @@ Totolaw uses **Better Auth** with the magic link plugin for passwordless authent
 ```typescript
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
+import { sendEmail } from "@/lib/services/email.service";
 
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET,
-  url: process.env.BETTER_AUTH_URL,
+  // Environment configuration
+  secret: process.env.BETTER_AUTH_SECRET,  // Signing secret (required)
+  url: process.env.BETTER_AUTH_URL,        // Base URL (e.g., http://localhost:3000)
   
+  // Database configuration
+  database: {
+    // Drizzle ORM connection used automatically
+  },
+  
+  // Session settings
   session: {
-    updateAge: 24 * 60 * 60,        // 24 hours
-    expiresIn: 60 * 60 * 24 * 7,    // 7 days
+    updateAge: 24 * 60 * 60,        // 24 hours - refresh session every 24h
+    expiresIn: 60 * 60 * 24 * 7,    // 7 days - session expires after 7 days
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,                // 5 minutes - cookie cache
+    },
   },
   
+  // Rate limiting
   rateLimit: {
-    window: 15 * 60 * 1000,          // 15 minutes
+    window: 15 * 60 * 1000,          // 15 minutes window
     max: 100,                         // 100 requests per window
-    storage: "database",
+    storage: "database",              // Store rate limits in DB
   },
   
+  // Email settings
+  emailAndPassword: {
+    enabled: false,                   // Disable password authentication
+  },
+  
+  // Plugins
   plugins: [
     magicLink({
+      // Token expiration
+      expiresIn: 15 * 60,             // 15 minutes
+      
+      // Send magic link email
       sendMagicLink: async ({ email, token, url }) => {
-        await sendEmail(email, "Your Magic Login Link", [
-          `You requested a magic login link.`,
-          `<a href="${url}">Click Here</a>`,
-        ]);
+        await sendEmail({
+          to: email,
+          subject: "Your Login Link - Totolaw",
+          html: `
+            <h2>Login to Totolaw</h2>
+            <p>You requested a magic login link.</p>
+            <p>
+              <a href="${url}" style="
+                display: inline-block;
+                padding: 12px 24px;
+                background-color: #2563eb;
+                color: white;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: 500;
+              ">
+                Click here to login
+              </a>
+            </p>
+            <p>Or copy and paste this link:</p>
+            <p style="color: #6b7280; font-size: 14px;">${url}</p>
+            <p style="margin-top: 24px; color: #6b7280; font-size: 14px;">
+              This link will expire in 15 minutes. If you didn't request this, please ignore this email.
+            </p>
+          `,
+        });
       },
+      
+      // Rate limiting for magic links
       rateLimit: {
-        window: 15 * 60 * 1000,
-        max: 5,  // 5 magic links per 15 minutes
+        window: 15 * 60 * 1000,       // 15 minutes
+        max: 5,                        // 5 magic links per user per window
       },
     }),
   ],
+  
+  // Advanced options
+  advanced: {
+    cookiePrefix: "totolaw",          // Cookie name prefix
+    generateId: () => crypto.randomUUID(), // ID generation function
+  },
 });
+```
+
+#### Environment Variables
+
+**Required:**
+
+```bash
+# Better Auth configuration
+BETTER_AUTH_SECRET="your-secret-key-min-32-chars"
+BETTER_AUTH_URL="http://localhost:3000"
+
+# Email configuration (for magic links)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USER="your-email@gmail.com"
+SMTP_PASSWORD="your-app-password"
+SMTP_FROM="Totolaw <noreply@totolaw.com>"
 ```
 
 ### Session Management
 
 #### Session Storage
-- Sessions stored in database (`session` table)
-- Session token stored in HTTP-only cookie
-- 7-day expiration with 24-hour update interval
+
+Sessions are stored in the database with the following schema:
+
+```sql
+CREATE TABLE session (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+  expires_at TIMESTAMP NOT NULL,
+  token TEXT NOT NULL UNIQUE,
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+#### Session Lifecycle
+
+```
+CREATE SESSION
+    ↓
+ACTIVE (7 days max)
+    ↓
+┌───────────────┐
+│ Every 24h:    │
+│ Update token  │
+│ Refresh cookie│
+└───────────────┘
+    ↓
+EXPIRED or LOGOUT
+    ↓
+DELETE SESSION
+```
 
 #### Session Validation
 
-**Server-side:**
+**Server-side (Server Actions/API Routes):**
+
 ```typescript
+'use server';
+
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-const session = await auth.api.getSession({
-  headers: await headers(),
-});
+export async function protectedAction() {
+  // Get session from request headers
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-if (!session?.user) {
-  // Not authenticated
+  // Check authentication
+  if (!session?.user) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  // Access user data
+  const userId = session.user.id;
+  const userEmail = session.user.email;
+
+  // Continue with authorized logic...
 }
 ```
 
-**Client-side:**
+**Client-side (React Components):**
+
 ```typescript
+'use client';
+
 import { authClient } from "@/lib/auth-client";
 
-const session = authClient.useSession();
+export function ProtectedComponent() {
+  const { data: session, isPending } = authClient.useSession();
 
-if (session.data?.user) {
-  // Authenticated
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (!session?.user) {
+    return <div>Not authenticated</div>;
+  }
+
+  return (
+    <div>
+      <p>Welcome, {session.user.email}!</p>
+    </div>
+  );
 }
 ```
 
 ### Login Flow
 
 #### 1. Login Page
+
 **Location:** `app/auth/login/page.tsx`
 
 ```typescript
-<form action={sendMagicLink}>
-  <input 
-    type="email" 
-    name="email" 
-    placeholder="Enter your email" 
-    required 
-  />
-  <button type="submit">Send Magic Link</button>
-</form>
+import { sendMagicLink } from '../actions';
+import { FormField } from '@/components/forms/form-field';
+import { Button } from '@/components/ui/button';
+
+export default function LoginPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="w-full max-w-md space-y-6 px-4">
+        <div>
+          <h1 className="text-2xl font-bold">Sign in to Totolaw</h1>
+          <p className="text-muted-foreground">
+            Enter your email to receive a magic link
+          </p>
+        </div>
+
+        <form action={sendMagicLink} className="space-y-4">
+          <FormField
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="judge@court.gov.fj"
+            required
+            autoComplete="email"
+          />
+
+          <Button type="submit" className="w-full">
+            Send Magic Link
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-muted-foreground">
+          We'll email you a magic link for a password-free sign in
+        </p>
+      </div>
+    </div>
+  );
+}
 ```
 
-#### 2. Server Action
+#### 2. Send Magic Link Action
+
 **Location:** `app/auth/actions.ts`
 
 ```typescript
 'use server';
+
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export async function sendMagicLink(formData: FormData) {
   const email = formData.get("email") as string;

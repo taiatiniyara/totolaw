@@ -23,7 +23,7 @@ export const cases = pgTable("cases", {
   title: text("title").notNull(),
   type: varchar("type", { length: 50 }).notNull(), // criminal, civil, appeal, etc.
   courtLevel: varchar("court_level", { length: 50 }).notNull(), // high_court, magistrates, court_of_appeal, tribunal
-  division: varchar("division", { length: 50 }), // criminal, civil for high court
+  caseType: varchar("case_type", { length: 50 }), // criminal, civil for high court
   status: varchar("status", { length: 50 }).notNull(), // open, active, closed, appealed
   
   // Parties (multiple supported via JSON)

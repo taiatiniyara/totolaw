@@ -82,8 +82,30 @@ Stores user account information.
 | adminAddedBy | text | FK to user who granted admin |
 | adminAddedAt | timestamp | When admin access was granted |
 | lastLogin | timestamp | Last login timestamp |
+| judicialTitle | text | Judicial title (e.g., "Justice", "Resident Magistrate") |
+| designation | text | Role designation (e.g., "Judge", "Magistrate", "Prosecutor") |
 | createdAt | timestamp | Account creation time |
 | updatedAt | timestamp | Last update time |
+
+**Judicial Fields Usage:**
+- `judicialTitle` - Used in cause list generation and formal court documents (e.g., "THE HON. MR. JUSTICE GOUNDAR")
+- `designation` - General role classification for assignment purposes (e.g., assigning judges to cases)
+
+**Common Judicial Titles:**
+- "Justice" - High Court and Court of Appeal judges
+- "Resident Magistrate" - Senior magistrates
+- "Magistrate" - Magistrates court officials
+- "Chief Registrar" - Court administrative head
+- null - Non-judicial users
+
+**Common Designations:**
+- "Judge" - Judicial officer in higher courts
+- "Magistrate" - Judicial officer in magistrates courts
+- "Registrar" - Court administrator
+- "Prosecutor" - Prosecution counsel
+- "Defense Attorney" - Defense counsel
+- "Clerk" - Court clerk
+- null - Administrative or other roles
 
 **Indexes:**
 - Unique on `email`
@@ -151,26 +173,55 @@ Rate limiting tracking (prevents abuse).
 ### Organisation Tables
 
 #### `organisations`
-Court systems and organisational entities.
+Court systems and organisational entities with court hierarchy support.
 
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | Primary key (UUID) |
-| name | text | Organisation name (e.g., "Fiji High Court") |
-| code | varchar(10) | Organisation code (e.g., "FJ") |
-| type | varchar(50) | Type: "country", "province", "district" |
+| name | text | Organisation name (e.g., "Fiji High Court - Criminal Division") |
+| code | varchar(10) | Organisation code (e.g., "FJ-HC-CRIM") |
+| type | varchar(50) | Type: "country", "court_system", "court", "tribunal" |
+| courtLevel | varchar(50) | Court level: "court_of_appeal", "high_court", "magistrates", "tribunal" |
+| courtType | varchar(50) | Court type: "criminal", "civil", "family", "agricultural", "small_claims" |
+| jurisdiction | text | Geographic or subject matter jurisdiction |
 | description | text | Organisation description |
 | parentId | text | FK to parent organisation (hierarchy) |
 | isActive | boolean | Active status |
-| settings | text | JSON settings |
+| settings | text | JSON settings (case number formats, etc.) |
 | createdBy | text | FK to user who created |
 | createdAt | timestamp | Creation time |
 | updatedAt | timestamp | Last update |
+
+**Court Hierarchy Example:**
+```
+Fiji Court System (country, parent=null)
+  ├── Court of Appeal (court_of_appeal, parent=Fiji)
+  ├── High Court - Criminal Division (high_court, criminal, parent=Fiji)
+  ├── High Court - Civil Division (high_court, civil, parent=Fiji)
+  ├── Suva Magistrates Court (magistrates, parent=Fiji)
+  ├── Nadi Magistrates Court (magistrates, parent=Fiji)
+  └── Agricultural Tribunal (tribunal, agricultural, parent=Fiji)
+```
+
+**Court Levels:**
+- `court_of_appeal` - Highest appellate court
+- `high_court` - Superior court with original and appellate jurisdiction
+- `magistrates` - Lower courts handling minor matters
+- `tribunal` - Specialized courts (agricultural, small claims, etc.)
+
+**Court Types (for high courts and tribunals):**
+- `criminal` - Criminal matters
+- `civil` - Civil disputes
+- `family` - Family law matters
+- `agricultural` - Land and agricultural disputes
+- `small_claims` - Small monetary claims
+- null - Not applicable or mixed jurisdiction
 
 **Indexes:**
 - Unique on `code`
 - Index on `parentId`
 - Index on `isActive`
+- Index on `courtLevel`
 
 #### `organisation_members`
 User membership in organisations.
@@ -395,47 +446,456 @@ Audit trail for RBAC changes.
 
 ### Case Management Tables
 
-*(Note: Full case schema tables are defined but not detailed here for brevity. Key tables include:)*
+#### `cases`
+Legal case records with Fiji court system support.
 
-- `cases` - Legal case records
-- `hearings` - Court hearing schedules
-- `evidence` - Evidence items
-- `documents` - Case documents
-- `verdicts` - Case outcomes
-- `sentences` - Sentencing information
-- `appeals` - Appeal records
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseNumber | varchar(50) | Auto-generated case number (e.g., "HAC 179/2024") |
+| title | text | Case title |
+| type | varchar(50) | Case type: "criminal", "civil", "appeal", etc. |
+| courtLevel | varchar(50) | Court level: "high_court", "magistrates", "court_of_appeal", "tribunal" |
+| caseType | varchar(50) | Division for high court: "criminal", "civil" |
+| status | varchar(50) | Status: "open", "active", "closed", "appealed" |
+| parties | json | Parties structure (see below) |
+| assignedJudgeId | text | FK to assigned judge |
+| assignedClerkId | text | FK to assigned clerk |
+| filedDate | timestamp | Date case was filed |
+| firstHearingDate | timestamp | Date of first hearing |
+| closedDate | timestamp | Date case was closed |
+| offences | json | Array of offences (for criminal cases) |
+| notes | text | Additional notes |
+| filedBy | text | FK to user who filed |
+| createdAt | timestamp | Record creation time |
+| updatedAt | timestamp | Last update time |
+
+**Parties JSON Structure:**
+```json
+{
+  "prosecution": [
+    { "name": "State", "counsel": "DPP" }
+  ],
+  "defense": [
+    { "name": "John Doe", "counsel": "LEGAL AID COMMISSION" }
+  ],
+  "plaintiff": [
+    { "name": "Jane Smith", "counsel": "MISHRA PRAKASH & ASSOCIATES" }
+  ],
+  "defendant": [
+    { "name": "ABC Company", "counsel": "SEN LAWYERS" }
+  ],
+  "appellant": [
+    { "name": "Appellant Name", "counsel": "Counsel Name" }
+  ],
+  "respondent": [
+    { "name": "Respondent Name", "counsel": "Counsel Name" }
+  ]
+}
+```
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `status`
+- Index on `caseNumber`
+- Index on `courtLevel`
+- Index on `assignedJudgeId`
+- Index on `filedDate`
+
+#### `hearings`
+Court hearing schedules with Fiji action types.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| scheduledDate | timestamp | Hearing date |
+| scheduledTime | varchar(10) | Time in format "9:30AM" |
+| estimatedDuration | integer | Duration in minutes |
+| courtRoomId | text | FK to courtroom |
+| location | text | Location (fallback if courtroom not tracked) |
+| actionType | varchar(50) | Hearing action type (see below) |
+| status | varchar(50) | Status: "scheduled", "in_progress", "completed", "adjourned", "cancelled" |
+| judgeId | text | FK to presiding judge |
+| magistrateId | text | FK to magistrate (for magistrates courts) |
+| clerkId | text | FK to court clerk |
+| outcome | text | Brief outcome description |
+| nextActionRequired | text | Next action needed |
+| bailConsidered | boolean | Whether bail was considered |
+| bailDecision | varchar(50) | Bail decision: "granted", "denied", "continued" |
+| bailAmount | integer | Bail amount (if granted) |
+| bailConditions | text | Bail conditions |
+| minutes | text | Hearing minutes |
+| notes | text | Additional notes |
+| createdBy | text | FK to user who created |
+| createdAt | timestamp | Record creation |
+| updatedAt | timestamp | Last update |
+
+**Action Types (Fiji Court System):**
+- `MENTION` - Routine case management hearing
+- `HEARING` - General hearing on matters
+- `TRIAL` - Full trial proceeding
+- `CONTINUATION OF TRIAL` - Multi-day trial continuation
+- `VOIR DIRE HEARING` - Evidence admissibility hearing
+- `PRE-TRIAL CONFERENCE` - Pre-trial preparation
+- `BAIL HEARING` - Bail consideration
+- `RULING` - Judge delivering ruling/decision
+- `FIRST CALL` - Initial appearance
+- `SENTENCING` - Sentence delivery
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+- Index on `judgeId`
+- Index on `scheduledDate`
+- Index on `status`
+- Index on `actionType`
+- Index on `courtRoomId`
+
+#### `court_rooms`
+Physical courtroom tracking.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| name | varchar(100) | Courtroom name (e.g., "HIGH COURT ROOM NO. 2") |
+| code | varchar(20) | Short code (e.g., "HC-2") |
+| courtLevel | varchar(50) | Court level: "high_court", "magistrates", etc. |
+| location | text | Physical location details |
+| capacity | integer | Seating capacity |
+| isActive | boolean | Active status |
+| createdAt | timestamp | Record creation |
+| updatedAt | timestamp | Last update |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `code`
+- Index on `isActive`
+
+#### `legal_representatives`
+Lawyers, law firms, and legal aid tracking.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| name | text | Lawyer or firm name |
+| type | varchar(50) | Type: "individual", "law_firm", "legal_aid", "government" |
+| firmName | text | Law firm name (if individual lawyer) |
+| email | text | Contact email |
+| phone | text | Contact phone |
+| address | text | Physical address |
+| practiceAreas | json | Array of practice areas (e.g., ["criminal", "civil"]) |
+| userId | text | FK to linked user account (optional) |
+| isActive | boolean | Active status |
+| notes | text | Additional notes |
+| createdBy | text | FK to user who created |
+| createdAt | timestamp | Record creation |
+| updatedAt | timestamp | Last update |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `userId`
+- Index on `isActive`
+
+#### `daily_cause_lists`
+Daily court schedules (Fiji format).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| listDate | timestamp | Date for this cause list |
+| courtLevel | varchar(50) | Court level |
+| presidingOfficerId | text | FK to presiding judge/magistrate |
+| presidingOfficerTitle | varchar(100) | Full title (e.g., "HON. MR. JUSTICE GOUNDAR") |
+| courtRoomId | text | FK to courtroom |
+| sessionTime | varchar(20) | Session time (e.g., "9:30AM") |
+| status | varchar(50) | Status: "draft", "published", "completed" |
+| publishedAt | timestamp | When published |
+| notes | text | Additional notes |
+| createdBy | text | FK to creator |
+| createdAt | timestamp | Record creation |
+| updatedAt | timestamp | Last update |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `listDate`
+- Index on `presidingOfficerId`
+- Index on `status`
+
+**Note:** Hearings are linked to cause lists via the hearing's `courtRoomId`, `judgeId`, and `scheduledDate` matching the cause list criteria.
+
+#### `evidence`
+Evidence items for cases.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| hearingId | text | FK to hearing (optional) |
+| fileName | text | Original filename |
+| fileSize | integer | File size in bytes |
+| fileType | varchar(100) | MIME type |
+| filePath | text | Storage path |
+| description | text | Evidence description |
+| submittedBy | text | FK to user who submitted |
+| createdAt | timestamp | Submission time |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+- Index on `hearingId`
+- Index on `submittedBy`
+
+#### `pleas`
+Plea records (guilty, not guilty, etc.).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| defendantId | text | FK to defendant user |
+| pleaType | varchar(20) | Plea type: "guilty", "not_guilty", etc. |
+| createdAt | timestamp | Plea date |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+
+#### `trials`
+Trial records and outcomes.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| judgeId | text | FK to presiding judge |
+| verdict | varchar(20) | Verdict: "guilty", "not_guilty", etc. |
+| createdAt | timestamp | Trial completion date |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+- Index on `judgeId`
+
+#### `sentences`
+Sentencing information.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| sentenceType | varchar(50) | Type of sentence |
+| duration | integer | Duration in months/years (if applicable) |
+| createdAt | timestamp | Sentencing date |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+
+#### `appeals`
+Appeal records with enhanced linking.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| originalCaseId | text | FK to lower court case |
+| appealCaseId | text | FK to appeal case (if created as new case) |
+| appealType | varchar(50) | Type: "criminal_appeal", "civil_appeal", "bail_application" |
+| grounds | text | Grounds for appeal |
+| status | varchar(50) | Status: "pending", "admitted", "dismissed", "allowed", "withdrawn" |
+| appellantId | text | FK to appellant user |
+| appellantCounsel | text | Appellant's counsel |
+| respondentCounsel | text | Respondent's counsel |
+| filedDate | timestamp | Filing date |
+| hearingDate | timestamp | Appeal hearing date |
+| decisionDate | timestamp | Decision date |
+| decision | text | Appeal decision |
+| orders | text | Court orders |
+| filedBy | text | FK to user who filed |
+| createdAt | timestamp | Record creation |
+| updatedAt | timestamp | Last update |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `originalCaseId`
+- Index on `appealCaseId`
+- Index on `status`
+- Index on `filedBy`
+
+#### `enforcement`
+Sentence enforcement tracking.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| caseId | text | FK to case |
+| officerId | text | FK to enforcement officer |
+| action | varchar(50) | Enforcement action taken |
+| notes | text | Additional notes |
+| createdAt | timestamp | Action date |
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+- Index on `officerId`
+
+#### `managed_lists`
+Custom managed lists for organisations.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| organisationId | text | FK to organisation |
+| name | varchar(100) | List name |
+| description | text | List description |
+| list | json | Array of list items (id, name, details) |
+| createdBy | text | FK to creator |
+| createdAt | timestamp | Creation time |
+
+**Indexes:**
+- Index on `organisationId`
 
 All case-related tables include `organisationId` for tenant isolation.
 
 ### Transcript Tables
 
-#### `proceeding_templates`
-Templates for court proceedings.
+The transcription system supports manual and automated transcription of court proceedings.
+
+#### `transcripts`
+Main transcript records.
 
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | Primary key (UUID) |
+| caseId | text | FK to case |
+| hearingId | text | FK to hearing |
 | organisationId | text | FK to organisation |
-| name | varchar(100) | Template name |
-| description | text | Template description |
-| steps | json | Array of proceeding steps |
-| createdBy | text | FK to creator |
+| title | text | Transcript title |
+| status | varchar(50) | Status: "draft", "in-progress", "completed", "reviewed" |
+| recordingUrl | text | Optional URL to audio/video recording |
+| transcriptionService | varchar(50) | Service used: "manual", "automated", "hybrid" |
+| startedAt | timestamp | When transcription started |
+| completedAt | timestamp | When completed |
+| createdBy | text | FK to user who created |
 | createdAt | timestamp | Creation time |
+| updatedAt | timestamp | Last update |
 
-#### `proceeding_steps`
-Individual steps in proceeding templates.
+**Status Values:**
+- `draft` - Newly created, not started
+- `in-progress` - Currently being transcribed
+- `completed` - Transcription finished
+- `reviewed` - Reviewed and approved by supervisor
+
+**Indexes:**
+- Index on `organisationId`
+- Index on `caseId`
+- Index on `hearingId`
+- Index on `status`
+- Index on `createdBy`
+
+#### `transcript_speakers`
+Speakers in court proceedings.
 
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | Primary key (UUID) |
+| transcriptId | text | FK to transcript |
 | organisationId | text | FK to organisation |
-| templateId | text | FK to template |
-| title | text | Step title |
-| description | text | Step description |
-| order | integer | Step sequence number |
-| isRequired | boolean | Required step flag |
-| createdBy | text | FK to creator |
+| name | text | Speaker name (e.g., "Judge Smith", "Witness A") |
+| role | varchar(50) | Speaker role (see below) |
+| userId | text | FK to user (optional, if speaker has system account) |
+| metadata | json | Additional speaker data |
 | createdAt | timestamp | Creation time |
+| updatedAt | timestamp | Last update |
+
+**Speaker Roles:**
+- `judge` - Presiding judge or magistrate
+- `prosecutor` - Prosecution counsel
+- `defense` - Defense attorney
+- `witness` - Witness giving testimony
+- `defendant` - Defendant speaking
+- `clerk` - Court clerk
+- `interpreter` - Court interpreter
+- `other` - Other participants
+
+**Indexes:**
+- Index on `transcriptId`
+- Index on `organisationId`
+- Index on `userId`
+
+#### `transcript_segments`
+Individual transcript segments (statements).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| transcriptId | text | FK to transcript |
+| speakerId | text | FK to speaker |
+| organisationId | text | FK to organisation |
+| startTime | integer | Start time in milliseconds |
+| endTime | integer | End time in milliseconds (optional) |
+| text | text | Transcript text |
+| confidence | numeric | Confidence score (for automated transcription, 0-1) |
+| metadata | json | Additional data (notes, corrections, timestamp string) |
+| createdAt | timestamp | Creation time |
+| updatedAt | timestamp | Last update |
+
+**Metadata Structure (Manual Transcription):**
+```json
+{
+  "notes": "Witness had strong accent",
+  "timestamp": "10:35",
+  "manualEntry": true,
+  "corrections": []
+}
+```
+
+**Indexes:**
+- Index on `transcriptId`
+- Index on `speakerId`
+- Index on `organisationId`
+- Index on `startTime`
+
+#### `transcript_annotations`
+Annotations, highlights, and comments on transcripts.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | text | Primary key (UUID) |
+| transcriptId | text | FK to transcript |
+| segmentId | text | FK to specific segment (optional) |
+| organisationId | text | FK to organisation |
+| type | varchar(50) | Annotation type (see below) |
+| content | text | Annotation content/comment |
+| color | varchar(20) | Highlight color (for highlights) |
+| createdBy | text | FK to user who created |
+| createdAt | timestamp | Creation time |
+| updatedAt | timestamp | Last update |
+
+**Annotation Types:**
+- `highlight` - Important text highlight
+- `comment` - Comment or note
+- `correction` - Error correction
+- `clarification` - Clarification note
+- `redaction` - Text redaction marker
+
+**Indexes:**
+- Index on `transcriptId`
+- Index on `segmentId`
+- Index on `organisationId`
+- Index on `createdBy`
+- Index on `type`
 
 ### System Admin Tables
 

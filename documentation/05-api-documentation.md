@@ -593,6 +593,603 @@ fetch('/api/organization/list')
   .then(console.log);
 ```
 
+## Server Action Endpoints
+
+The following sections document all available server actions grouped by domain.
+
+### Case Management Actions
+
+**File:** `app/dashboard/cases/actions.ts`
+
+#### Get Cases
+
+```typescript
+export async function getCases(filters?: {
+  status?: string;
+  assignedJudge?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<ActionResult<Case[]>>;
+```
+
+**Filters:**
+- `status` - Filter by case status (open, active, closed, appealed)
+- `assignedJudge` - Filter by assigned judge ID
+- `search` - Search case titles and numbers
+- `limit` - Maximum results to return
+- `offset` - Pagination offset
+
+**Returns:**
+```typescript
+{
+  success: true,
+  data: [
+    {
+      id: "case-uuid",
+      caseNumber: "HAC 179/2024",
+      title: "State vs John Doe",
+      type: "criminal",
+      courtLevel: "high_court",
+      status: "open",
+      parties: { prosecution: [...], defense: [...] },
+      filedDate: "2024-11-01T00:00:00Z",
+      // ... other fields
+    }
+  ]
+}
+```
+
+#### Get Case by ID
+
+```typescript
+export async function getCaseById(caseId: string): Promise<ActionResult<Case>>;
+```
+
+#### Create Case
+
+```typescript
+export async function createCase(formData: FormData): Promise<ActionResult<{ caseId: string }>>;
+```
+
+**Required FormData Fields:**
+- `title` - Case title
+- `type` - Case type (criminal, civil, appeal)
+- `courtLevel` - Court level (high_court, magistrates, court_of_appeal, tribunal)
+- `status` - Initial status (usually "open")
+- `filedDate` - Date case was filed
+
+**Optional Fields:**
+- `caseType` - Division for high court (criminal, civil)
+- `assignedJudgeId` - Assigned judge
+- `assignedClerkId` - Assigned clerk
+- `description` - Case description
+- `parties` - JSON string of parties
+- `offences` - JSON array of offences (for criminal cases)
+- `notes` - Additional notes
+
+**Note:** Case number is auto-generated based on court level and type.
+
+#### Update Case
+
+```typescript
+export async function updateCase(
+  caseId: string,
+  formData: FormData
+): Promise<ActionResult>;
+```
+
+#### Delete Case
+
+```typescript
+export async function deleteCase(caseId: string): Promise<ActionResult>;
+```
+
+**Permission Required:** `cases:delete`
+
+### Hearing Management Actions
+
+**File:** `app/dashboard/hearings/actions.ts`
+
+#### Get Hearings
+
+```typescript
+export async function getHearings(options?: {
+  limit?: number;
+  upcoming?: boolean;
+  caseId?: string;
+}): Promise<ActionResult<HearingWithCase[]>>;
+```
+
+**Returns hearings with joined case information:**
+```typescript
+{
+  success: true,
+  data: [
+    {
+      id: "hearing-uuid",
+      caseId: "case-uuid",
+      caseTitle: "State vs John Doe",
+      date: "2025-11-15T09:30:00Z",
+      scheduledTime: "9:30AM",
+      actionType: "MENTION",
+      status: "scheduled",
+      location: "HIGH COURT ROOM NO. 2",
+      judgeId: "judge-uuid",
+      bailDecision: null,
+      createdAt: "2025-11-10T00:00:00Z"
+    }
+  ]
+}
+```
+
+#### Get Hearing by ID
+
+```typescript
+export async function getHearingById(hearingId: string): Promise<ActionResult<Hearing>>;
+```
+
+#### Create Hearing
+
+```typescript
+export async function createHearing(formData: FormData): Promise<ActionResult<{ hearingId: string }>>;
+```
+
+**Required FormData Fields:**
+- `caseId` - Associated case ID
+- `scheduledDate` - Hearing date (ISO format)
+- `actionType` - Type of hearing action
+
+**Supported Action Types:**
+- `MENTION` - Routine case management
+- `HEARING` - General hearing
+- `TRIAL` - Main trial
+- `CONTINUATION OF TRIAL` - Multi-day trial
+- `VOIR DIRE HEARING` - Evidence admissibility
+- `PRE-TRIAL CONFERENCE` - Pre-trial preparation
+- `BAIL HEARING` - Bail consideration
+- `RULING` - Decision delivery
+- `FIRST CALL` - Initial appearance
+- `SENTENCING` - Sentence delivery
+
+**Optional Fields:**
+- `scheduledTime` - Time in format "HH:MMAM/PM"
+- `estimatedDuration` - Duration in minutes
+- `courtRoomId` - Assigned courtroom
+- `location` - Location description (fallback)
+- `judgeId` - Presiding judge
+- `magistrateId` - Magistrate (for magistrates courts)
+- `bailConsidered` - Boolean
+- `notes` - Additional notes
+
+#### Update Hearing
+
+```typescript
+export async function updateHearing(
+  hearingId: string,
+  formData: FormData
+): Promise<ActionResult>;
+```
+
+#### Delete Hearing
+
+```typescript
+export async function deleteHearing(hearingId: string): Promise<ActionResult>;
+```
+
+### Courtroom Management Actions
+
+**File:** `app/dashboard/settings/courtrooms/actions.ts`
+
+#### Get Courtrooms
+
+```typescript
+export async function getCourtRooms(filters?: {
+  courtLevel?: string;
+  isActive?: boolean;
+}): Promise<ActionResult<CourtRoom[]>>;
+```
+
+**Returns:**
+```typescript
+{
+  success: true,
+  data: [
+    {
+      id: "room-uuid",
+      organisationId: "org-uuid",
+      name: "HIGH COURT ROOM NO. 2",
+      code: "HC-2",
+      courtLevel: "high_court",
+      location: "Building A, Floor 2",
+      capacity: 50,
+      isActive: true,
+      createdAt: "2025-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+#### Get Courtroom by ID
+
+```typescript
+export async function getCourtRoomById(roomId: string): Promise<ActionResult<CourtRoom>>;
+```
+
+#### Create Courtroom
+
+```typescript
+export async function createCourtRoom(formData: FormData): Promise<ActionResult<{ roomId: string }>>;
+```
+
+**Required FormData Fields:**
+- `name` - Courtroom name (e.g., "HIGH COURT ROOM NO. 2")
+- `code` - Short code (e.g., "HC-2")
+- `courtLevel` - Court level (high_court, magistrates, etc.)
+
+**Optional Fields:**
+- `location` - Physical location description
+- `capacity` - Seating capacity
+- `isActive` - Active status (defaults to true)
+
+#### Update Courtroom
+
+```typescript
+export async function updateCourtRoom(
+  roomId: string,
+  formData: FormData
+): Promise<ActionResult>;
+```
+
+#### Delete Courtroom
+
+```typescript
+export async function deleteCourtRoom(roomId: string): Promise<ActionResult>;
+```
+
+### Legal Representatives Actions
+
+**File:** `app/dashboard/settings/legal-representatives/actions.ts`
+
+#### Get Legal Representatives
+
+```typescript
+export async function getLegalRepresentatives(filters?: {
+  type?: string;
+  search?: string;
+  isActive?: boolean;
+}): Promise<ActionResult<LegalRepresentative[]>>;
+```
+
+**Filter Types:**
+- `individual` - Individual lawyer
+- `law_firm` - Law firm
+- `legal_aid` - Legal Aid Commission
+- `government` - Government counsel (DPP, etc.)
+
+**Returns:**
+```typescript
+{
+  success: true,
+  data: [
+    {
+      id: "rep-uuid",
+      organisationId: "org-uuid",
+      name: "LEGAL AID COMMISSION",
+      type: "legal_aid",
+      firmName: null,
+      email: "legal.aid@fiji.gov.fj",
+      phone: "+679 123 4567",
+      address: "Suva, Fiji",
+      practiceAreas: ["criminal", "civil", "family"],
+      userId: null,
+      isActive: true,
+      notes: null,
+      createdAt: "2025-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+#### Get Legal Representative by ID
+
+```typescript
+export async function getLegalRepresentativeById(repId: string): Promise<ActionResult<LegalRepresentative>>;
+```
+
+#### Create Legal Representative
+
+```typescript
+export async function createLegalRepresentative(formData: FormData): Promise<ActionResult<{ repId: string }>>;
+```
+
+**Required FormData Fields:**
+- `name` - Lawyer or firm name
+- `type` - Type (individual, law_firm, legal_aid, government)
+
+**Optional Fields:**
+- `firmName` - Law firm name (if individual)
+- `email` - Contact email
+- `phone` - Contact phone
+- `address` - Physical address
+- `practiceAreas` - JSON array of practice areas
+- `userId` - Linked user account ID
+- `notes` - Additional notes
+
+#### Update Legal Representative
+
+```typescript
+export async function updateLegalRepresentative(
+  repId: string,
+  formData: FormData
+): Promise<ActionResult>;
+```
+
+#### Delete Legal Representative
+
+```typescript
+export async function deleteLegalRepresentative(repId: string): Promise<ActionResult>;
+```
+
+### Transcript Management Actions
+
+**File:** `app/dashboard/hearings/transcripts/actions.ts`
+
+#### Create Transcript
+
+```typescript
+export async function createTranscript(data: {
+  caseId: string;
+  hearingId: string;
+  title: string;
+  recordingUrl?: string;
+}): Promise<{ success?: boolean; transcript?: Transcript; error?: string }>;
+```
+
+**Returns:**
+```typescript
+{
+  success: true,
+  transcript: {
+    id: "transcript-uuid",
+    caseId: "case-uuid",
+    hearingId: "hearing-uuid",
+    title: "Hearing Transcript - Nov 15, 2025",
+    status: "draft",
+    recordingUrl: "https://...",
+    createdAt: "2025-11-15T00:00:00Z"
+  }
+}
+```
+
+#### Get Transcript Details
+
+```typescript
+export async function getTranscriptDetails(transcriptId: string): Promise<{
+  success?: boolean;
+  transcript?: Transcript;
+  speakers?: TranscriptSpeaker[];
+  segments?: TranscriptSegment[];
+  error?: string;
+}>;
+```
+
+#### Update Transcript Status
+
+```typescript
+export async function updateTranscriptStatus(
+  transcriptId: string,
+  status: string
+): Promise<{ success?: boolean; error?: string }>;
+```
+
+**Status Values:**
+- `draft` - Initial state
+- `in-progress` - Transcription in progress
+- `completed` - Transcription finished
+- `reviewed` - Reviewed and approved
+
+#### Add Speaker
+
+```typescript
+export async function addSpeaker(data: {
+  transcriptId: string;
+  name: string;
+  role: string;
+}): Promise<{ success?: boolean; speaker?: TranscriptSpeaker; error?: string }>;
+```
+
+**Common Roles:**
+- `judge` - Presiding judge
+- `prosecutor` - Prosecution counsel
+- `defense` - Defense counsel
+- `witness` - Witness
+- `defendant` - Defendant
+- `clerk` - Court clerk
+- `other` - Other participant
+
+#### Save Manual Transcript Entries
+
+```typescript
+export async function saveManualTranscriptEntries(data: {
+  transcriptId: string;
+  entries: Array<{
+    id: string;
+    speakerId: string;
+    text: string;
+    timestamp: string;
+    notes?: string;
+  }>;
+}): Promise<{ success?: boolean; error?: string }>;
+```
+
+**Purpose:** Saves manually typed transcript entries from the ManualTranscriptionEditor component.
+
+#### Auto-Save Manual Transcript
+
+```typescript
+export async function autoSaveManualTranscript(data: {
+  transcriptId: string;
+  entries: Array<{
+    id: string;
+    speakerId: string;
+    text: string;
+    timestamp: string;
+    notes?: string;
+  }>;
+}): Promise<{ success?: boolean; error?: string }>;
+```
+
+**Purpose:** Auto-save functionality that triggers every 5 seconds during manual transcription.
+
+### Evidence Management Actions
+
+**File:** `app/dashboard/evidence/actions.ts`
+
+#### Get Evidence
+
+```typescript
+export async function getEvidence(filters?: {
+  caseId?: string;
+  type?: string;
+  search?: string;
+}): Promise<ActionResult<Evidence[]>>;
+```
+
+#### Create Evidence
+
+```typescript
+export async function createEvidence(formData: FormData): Promise<ActionResult<{ evidenceId: string }>>;
+```
+
+#### Update Evidence
+
+```typescript
+export async function updateEvidence(
+  evidenceId: string,
+  formData: FormData
+): Promise<ActionResult>;
+```
+
+#### Delete Evidence
+
+```typescript
+export async function deleteEvidence(evidenceId: string): Promise<ActionResult>;
+```
+
+### User Management Actions
+
+**File:** `app/dashboard/users/actions.ts`
+
+#### Get Organisation Members
+
+```typescript
+export async function getOrganisationMembers(): Promise<ActionResult<MemberWithUser[]>>;
+```
+
+#### Invite User to Organisation
+
+```typescript
+export async function inviteUserToOrganisation(
+  email: string,
+  roleId: string
+): Promise<ActionResult<{ invitationId: string }>>;
+```
+
+#### Revoke Invitation
+
+```typescript
+export async function revokeInvitation(invitationId: string): Promise<ActionResult>;
+```
+
+#### Update Member Role
+
+```typescript
+export async function updateMemberRole(
+  memberId: string,
+  roleId: string
+): Promise<ActionResult>;
+```
+
+#### Remove Member
+
+```typescript
+export async function removeMemberFromOrganisation(memberId: string): Promise<ActionResult>;
+```
+
+### Join Request Actions
+
+**File:** `app/dashboard/users/requests/actions.ts`
+
+#### Get Join Requests
+
+```typescript
+export async function getJoinRequests(filters?: {
+  status?: string;
+}): Promise<ActionResult<JoinRequest[]>>;
+```
+
+#### Approve Join Request
+
+```typescript
+export async function approveJoinRequest(
+  requestId: string,
+  roleId: string
+): Promise<ActionResult>;
+```
+
+#### Reject Join Request
+
+```typescript
+export async function rejectJoinRequest(requestId: string): Promise<ActionResult>;
+```
+
+### Search Actions
+
+**File:** `app/dashboard/search/actions.ts`
+
+#### Global Search
+
+```typescript
+export async function globalSearch(query: string): Promise<ActionResult<{
+  cases: Case[];
+  hearings: Hearing[];
+  evidence: Evidence[];
+}>>;
+```
+
+**Returns:** Combined results from cases, hearings, and evidence matching the search query.
+
+### System Admin Actions
+
+**File:** `app/dashboard/system-admin/actions.ts`
+
+**Note:** These actions are restricted to system administrators only.
+
+#### Grant System Admin
+
+```typescript
+export async function grantSystemAdmin(userId: string): Promise<ActionResult>;
+```
+
+#### Revoke System Admin
+
+```typescript
+export async function revokeSystemAdmin(userId: string): Promise<ActionResult>;
+```
+
+#### Get All Users (System Admin)
+
+```typescript
+export async function getAllUsers(): Promise<ActionResult<User[]>>;
+```
+
+#### Get All Organisations (System Admin)
+
+```typescript
+export async function getAllOrganisations(): Promise<ActionResult<Organisation[]>>;
+```
+
 ## Webhooks & Integrations
 
 Currently, Totolaw doesn't expose webhooks, but the architecture supports future integration:

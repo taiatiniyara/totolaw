@@ -167,8 +167,8 @@ export function CaseForm({ courts }: CaseFormProps) {
 
           {courtLevel && divisionOptions[courtLevel as keyof typeof divisionOptions] && (
             <FormField
-              name="division"
-              label="Division"
+              name="caseType"
+              label="Case Type"
               type="select"
               options={divisionOptions[courtLevel as keyof typeof divisionOptions]}
             />

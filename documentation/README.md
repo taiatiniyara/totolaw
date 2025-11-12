@@ -1,9 +1,9 @@
 # Totolaw Technical Documentation
 
-**Version:** 0.1.0  
-**Last Updated:** November 11, 2025
+**Version:** 1.0.0  
+**Last Updated:** November 2024
 
-Welcome to the Totolaw technical documentation. This comprehensive guide covers all aspects of the system architecture, implementation, and development workflows.
+Welcome to the Totolaw technical documentation. This comprehensive guide covers all aspects of the system architecture, implementation, development workflows, and Fiji court system features.
 
 ## 📚 Documentation Index
 
@@ -39,18 +39,21 @@ Welcome to the Totolaw technical documentation. This comprehensive guide covers 
    - Request/response formats
    - Authentication requirements
    - Error handling
+   - Fiji court system endpoints
 
 6. **[User Management](06-user-management.md)**
    - User lifecycle
    - Organisation membership
    - Invitations and join requests
    - Role assignments
+   - Judicial titles and designations
 
 7. **[Case Management](07-case-management.md)**
    - Case lifecycle
-   - Hearings and evidence
-   - Document management
-   - Search functionality
+   - Case parties (prosecution/defence, plaintiff/defendant)
+   - Offences tracking
+   - Court hierarchy integration
+   - Case number generation
 
 8. **[Deployment Guide](08-deployment.md)**
    - Environment setup
@@ -71,36 +74,189 @@ Welcome to the Totolaw technical documentation. This comprehensive guide covers 
     - Core services overview
     - Usage examples
 
+### Fiji Court System Features
+
+11. **[Fiji Court System Redesign](11-fiji-court-system-redesign.md)**
+    - Fiji court hierarchy
+    - Case type classifications
+    - Court levels and jurisdictions
+    - Implementation overview
+
+12. **[Fiji Implementation Summary](12-fiji-implementation-summary.md)**
+    - Implementation phases
+    - Technical decisions
+    - Migration strategy
+    - Future enhancements
+
+13. **[Fiji System Diagrams](13-fiji-system-diagrams.md)**
+    - Architecture diagrams
+    - Data flow diagrams
+    - Component relationships
+    - Visual system overview
+
+14. **[Transcription System](14-transcription-system.md)**
+    - Manual transcription editor
+    - Rich text editing features
+    - Auto-save functionality
+    - Keyboard shortcuts
+    - Transcript management
+
+15. **[Case Number Generation](15-case-number-generation.md)**
+    - Fiji case number formats (HAC, HBC, HAA, ABU, etc.)
+    - Generation algorithms
+    - Validation rules
+    - Yearly sequence management
+
+16. **[Calendar View Features](16-calendar-view.md)**
+    - Hearing calendar display
+    - Date navigation
+    - Filtering by judge/courtroom
+    - Action type color coding
+    - Month/week/day views
+
+17. **[Legal Representatives Management](17-legal-representatives.md)**
+    - Legal representative directory
+    - CRUD operations
+    - Case associations
+    - Practice areas
+    - Bar registration tracking
+
+18. **[Daily Cause Lists](18-daily-cause-lists.md)**
+    - Cause list generation
+    - Publication workflow
+    - PDF export functionality
+    - Hearing filtering
+    - Courtroom scheduling
+
+19. **[Hearing Management](19-hearing-management.md)**
+    - Hearing action types (MENTION, TRIAL, etc.)
+    - Bail tracking
+    - Courtroom assignment
+    - Transcript linking
+    - Hearing outcomes
+
+20. **[Courtroom Management](20-courtroom-management.md)**
+    - Courtroom CRUD operations
+    - Hearing assignments
+    - Capacity management
+    - Availability checking
+    - Conflict detection
+
+21. **[Organisation Hierarchy](21-organisation-hierarchy.md)**
+    - Court hierarchy structure
+    - Court levels (High Court, Magistrates, etc.)
+    - Court types (Criminal, Civil, etc.)
+    - Jurisdiction management
+    - Parent-child relationships
+
+22. **[Evidence Management](22-evidence-management.md)**
+    - Evidence upload and storage
+    - File type validation (PDF, images, audio, video)
+    - Case and hearing linking
+    - Permission-based access
+    - File preview components
+
+23. **[Document Management](23-document-management.md)**
+    - Document categories
+    - Unified evidence/document model
+    - Upload and organization
+    - Browse and search workflows
+    - Storage best practices
+
+24. **[Search Functionality](24-search-functionality.md)**
+    - Global search across entities
+    - Case, hearing, and evidence search
+    - Debounced search interface
+    - Advanced filtering
+    - Search optimization
+
+### User Guides & Reference
+
+25. **[Quick Reference Guide](25-quick-reference.md)** ⭐
+    - Common tasks and workflows
+    - Keyboard shortcuts
+    - Daily operations
+    - Navigation guide
+    - Tips and tricks
+
+26. **[Testing Strategy](26-testing-strategy.md)**
+    - Unit testing with Vitest
+    - Integration testing
+    - End-to-end testing with Playwright
+    - Test organization
+    - CI/CD integration
+
+27. **[Troubleshooting Guide](27-troubleshooting.md)** 🔧
+    - Common issues and solutions
+    - Error messages
+    - Authentication problems
+    - Database issues
+    - Performance optimization
+
+### Additional Resources
+
+- **[Quick Reference (Fiji)](QUICK_REFERENCE_FIJI.md)** - Fiji-specific quick reference
+
 ## 🎯 Quick Links
 
+### For End Users
+- ⭐ **[Quick Reference Guide](25-quick-reference.md)** - Daily tasks and shortcuts
+- 🔧 **[Troubleshooting Guide](27-troubleshooting.md)** - Common issues and solutions
+- **[Getting Started](getting-started/page.md)** - First steps with Totolaw
+- **[FAQ](faq/page.md)** - Frequently asked questions
+
+### For Court Staff
+- **[Case Management](07-case-management.md)** - Creating and managing cases
+- **[Hearing Management](19-hearing-management.md)** - Scheduling and tracking hearings
+- **[Evidence Management](22-evidence-management.md)** - Uploading and organizing evidence
+- **[Calendar View](16-calendar-view.md)** - Using the hearing calendar
+- **[Daily Cause Lists](18-daily-cause-lists.md)** - Generating daily cause lists
+
 ### For Developers
-- [Getting Started](09-development-guide.md#getting-started)
-- [Folder Structure](02-architecture.md#folder-structure)
-- [Coding Standards](09-development-guide.md#coding-standards)
+- **[Getting Started](09-development-guide.md#getting-started)** - Development setup
+- **[Folder Structure](02-architecture.md#folder-structure)** - Code organization
+- **[Coding Standards](09-development-guide.md#coding-standards)** - Code style guide
+- **[API Documentation](05-api-documentation.md)** - API reference
+- **[Testing Strategy](26-testing-strategy.md)** - Writing tests
 
 ### For System Administrators
-- [Deployment Guide](08-deployment.md)
-- [Environment Configuration](08-deployment.md#environment-variables)
-- [Database Migrations](08-deployment.md#database-migrations)
+- **[Deployment Guide](08-deployment.md)** - Production deployment
+- **[Environment Configuration](08-deployment.md#environment-variables)** - Environment setup
+- **[Database Migrations](08-deployment.md#database-migrations)** - Schema management
+- **[User Management](06-user-management.md)** - Managing users and roles
+- **[Organisation Hierarchy](21-organisation-hierarchy.md)** - Court structure setup
 
 ### For Architects
-- [System Architecture](02-architecture.md)
-- [Database Design](03-database-schema.md)
-- [Security Model](04-auth-and-security.md)
+- **[System Architecture](02-architecture.md)** - System design overview
+- **[Database Design](03-database-schema.md)** - Data models and relationships
+- **[Security Model](04-auth-and-security.md)** - Authentication and authorization
+- **[Fiji Court System](11-fiji-court-system-redesign.md)** - Fiji implementation details
 
 ## 🔍 Key Concepts
 
 ### Multi-Tenancy
-Totolaw is built on a **multi-tenant architecture** where each court system (organisation) has complete data isolation while sharing the same application infrastructure.
+Totolaw is built on a **multi-tenant architecture** where each court system (organisation) has complete data isolation while sharing the same application infrastructure. Each court maintains its own cases, hearings, and evidence while benefiting from shared infrastructure.
+
+### Fiji Court System Support
+Built specifically for the **Fiji court system** with support for:
+- Court hierarchy (High Court, Magistrates Court, Court of Appeal)
+- Fiji case number formats (HAC, HBC, HAA, ABU, etc.)
+- Judicial titles (Justice, Acting Justice, Master)
+- Court divisions and case types
+- Daily cause lists and hearing management
 
 ### Role-Based Access Control
-The system implements **granular RBAC** with organisation-scoped roles and permissions, allowing fine-grained control over user access.
+The system implements **granular RBAC** with organisation-scoped roles and permissions:
+- **Judges** - Preside over cases and hearings
+- **Clerks** - Manage cases, schedule hearings, upload evidence
+- **Registry** - Administrative support and document management
+- **System Admin** - Platform-wide management across all courts
 
 ### Super Admin Privileges
-**System administrators** have omnipotent access across all organisations without requiring membership, enabling platform-wide management.
+**System administrators** have omnipotent access across all organisations without requiring membership, enabling platform-wide management and court hierarchy setup.
 
 ### Passwordless Authentication
-Uses **magic link authentication** via email for secure, user-friendly access without password management overhead.
+Uses **magic link authentication** via email for secure, user-friendly access without password management overhead. Users receive a one-time login link via email for secure access.
 
 ## 🛠️ Technology Stack Summary
 
@@ -112,12 +268,41 @@ Uses **magic link authentication** via email for secure, user-friendly access wi
 - **Email:** Nodemailer
 - **Icons:** Lucide React
 
+## � Documentation Organization
+
+### By User Type
+
+**👤 End Users (Judges, Clerks, Registry)**
+- Start with: [Quick Reference Guide](25-quick-reference.md)
+- Common tasks: [Case Management](07-case-management.md), [Hearing Management](19-hearing-management.md)
+- Need help: [Troubleshooting Guide](27-troubleshooting.md), [FAQ](faq/page.md)
+
+**👨‍💻 Developers**
+- Start with: [Development Guide](09-development-guide.md)
+- Architecture: [System Architecture](02-architecture.md), [Database Schema](03-database-schema.md)
+- APIs: [API Documentation](05-api-documentation.md)
+- Testing: [Testing Strategy](26-testing-strategy.md)
+
+**🔧 System Administrators**
+- Start with: [Deployment Guide](08-deployment.md)
+- Configuration: [Authentication](04-auth-and-security.md), [User Management](06-user-management.md)
+- Maintenance: [Troubleshooting Guide](27-troubleshooting.md)
+- Setup: [Organisation Hierarchy](21-organisation-hierarchy.md)
+
+**🏗️ Architects & Decision Makers**
+- Start with: [System Overview](01-system-overview.md)
+- Implementation: [Fiji Court System Redesign](11-fiji-court-system-redesign.md)
+- Design: [Architecture](02-architecture.md), [Fiji System Diagrams](13-fiji-system-diagrams.md)
+
+---
+
 ## 📞 Support
 
 For questions or issues:
-- **Technical Issues:** See [Development Guide](09-development-guide.md#troubleshooting)
-- **Deployment Help:** See [Deployment Guide](08-deployment.md#troubleshooting)
-- **GitHub Issues:** https://github.com/taiatiniyara/totolaw/issues
+- **User Questions:** See [Quick Reference](25-quick-reference.md) and [Troubleshooting Guide](27-troubleshooting.md)
+- **Technical Issues:** See [Development Guide](09-development-guide.md) and [Testing Strategy](26-testing-strategy.md)
+- **Deployment Help:** See [Deployment Guide](08-deployment.md)
+- **Email Support:** support@totolaw.com
 
 ## 📝 Document Conventions
 
@@ -135,7 +320,48 @@ This documentation should be updated whenever:
 - API endpoints are modified
 - Database schema is updated
 - Deployment procedures change
+- User workflows are updated
+- Troubleshooting steps are added
+
+---
+
+## 📋 Documentation Checklist
+
+When adding new features, ensure documentation is updated:
+
+- [ ] Update relevant technical documentation (Architecture, API, Database)
+- [ ] Add user-facing documentation (Quick Reference, User Guides)
+- [ ] Update troubleshooting guide with potential issues
+- [ ] Add examples and code snippets
+- [ ] Update this README if new documentation files are added
+- [ ] Test all documentation links
+- [ ] Update "Last Updated" date
+
+---
+
+## 🎓 Learning Path
+
+### New to Totolaw?
+1. Read [System Overview](01-system-overview.md)
+2. Review [Fiji Court System Redesign](11-fiji-court-system-redesign.md)
+3. Follow [Getting Started](getting-started/page.md)
+4. Bookmark [Quick Reference Guide](25-quick-reference.md)
+
+### Setting Up Development?
+1. Read [Development Guide](09-development-guide.md)
+2. Review [Architecture](02-architecture.md) and [Database Schema](03-database-schema.md)
+3. Set up environment following [Deployment Guide](08-deployment.md)
+4. Review [Testing Strategy](26-testing-strategy.md)
+
+### Deploying to Production?
+1. Read [Deployment Guide](08-deployment.md)
+2. Configure [Authentication & Security](04-auth-and-security.md)
+3. Set up [Organisation Hierarchy](21-organisation-hierarchy.md)
+4. Review [User Management](06-user-management.md)
+5. Keep [Troubleshooting Guide](27-troubleshooting.md) handy
 
 ---
 
 **Made with ❤️ for Pacific Island Court Systems**
+
+*Empowering justice through technology*

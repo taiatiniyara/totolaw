@@ -17,7 +17,7 @@ async function handleSubmit(formData: FormData) {
   const title = formData.get("title") as string;
   const type = formData.get("type") as string;
   const courtLevel = formData.get("courtLevel") as string;
-  const division = formData.get("division") as string;
+  const caseType = formData.get("caseType") as string;
   const status = formData.get("status") as string;
 
   // Parse parties JSON
@@ -43,7 +43,7 @@ async function handleSubmit(formData: FormData) {
     title,
     type,
     courtLevel,
-    division: division || undefined,
+    caseType: caseType || undefined,
     status,
     parties,
     offences: offences.length > 0 ? offences : undefined,

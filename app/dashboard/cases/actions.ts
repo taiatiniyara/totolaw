@@ -184,7 +184,7 @@ export async function createCase(data: {
   title: string;
   type: string;
   courtLevel: string;
-  division?: string;
+  caseType?: string;
   status?: string;
   parties: {
     prosecution?: { name: string; counsel?: string }[];
@@ -225,7 +225,7 @@ export async function createCase(data: {
     const caseNumber = await generateCaseNumber(
       context.organisationId,
       data.courtLevel,
-      data.division || data.type,
+      data.caseType || data.type,
       new Date().getFullYear()
     );
 
@@ -243,7 +243,7 @@ export async function createCase(data: {
           title: data.title,
           type: data.type,
           courtLevel: data.courtLevel,
-          division: data.division,
+          caseType: data.caseType,
           status: data.status || "open",
           parties: data.parties,
           offences: data.offences,

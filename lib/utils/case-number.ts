@@ -119,7 +119,7 @@ async function getNextSequenceNumber(
       and(
         eq(cases.organisationId, organisationId),
         eq(cases.courtLevel, courtLevel),
-        courtType ? eq(cases.division, courtType) : sql`true`,
+        courtType ? eq(cases.caseType, courtType) : sql`true`,
         sql`EXTRACT(YEAR FROM ${cases.filedDate}) = ${year}`
       )
     );

@@ -49,9 +49,199 @@ Users are created when they:
   emailVerified: true,
   currentOrganisationId: "org-uuid",
   isSuperAdmin: false,
+  judicialTitle: null,           // Optional: "Magistrate", "Justice", "Judge", etc.
+  designation: null,             // Optional: "Registrar", "Court Clerk", "Bailiff", etc.
   createdAt: timestamp,
   updatedAt: timestamp
 }
+```
+
+### Judicial Titles and Designations
+
+**Purpose:** Identify judicial officers and court staff for formal documents and cause lists.
+
+#### Judicial Titles
+
+Used for judges and magistrates:
+
+| Title | Usage |
+|-------|-------|
+| **Magistrate** | Magistrates Court judicial officers |
+| **Justice** | High Court and Court of Appeal justices |
+| **Judge** | General term for judicial officers |
+| **Chief Justice** | Head of judiciary |
+| **President** | President of Court of Appeal |
+| **Resident Magistrate** | Magistrates with specific jurisdiction |
+| **Master** | High Court masters (procedural matters) |
+
+**Example:**
+```typescript
+// Magistrate user
+{
+  name: "Jane Smith",
+  judicialTitle: "Magistrate",
+  designation: null
+}
+
+// High Court Justice
+{
+  name: "John Doe",
+  judicialTitle: "Justice",
+  designation: null
+}
+```
+
+#### Designations
+
+Used for court staff (non-judicial):
+
+| Designation | Role |
+|-------------|------|
+| **Registrar** | Court registry management |
+| **Deputy Registrar** | Assistant registrar |
+| **Court Clerk** | Administrative support |
+| **Bailiff** | Court security and enforcement |
+| **Marshal** | Court of Appeal officer |
+| **Usher** | Courtroom assistance |
+| **Stenographer** | Court transcription |
+
+**Example:**
+```typescript
+// Court Registrar
+{
+  name: "Sarah Williams",
+  judicialTitle: null,
+  designation: "Registrar"
+}
+
+// Court Clerk
+{
+  name: "Michael Brown",
+  judicialTitle: null,
+  designation: "Court Clerk"
+}
+```
+
+#### Usage in System
+
+1. **Daily Cause Lists**
+   - Displays judicial officer presiding over hearings
+   - Format: "[Title] [Name]" (e.g., "Justice John Doe")
+
+2. **Court Documents**
+   - Formal document headers
+   - Judgment signatures
+   - Court orders
+
+3. **Hearing Assignments**
+   - Shows who is presiding
+   - Filters judicial officers for assignment
+
+4. **User Directory**
+   - Sorted by title/designation
+   - Filtered by judicial vs. administrative staff
+
+#### Setting Titles and Designations
+
+**Admin UI:** `/dashboard/users/[userId]/edit`
+
+```typescript
+'use server';
+
+export async function updateUserProfile(
+  userId: string,
+  formData: FormData
+) {
+  // Check permissions
+  const canEditUsers = await hasPermission(
+    currentUserId,
+    organisationId,
+    'users:edit',
+    isSuperAdmin
+  );
+
+  if (!canEditUsers) {
+    return { success: false, error: 'Permission denied' };
+  }
+
+  // Extract fields
+  const name = formData.get('name') as string;
+  const judicialTitle = formData.get('judicialTitle') as string | null;
+  const designation = formData.get('designation') as string | null;
+
+  // Validation: Only one of judicialTitle or designation
+  if (judicialTitle && designation) {
+    return {
+      success: false,
+      error: 'User cannot have both judicial title and designation'
+    };
+  }
+
+  // Update user
+  await db
+    .update(user)
+    .set({
+      name,
+      judicialTitle: judicialTitle || null,
+      designation: designation || null,
+      updatedAt: new Date()
+    })
+    .where(eq(user.id, userId));
+
+  revalidatePath(`/dashboard/users/${userId}`);
+  return { success: true };
+}
+```
+
+**Form Component:**
+
+```tsx
+<form action={updateUserProfile}>
+  <FormField
+    label="Name"
+    name="name"
+    required
+    defaultValue={user.name}
+  />
+
+  <FormField
+    label="Judicial Title"
+    name="judicialTitle"
+    type="select"
+    helpText="For judges and magistrates only"
+    options={[
+      { value: "", label: "None" },
+      { value: "Magistrate", label: "Magistrate" },
+      { value: "Justice", label: "Justice" },
+      { value: "Judge", label: "Judge" },
+      { value: "Chief Justice", label: "Chief Justice" },
+      { value: "President", label: "President" },
+      { value: "Resident Magistrate", label: "Resident Magistrate" },
+      { value: "Master", label: "Master" },
+    ]}
+    defaultValue={user.judicialTitle}
+  />
+
+  <FormField
+    label="Designation"
+    name="designation"
+    type="select"
+    helpText="For court staff only"
+    options={[
+      { value: "", label: "None" },
+      { value: "Registrar", label: "Registrar" },
+      { value: "Deputy Registrar", label: "Deputy Registrar" },
+      { value: "Court Clerk", label: "Court Clerk" },
+      { value: "Bailiff", label: "Bailiff" },
+      { value: "Marshal", label: "Marshal" },
+      { value: "Usher", label: "Usher" },
+      { value: "Stenographer", label: "Stenographer" },
+    ]}
+    defaultValue={user.designation}
+  />
+
+  <Button type="submit">Save Changes</Button>
+</form>
 ```
 
 ### First-Time Login
@@ -623,7 +813,13 @@ Users can edit their own profile:
 Admins can also:
 - Assign/revoke roles
 - Add to organisations
+- Set judicial title or designation
 - Activate/deactivate account
+
+**Restrictions:**
+- Users cannot have both `judicialTitle` and `designation`
+- Only one should be set at a time
+- Both can be `null` for regular users
 
 ## User Status Management
 
