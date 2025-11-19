@@ -140,24 +140,48 @@ export default function PublicDocsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="p-3 rounded-lg border">
-                      <p className="font-semibold text-sm mb-1">Multi-Tenant Security</p>
-                      <p className="text-xs text-muted-foreground">
-                        Each organisation's data is completely isolated and secure
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg border">
-                      <p className="font-semibold text-sm mb-1">Role-Based Access</p>
-                      <p className="text-xs text-muted-foreground">
-                        Admins, Managers, Staff, and Viewers have different permission levels
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-lg border">
-                      <p className="font-semibold text-sm mb-1">Passwordless Login</p>
-                      <p className="text-xs text-muted-foreground">
-                        Secure magic link authentication via email
-                      </p>
-                    </div>
+                    <Link 
+                      href="/docs/rbac" 
+                      className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-sm mb-1">Role-Based Access Control (RBAC)</p>
+                          <p className="text-xs text-muted-foreground">
+                            Learn how permissions and roles work in Totolaw
+                          </p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </Link>
+                    <Link 
+                      href="/docs/security" 
+                      className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-sm mb-1">Multi-Tenant Security</p>
+                          <p className="text-xs text-muted-foreground">
+                            How your organisation's data is isolated and secure
+                          </p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </Link>
+                    <Link 
+                      href="/docs/authentication" 
+                      className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-sm mb-1">Passwordless Login</p>
+                          <p className="text-xs text-muted-foreground">
+                            Secure magic link authentication via email
+                          </p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
