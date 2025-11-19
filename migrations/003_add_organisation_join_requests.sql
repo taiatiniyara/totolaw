@@ -1,6 +1,11 @@
--- Migration: Add Organisation Join Requests Table
--- Description: Allows users to request to join organisations, which can be approved/rejected by admins
--- Date: 2024
+-- =============================================================================
+-- Totolaw Database Migration 003: Add Organisation Join Requests
+-- Date: Applied
+-- Status: ACTIVE - DO NOT REMOVE
+-- 
+-- Description: Allows users to request to join organisations, which can be 
+-- approved/rejected by admins
+-- =============================================================================
 
 -- Create organisation join requests table
 CREATE TABLE IF NOT EXISTS organisation_join_requests (

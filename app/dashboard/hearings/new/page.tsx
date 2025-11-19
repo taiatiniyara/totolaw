@@ -36,6 +36,11 @@ async function handleCreateHearing(formData: FormData) {
   const nextActionRequired = formData.get("nextActionRequired") as string;
   const notes = formData.get("notes") as string;
 
+  // Validate required fields
+  if (!caseId || !scheduledDate || !scheduledTime || !actionType) {
+    throw new Error("Missing required fields");
+  }
+
   const result = await createHearing({
     caseId,
     scheduledDate: new Date(scheduledDate),
@@ -44,12 +49,12 @@ async function handleCreateHearing(formData: FormData) {
     courtRoomId: courtRoomId || undefined,
     location: location || undefined,
     actionType,
-    status: status || "SCHEDULED",
+    status: status || "scheduled",
     judgeId: judgeId || undefined,
     magistrateId: magistrateId || undefined,
     clerkId: clerkId || undefined,
     bailConsidered: bailConsidered || undefined,
-    bailDecision: bailDecision || undefined,
+    bailDecision: (bailDecision && bailDecision !== "not_decided") ? bailDecision : undefined,
     bailAmount: bailAmount ? parseFloat(bailAmount) : undefined,
     bailConditions: bailConditions || undefined,
     outcome: outcome || undefined,

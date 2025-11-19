@@ -74,128 +74,101 @@ Welcome to the Totolaw technical documentation. This comprehensive guide covers 
     - Core services overview
     - Usage examples
 
-### Fiji Court System Features
+### Court System Features
 
-11. **[Fiji Court System Redesign](11-fiji-court-system-redesign.md)**
-    - Fiji court hierarchy
-    - Case type classifications
-    - Court levels and jurisdictions
-    - Implementation overview
-
-12. **[Fiji Implementation Summary](12-fiji-implementation-summary.md)**
-    - Implementation phases
-    - Technical decisions
-    - Migration strategy
-    - Future enhancements
-
-13. **[Fiji System Diagrams](13-fiji-system-diagrams.md)**
-    - Architecture diagrams
-    - Data flow diagrams
-    - Component relationships
-    - Visual system overview
-
-14. **[Transcription System](14-transcription-system.md)**
+11. **[Transcription System](14-transcription-system.md)**
     - Manual transcription editor
     - Rich text editing features
     - Auto-save functionality
     - Keyboard shortcuts
     - Transcript management
 
-15. **[Case Number Generation](15-case-number-generation.md)**
-    - Fiji case number formats (HAC, HBC, HAA, ABU, etc.)
+12. **[Case Number Generation](15-case-number-generation.md)**
+    - Case number formats (HAC, HBC, HAA, ABU, etc.)
     - Generation algorithms
     - Validation rules
     - Yearly sequence management
 
-16. **[Calendar View Features](16-calendar-view.md)**
+13. **[Calendar View Features](16-calendar-view.md)**
     - Hearing calendar display
     - Date navigation
     - Filtering by judge/courtroom
     - Action type color coding
     - Month/week/day views
 
-17. **[Legal Representatives Management](17-legal-representatives.md)**
+14. **[Legal Representatives Management](17-legal-representatives.md)**
     - Legal representative directory
     - CRUD operations
     - Case associations
-    - Practice areas
-    - Bar registration tracking
+    - Practice areas tracking
 
-18. **[Daily Cause Lists](18-daily-cause-lists.md)**
+15. **[Daily Cause Lists](18-daily-cause-lists.md)**
     - Cause list generation
     - Publication workflow
-    - PDF export functionality
     - Hearing filtering
     - Courtroom scheduling
 
-19. **[Hearing Management](19-hearing-management.md)**
+16. **[Hearing Management](19-hearing-management.md)**
     - Hearing action types (MENTION, TRIAL, etc.)
     - Bail tracking
     - Courtroom assignment
     - Transcript linking
     - Hearing outcomes
 
-20. **[Courtroom Management](20-courtroom-management.md)**
+17. **[Courtroom Management](20-courtroom-management.md)**
     - Courtroom CRUD operations
     - Hearing assignments
     - Capacity management
     - Availability checking
-    - Conflict detection
 
-21. **[Organisation Hierarchy](21-organisation-hierarchy.md)**
+18. **[Organisation Hierarchy](21-organisation-hierarchy.md)**
     - Court hierarchy structure
     - Court levels (High Court, Magistrates, etc.)
     - Court types (Criminal, Civil, etc.)
     - Jurisdiction management
     - Parent-child relationships
 
-22. **[Evidence Management](22-evidence-management.md)**
+19. **[Evidence Management](22-evidence-management.md)**
     - Evidence upload and storage
     - File type validation (PDF, images, audio, video)
     - Case and hearing linking
     - Permission-based access
     - File preview components
 
-23. **[Document Management](23-document-management.md)**
+20. **[Document Management](23-document-management.md)**
     - Document categories
     - Unified evidence/document model
     - Upload and organization
     - Browse and search workflows
-    - Storage best practices
 
-24. **[Search Functionality](24-search-functionality.md)**
+21. **[Search Functionality](24-search-functionality.md)**
     - Global search across entities
     - Case, hearing, and evidence search
     - Debounced search interface
     - Advanced filtering
-    - Search optimization
 
 ### User Guides & Reference
 
-25. **[Quick Reference Guide](25-quick-reference.md)** ⭐
+22. **[Quick Reference Guide](25-quick-reference.md)** ⭐
     - Common tasks and workflows
     - Keyboard shortcuts
     - Daily operations
     - Navigation guide
     - Tips and tricks
 
-26. **[Testing Strategy](26-testing-strategy.md)**
+23. **[Testing Strategy](26-testing-strategy.md)**
     - Unit testing with Vitest
     - Integration testing
     - End-to-end testing with Playwright
     - Test organization
     - CI/CD integration
 
-27. **[Troubleshooting Guide](27-troubleshooting.md)** 🔧
+24. **[Troubleshooting Guide](27-troubleshooting.md)** 🔧
     - Common issues and solutions
     - Error messages
     - Authentication problems
     - Database issues
     - Performance optimization
-
-### Additional Resources
-
-- **[Quick Reference (Fiji)](QUICK_REFERENCE_FIJI.md)** - Fiji-specific quick reference
 
 ## 🎯 Quick Links
 
@@ -210,7 +183,8 @@ Welcome to the Totolaw technical documentation. This comprehensive guide covers 
 - **[Hearing Management](19-hearing-management.md)** - Scheduling and tracking hearings
 - **[Evidence Management](22-evidence-management.md)** - Uploading and organizing evidence
 - **[Calendar View](16-calendar-view.md)** - Using the hearing calendar
-- **[Daily Cause Lists](18-daily-cause-lists.md)** - Generating daily cause lists
+- **[Daily Cause Lists](18-daily-cause-lists.md)** - Generating cause lists
+- **[Legal Representatives](17-legal-representatives.md)** - Managing legal representatives
 
 ### For Developers
 - **[Getting Started](09-development-guide.md#getting-started)** - Development setup
@@ -230,20 +204,21 @@ Welcome to the Totolaw technical documentation. This comprehensive guide covers 
 - **[System Architecture](02-architecture.md)** - System design overview
 - **[Database Design](03-database-schema.md)** - Data models and relationships
 - **[Security Model](04-auth-and-security.md)** - Authentication and authorization
-- **[Fiji Court System](11-fiji-court-system-redesign.md)** - Fiji implementation details
+- **[Organisation Hierarchy](21-organisation-hierarchy.md)** - Court system architecture
 
 ## 🔍 Key Concepts
 
 ### Multi-Tenancy
 Totolaw is built on a **multi-tenant architecture** where each court system (organisation) has complete data isolation while sharing the same application infrastructure. Each court maintains its own cases, hearings, and evidence while benefiting from shared infrastructure.
 
-### Fiji Court System Support
-Built specifically for the **Fiji court system** with support for:
+### Court System Support
+Built for **Pacific Island court systems** with comprehensive support for:
 - Court hierarchy (High Court, Magistrates Court, Court of Appeal)
-- Fiji case number formats (HAC, HBC, HAA, ABU, etc.)
-- Judicial titles (Justice, Acting Justice, Master)
+- Case number formats (HAC, HBC, HAA, ABU, etc.)
+- Judicial titles (Justice, Magistrate, Resident Magistrate)
 - Court divisions and case types
 - Daily cause lists and hearing management
+- Legal representatives tracking
 
 ### Role-Based Access Control
 The system implements **granular RBAC** with organisation-scoped roles and permissions:
@@ -343,7 +318,7 @@ When adding new features, ensure documentation is updated:
 
 ### New to Totolaw?
 1. Read [System Overview](01-system-overview.md)
-2. Review [Fiji Court System Redesign](11-fiji-court-system-redesign.md)
+2. Review [Organisation Hierarchy](21-organisation-hierarchy.md)
 3. Follow [Getting Started](getting-started/page.md)
 4. Bookmark [Quick Reference Guide](25-quick-reference.md)
 

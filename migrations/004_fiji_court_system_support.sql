@@ -1,7 +1,15 @@
--- Migration: Add Fiji Court System Support
--- Date: 2025-11-11
--- Description: Extends schema to support Fiji court procedures including court hierarchy,
---              hearing action types, legal representatives, daily cause lists, and enhanced case tracking
+-- =============================================================================
+-- Totolaw Database Migration 004: Add Court System Features
+-- Date: Applied
+-- Status: ACTIVE - DO NOT REMOVE
+-- 
+-- Description: Extends schema to support comprehensive court procedures including:
+-- - Court hierarchy (High Court, Magistrates, Court of Appeal)
+-- - Hearing action types and courtroom management
+-- - Legal representatives tracking
+-- - Daily cause lists
+-- - Enhanced case tracking with parties and offences
+-- =============================================================================
 
 -- ============================================================================
 -- 1. Extend User Table for Judicial Designations

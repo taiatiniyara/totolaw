@@ -657,120 +657,100 @@ async function checkCourtRoomAvailability(
 }
 ```
 
-## Transcript Linking
+## Transcript Integration
 
-### Linking Transcript to Hearing
+### Overview
+
+Hearings are automatically linked to transcripts through the `hearingId` field in the transcripts table. Each hearing can have multiple transcripts (e.g., draft, final, amended versions).
+
+### Getting Transcripts for a Hearing
+
+**Server Action:**
 
 ```typescript
 'use server';
 
-export async function linkTranscript(
-  hearingId: string,
-  transcriptId: string
-): Promise<ActionResult> {
+export async function getHearingTranscripts(hearingId: string): Promise<ActionResult<Array<{
+  id: string;
+  title: string;
+  status: string;
+  createdAt: Date;
+  completedAt: Date | null;
+  segmentCount: number;
+}>>> {
   const session = await auth.api.getSession({ headers: await headers() });
   const context = await getUserTenantContext(session.user.id);
 
-  // Verify both exist and belong to org
-  const [hearing] = await db
-    .select()
-    .from(hearings)
-    .where(
-      withOrgFilter(context.organisationId, hearings, [
-        eq(hearings.id, hearingId),
-      ])
-    )
-    .limit(1);
-
-  if (!hearing) {
-    return { success: false, error: 'Hearing not found' };
-  }
-
-  const [transcript] = await db
-    .select()
+  const { transcripts, transcriptSegments } = await import("@/lib/drizzle/schema/transcript-schema");
+  
+  // Get transcripts with segment counts
+  const results = await db
+    .select({
+      id: transcripts.id,
+      title: transcripts.title,
+      status: transcripts.status,
+      createdAt: transcripts.createdAt,
+      completedAt: transcripts.completedAt,
+      segmentCount: sql<number>`count(${transcriptSegments.id})::int`,
+    })
     .from(transcripts)
+    .leftJoin(transcriptSegments, eq(transcripts.id, transcriptSegments.transcriptId))
     .where(
       withOrgFilter(context.organisationId, transcripts, [
-        eq(transcripts.id, transcriptId),
+        eq(transcripts.hearingId, hearingId)
       ])
     )
-    .limit(1);
+    .groupBy(transcripts.id)
+    .orderBy(desc(transcripts.createdAt));
 
-  if (!transcript) {
-    return { success: false, error: 'Transcript not found' };
-  }
-
-  // Link transcript to hearing
-  await db
-    .update(hearings)
-    .set({
-      transcriptId,
-      updatedAt: new Date(),
-    })
-    .where(
-      withOrgFilter(context.organisationId, hearings, [
-        eq(hearings.id, hearingId),
-      ])
-    );
-
-  // Also update transcript with hearing reference
-  await db
-    .update(transcripts)
-    .set({
-      hearingId,
-      updatedAt: new Date(),
-    })
-    .where(
-      withOrgFilter(context.organisationId, transcripts, [
-        eq(transcripts.id, transcriptId),
-      ])
-    );
-
-  revalidatePath(`/dashboard/hearings/${hearingId}`);
-
-  return { success: true };
+  return { success: true, data: results };
 }
 ```
 
-### Displaying Transcript Link
+### Displaying Transcripts on Hearing Page
+
+**Component:**
 
 ```tsx
-export function HearingTranscript({ hearing }: { hearing: Hearing }) {
-  if (!hearing.transcriptId) {
-    return (
-      <Card>
-        <CardContent className="py-6">
-          <p className="text-sm text-muted-foreground text-center">
-            No transcript available
-          </p>
-          <div className="mt-4 flex justify-center">
-            <Button asChild variant="outline">
-              <Link href={`/dashboard/transcripts/new?hearingId=${hearing.id}`}>
-                Create Transcript
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+import { HearingTranscriptSection } from '@/components/hearings';
 
+export default async function HearingDetailPage({ params }) {
+  const hearing = await getHearingById(params.id);
+  const transcripts = await getHearingTranscripts(params.id);
+  
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Hearing Transcript</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Button asChild>
-          <Link href={`/dashboard/transcripts/${hearing.transcriptId}`}>
-            View Transcript
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      {/* Other hearing details */}
+      
+      <HearingTranscriptSection 
+        hearingId={hearing.id}
+        transcripts={transcripts}
+      />
+    </div>
   );
 }
 ```
+
+### Creating New Transcript
+
+Users can create a new transcript from the hearing detail page:
+
+1. Click "New Transcript" button
+2. Redirected to `/dashboard/hearings/transcripts/new?hearingId={id}`
+3. Enter transcript title and optional recording URL
+4. Default speakers are automatically added
+5. Redirected to manual transcription editor
+
+### Transcript Actions
+
+Available actions for each transcript:
+
+| Status | View | Edit | Actions |
+|--------|------|------|---------|
+| **draft** | ✅ | ✅ | Continue editing |
+| **in-progress** | ✅ | ✅ | Complete transcription |
+| **completed** | ✅ | ❌ | View only |
+| **reviewed** | ✅ | ❌ | Final version |
 
 ## Hearing Outcomes
 

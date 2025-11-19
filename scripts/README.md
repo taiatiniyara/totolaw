@@ -1,16 +1,22 @@
 # Totolaw Scripts
 
-This directory contains utility scripts for system administration and testing.
+This directory contains utility scripts for system administration, testing, and setup.
 
 ## Available Scripts
 
 ### 1. System Admin Setup (`setup-admin.ts`)
-
 Create the initial system administrator for your Totolaw instance.
 
-### 2. Email Testing (`test-email.ts`)
+### 2. Seed Fiji Courts (`seed-fiji-courts.ts`)
+Seed the database with Fiji court hierarchy, courtrooms, and legal representatives.
 
+### 3. Email Testing (`test-email.ts`)
 Test the email notification system and verify SMTP configuration.
+
+### 4. Clear Rate Limit (`clear-rate-limit.ts`)
+Clear rate limit entries for troubleshooting login issues.
+
+---
 
 The `setup-admin.ts` script provides an interactive way to create the initial super administrator for your Totolaw instance.
 
@@ -67,22 +73,68 @@ Once the initial admin is created:
 - They'll receive a magic link for authentication
 - They'll have full system access to manage the entire system
 
-### Error Handling
-
-The script validates input and provides clear error messages:
-- **Invalid email**: Must be a valid email format
-- **Invalid name**: Must be at least 2 characters
-- **Database errors**: Connection or query issues
-
 ### Security Notes
 
 - ⚠️ **Run only once**: This is for initial setup only
-- ⚠️ **Database access required**: Needs valid database connection
 - ⚠️ **Super admin power**: This user will have complete system access
 
 ### Adding More Admins
 
 After the initial setup, additional super admins can be managed via the UI at `/dashboard/system-admin`
+
+---
+
+## Seed Fiji Courts Script
+
+The `seed-fiji-courts.ts` script seeds your database with the complete Fiji court system hierarchy.
+
+### Usage
+
+```bash
+tsx scripts/seed-fiji-courts.ts
+```
+
+### What It Seeds
+
+1. **Court Organisations**
+   - Fiji Court System (root)
+   - Court of Appeal
+   - High Court (Criminal & Civil Divisions)
+   - Magistrates' Courts (Suva, Nadi, Lautoka, Labasa, Nausori)
+   - Tribunals (Agricultural, Small Claims)
+
+2. **Courtrooms**
+   - HIGH COURT ROOM NO. 1, 2, 4, 10, 13
+
+3. **Legal Representatives**
+   - Director of Public Prosecutions
+   - Legal Aid Commission
+   - Attorney General's Office
+   - Common law firms
+
+### When to Use
+
+- Initial system setup for Fiji courts
+- Development/testing environment setup
+- After database reset
+
+---
+
+## Clear Rate Limit Script
+
+The `clear-rate-limit.ts` script clears all rate limit entries from the database.
+
+### Usage
+
+```bash
+tsx scripts/clear-rate-limit.ts
+```
+
+### When to Use
+
+- User locked out due to too many failed login attempts
+- Testing authentication flows
+- Troubleshooting login issues
 
 ---
 

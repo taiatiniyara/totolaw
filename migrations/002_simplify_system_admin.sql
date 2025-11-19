@@ -1,5 +1,8 @@
 -- =============================================================================
 -- Totolaw Database Migration 002: Simplify System Admin Schema
+-- Date: Applied
+-- Status: ACTIVE - DO NOT REMOVE
+-- 
 -- This migration simplifies the system admin architecture by:
 -- 1. Migrating system_admins data to user table
 -- 2. Updating system_admin_audit_log to reference users directly

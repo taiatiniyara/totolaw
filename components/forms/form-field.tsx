@@ -45,7 +45,7 @@ export function FormField({
           defaultValue={defaultValue}
         />
       ) : type === "select" ? (
-        <Select name={name} required={required} defaultValue={defaultValue}>
+        <Select name={name} required={required} defaultValue={defaultValue || undefined}>
           <SelectTrigger id={id}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>

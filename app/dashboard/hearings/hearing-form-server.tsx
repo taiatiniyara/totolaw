@@ -78,19 +78,19 @@ const ACTION_TYPES = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: "SCHEDULED", label: "Scheduled" },
-  { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "COMPLETED", label: "Completed" },
-  { value: "ADJOURNED", label: "Adjourned" },
-  { value: "CANCELLED", label: "Cancelled" },
+  { value: "scheduled", label: "Scheduled" },
+  { value: "in_progress", label: "In Progress" },
+  { value: "completed", label: "Completed" },
+  { value: "adjourned", label: "Adjourned" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 const BAIL_DECISIONS = [
-  { value: "", label: "Not yet decided" },
-  { value: "GRANTED", label: "Granted" },
-  { value: "DENIED", label: "Denied" },
-  { value: "CONTINUED", label: "Continued" },
-  { value: "NOT_APPLICABLE", label: "Not Applicable" },
+  { value: "not_decided", label: "Not yet decided" },
+  { value: "granted", label: "Granted" },
+  { value: "denied", label: "Denied" },
+  { value: "continued", label: "Continued" },
+  { value: "not_applicable", label: "Not Applicable" },
 ];
 
 export function HearingFormServer({
@@ -196,7 +196,7 @@ export function HearingFormServer({
           required
           helpText="Set the hearing status"
           options={STATUS_OPTIONS}
-          defaultValue={initialData?.status || "SCHEDULED"}
+          defaultValue={initialData?.status || "scheduled"}
         />
 
         {/* Courtroom */}
@@ -310,7 +310,7 @@ export function HearingFormServer({
           type="select"
           placeholder="Select bail decision"
           options={BAIL_DECISIONS}
-          defaultValue={initialData?.bailDecision || ""}
+          defaultValue={initialData?.bailDecision || "not_decided"}
         />
 
         {/* Bail Amount */}

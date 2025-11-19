@@ -53,9 +53,9 @@ export function CreateOrganisationForm({ organisations }: CreateOrganisationForm
   const [formData, setFormData] = useState({
     name: "",
     code: "",
-    type: "",
+    type: "court",
     description: "",
-    parentId: "",
+    parentId: undefined as string | undefined,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -232,7 +232,7 @@ export function CreateOrganisationForm({ organisations }: CreateOrganisationForm
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setFormData({ ...formData, parentId: "" })}
+              onClick={() => setFormData({ ...formData, parentId: undefined })}
               disabled={isSubmitting}
             >
               Clear selection
