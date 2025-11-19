@@ -16,6 +16,9 @@ Test the email notification system and verify SMTP configuration.
 ### 4. Clear Rate Limit (`clear-rate-limit.ts`)
 Clear rate limit entries for troubleshooting login issues.
 
+### 5. Seed Managed Lists (`seed-managed-lists.ts`)
+Initialize or reset system-level managed lists (court levels, case statuses, offense types, etc.).
+
 ---
 
 The `setup-admin.ts` script provides an interactive way to create the initial super administrator for your Totolaw instance.
@@ -117,6 +120,94 @@ tsx scripts/seed-fiji-courts.ts
 - Initial system setup for Fiji courts
 - Development/testing environment setup
 - After database reset
+
+---
+
+## Seed Managed Lists Script
+
+The `seed-managed-lists.ts` script initializes or updates system-level managed lists with default values.
+
+### Usage
+
+```bash
+npm run seed:managed-lists
+```
+
+Or manually:
+```bash
+source .env.local && npx tsx scripts/seed-managed-lists.ts
+```
+
+### What It Seeds
+
+This script creates or updates the following system-level managed lists:
+
+1. **Court Levels** - High Court, Magistrates Court, Court of Appeal, Tribunal
+2. **Case Types** - Criminal, Civil, Family, Appeal, Agricultural, Small Claims
+3. **Case Statuses** - Pending, Active, In Progress, Closed, Archived, Appealed, Dismissed
+4. **Hearing Action Types** - Mention, Trial, Bail Hearing, Sentencing, etc.
+5. **Offense Types** - Common criminal offenses in Fiji
+6. **Bail Decisions** - Not decided, Granted, Denied, Continued
+7. **Sentence Types** - Imprisonment, Fine, Community Service, etc.
+8. **Appeal Types** - Criminal Appeal, Civil Appeal, Bail Application, etc.
+
+### When to Use
+
+- **Initial setup**: After running migrations to populate default lists
+- **Updates**: When new list items are added to the system
+- **Reset**: To restore system defaults if lists were modified
+- **Development**: To ensure test environments have consistent data
+
+### Safe to Re-run
+
+This script is safe to run multiple times:
+- Existing lists will be updated with latest items
+- No data loss - only system lists are affected
+- Organization-specific customizations are preserved
+
+### Example Output
+
+```
+🌱 Seeding managed lists...
+
+Seeding: Court Levels (court_levels)
+  ✓ Created with 4 items
+
+Seeding: Case Types (case_types)
+  ✓ Created with 6 items
+
+Seeding: Case Statuses (case_statuses)
+  ✓ Created with 7 items
+
+Seeding: Hearing Action Types (action_types)
+  ✓ Created with 12 items
+
+Seeding: Common Offense Types (offense_types)
+  ✓ Created with 10 items
+
+Seeding: Bail Decisions (bail_decisions)
+  ✓ Created with 4 items
+
+Seeding: Sentence Types (sentence_types)
+  ✓ Created with 6 items
+
+Seeding: Appeal Types (appeal_types)
+  ✓ Created with 4 items
+
+✅ Successfully seeded all managed lists!
+
+✨ Done!
+```
+
+### Integration with System
+
+These managed lists are used throughout the application:
+- Case creation forms use court levels and case types
+- Hearing forms use action types
+- Criminal cases use offense types
+- Status dropdowns use case statuses
+
+See `documentation/28-managed-lists.md` for complete usage documentation.
 
 ---
 

@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/common";
 import { HearingFormServer } from "../hearing-form-server";
 import { getCases } from "../../cases/actions";
 import { getCourtRooms } from "../../settings/courtrooms/actions";
+import { getManagedListOptions } from "@/app/dashboard/settings/managed-lists/actions";
 import { createHearing } from "../actions";
 
 async function handleCreateHearing(formData: FormData) {
@@ -86,6 +87,15 @@ export default async function NewHearingPage() {
   const courtroomsResult = await getCourtRooms();
   const courtrooms = courtroomsResult.success && courtroomsResult.data ? courtroomsResult.data : [];
 
+  // Fetch managed lists
+  const [actionTypesResult, bailDecisionsResult] = await Promise.all([
+    getManagedListOptions("action_types"),
+    getManagedListOptions("bail_decisions"),
+  ]);
+
+  const actionTypes = actionTypesResult.data || [];
+  const bailDecisions = bailDecisionsResult.data || [];
+
   return (
     <ProtectedRoute requiredPermission="hearings:create">
       <div className="space-y-6">
@@ -110,6 +120,8 @@ export default async function NewHearingPage() {
               mode="create"
               cases={cases}
               courtrooms={courtrooms}
+              actionTypes={actionTypes}
+              bailDecisions={bailDecisions}
             />
           </CardContent>
         </Card>

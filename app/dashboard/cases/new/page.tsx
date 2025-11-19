@@ -9,6 +9,7 @@ import { auth } from "@/lib/auth";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { PageHeader } from "@/components/common";
 import { createCase, getCourtOrganisations } from "../actions";
+import { getManagedListOptions } from "@/app/dashboard/settings/managed-lists/actions";
 import { CaseForm } from "./case-form";
 
 async function handleSubmit(formData: FormData) {
@@ -69,6 +70,19 @@ export default async function NewCasePage() {
   const courtsResult = await getCourtOrganisations();
   const courts = courtsResult.success ? courtsResult.data : [];
 
+  // Fetch managed lists
+  const [courtLevelsResult, caseTypesResult, caseStatusesResult, offenseTypesResult] = await Promise.all([
+    getManagedListOptions("court_levels"),
+    getManagedListOptions("case_types"),
+    getManagedListOptions("case_statuses"),
+    getManagedListOptions("offense_types"),
+  ]);
+
+  const courtLevels = courtLevelsResult.data || [];
+  const caseTypes = caseTypesResult.data || [];
+  const caseStatuses = caseStatusesResult.data || [];
+  const offenseTypes = offenseTypesResult.data || [];
+
   return (
     <ProtectedRoute requiredPermission="cases:create">
       <div className="space-y-6">
@@ -81,7 +95,13 @@ export default async function NewCasePage() {
 
         {/* Form */}
         <form action={handleSubmit}>
-          <CaseForm courts={courts || []} />
+          <CaseForm 
+            courts={courts || []} 
+            courtLevels={courtLevels}
+            caseTypes={caseTypes}
+            caseStatuses={caseStatuses}
+            offenseTypes={offenseTypes}
+          />
         </form>
       </div>
     </ProtectedRoute>

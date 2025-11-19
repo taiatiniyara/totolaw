@@ -27,9 +27,13 @@ interface Parties {
 
 interface CaseFormProps {
   courts: any[];
+  courtLevels: { value: string; label: string; description?: string }[];
+  caseTypes: { value: string; label: string; description?: string }[];
+  caseStatuses: { value: string; label: string; description?: string }[];
+  offenseTypes: { value: string; label: string; description?: string }[];
 }
 
-export function CaseForm({ courts }: CaseFormProps) {
+export function CaseForm({ courts, courtLevels, caseTypes, caseStatuses, offenseTypes }: CaseFormProps) {
   const [courtLevel, setCourtLevel] = useState("");
   const [division, setDivision] = useState("");
   const [caseType, setCaseType] = useState("criminal");
@@ -47,46 +51,18 @@ export function CaseForm({ courts }: CaseFormProps) {
     }
   }, [courtLevel, division]);
 
-  const courtLevelOptions = [
-    { value: "high_court", label: "High Court" },
-    { value: "magistrates", label: "Magistrates Court" },
-    { value: "court_of_appeal", label: "Court of Appeal" },
-    { value: "tribunal", label: "Tribunal" },
-  ];
-
+  // Build division options from case types based on context
   const divisionOptions: Record<string, { value: string; label: string }[]> = {
-    high_court: [
-      { value: "criminal", label: "Criminal Division" },
-      { value: "civil", label: "Civil Division" },
-      { value: "family", label: "Family Division" },
-    ],
-    magistrates: [
-      { value: "criminal", label: "Criminal" },
-      { value: "civil", label: "Civil" },
-    ],
-    tribunal: [
-      { value: "agricultural", label: "Agricultural" },
-      { value: "small_claims", label: "Small Claims" },
-    ],
+    high_court: caseTypes.filter(t => 
+      ['criminal', 'civil', 'family'].includes(t.value)
+    ).map(t => ({ value: t.value, label: t.label })),
+    magistrates: caseTypes.filter(t => 
+      ['criminal', 'civil'].includes(t.value)
+    ).map(t => ({ value: t.value, label: t.label })),
+    tribunal: caseTypes.filter(t => 
+      ['agricultural', 'small_claims'].includes(t.value)
+    ).map(t => ({ value: t.value, label: t.label })),
   };
-
-  const statusOptions = [
-    { value: "PENDING", label: "Pending" },
-    { value: "ACTIVE", label: "Active" },
-    { value: "CLOSED", label: "Closed" },
-    { value: "ARCHIVED", label: "Archived" },
-  ];
-
-  const COMMON_OFFENCES = [
-    "Theft contrary to section 291 of the Crimes Act",
-    "Assault Causing Actual Bodily Harm",
-    "Aggravated Robbery",
-    "Rape contrary to section 207 of the Crimes Act",
-    "Murder contrary to section 237 of the Crimes Act",
-    "Dangerous Driving Occasioning Death",
-    "Possession of Illicit Drugs",
-    "Breach of Trust",
-  ];
 
   const addParty = (section: keyof Parties) => {
     setParties(prev => ({
@@ -157,7 +133,7 @@ export function CaseForm({ courts }: CaseFormProps) {
               required
             >
               <option value="">Select court level</option>
-              {courtLevelOptions.map((opt) => (
+              {courtLevels.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
@@ -224,7 +200,7 @@ export function CaseForm({ courts }: CaseFormProps) {
             name="status"
             label="Status"
             type="select"
-            options={statusOptions}
+            options={caseStatuses}
             defaultValue="PENDING"
             required
           />
@@ -329,27 +305,27 @@ export function CaseForm({ courts }: CaseFormProps) {
             <div className="space-y-2">
               <Label className="text-sm text-muted-foreground">Quick Add Common Offences</Label>
               <div className="flex flex-wrap gap-2">
-                {COMMON_OFFENCES.map((offence) => (
+                {offenseTypes.map((offence) => (
                   <Button
-                    key={offence}
+                    key={offence.value}
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => {
                       // Add if not already present
-                      if (!offences.includes(offence)) {
+                      if (!offences.includes(offence.label)) {
                         const emptyIndex = offences.findIndex(o => !o);
                         if (emptyIndex >= 0) {
-                          updateOffence(emptyIndex, offence);
+                          updateOffence(emptyIndex, offence.label);
                         } else {
-                          setOffences([...offences, offence]);
+                          setOffences([...offences, offence.label]);
                         }
                       }
                     }}
                     className="text-xs"
                   >
                     <Plus className="h-3 w-3 mr-1" />
-                    {offence.split(" contrary to")[0]}
+                    {offence.label.split(" contrary to")[0]}
                   </Button>
                 ))}
               </div>

@@ -59,23 +59,11 @@ interface HearingFormProps {
   judges?: User[];
   magistrates?: User[];
   clerks?: User[];
+  actionTypes?: { value: string; label: string; description?: string }[];
+  bailDecisions?: { value: string; label: string; description?: string }[];
   mode: "create" | "edit";
   cancelHref?: string;
 }
-
-const ACTION_TYPES = [
-  { value: "MENTION", label: "Mention" },
-  { value: "TRIAL", label: "Trial" },
-  { value: "CONTINUATION_OF_TRIAL", label: "Continuation of Trial" },
-  { value: "VOIR_DIRE_HEARING", label: "Voir Dire Hearing" },
-  { value: "PRE_TRIAL_CONFERENCE", label: "Pre-Trial Conference" },
-  { value: "RULING", label: "Ruling" },
-  { value: "FIRST_CALL", label: "First Call" },
-  { value: "BAIL_HEARING", label: "Bail Hearing" },
-  { value: "SENTENCING", label: "Sentencing" },
-  { value: "CASE_CONFERENCE", label: "Case Conference" },
-  { value: "OTHER", label: "Other" },
-];
 
 const STATUS_OPTIONS = [
   { value: "scheduled", label: "Scheduled" },
@@ -83,14 +71,6 @@ const STATUS_OPTIONS = [
   { value: "completed", label: "Completed" },
   { value: "adjourned", label: "Adjourned" },
   { value: "cancelled", label: "Cancelled" },
-];
-
-const BAIL_DECISIONS = [
-  { value: "not_decided", label: "Not yet decided" },
-  { value: "granted", label: "Granted" },
-  { value: "denied", label: "Denied" },
-  { value: "continued", label: "Continued" },
-  { value: "not_applicable", label: "Not Applicable" },
 ];
 
 export function HearingFormServer({
@@ -101,6 +81,8 @@ export function HearingFormServer({
   judges = [],
   magistrates = [],
   clerks = [],
+  actionTypes = [],
+  bailDecisions = [],
   mode,
   cancelHref = "/dashboard/hearings",
 }: HearingFormProps) {
@@ -183,7 +165,7 @@ export function HearingFormServer({
           placeholder="Select action type"
           required
           helpText="Type of hearing action (e.g., Mention, Trial, Bail Hearing)"
-          options={ACTION_TYPES}
+          options={actionTypes}
           defaultValue={initialData?.actionType}
         />
 
@@ -309,7 +291,7 @@ export function HearingFormServer({
           name="bailDecision"
           type="select"
           placeholder="Select bail decision"
-          options={BAIL_DECISIONS}
+          options={bailDecisions}
           defaultValue={initialData?.bailDecision || "not_decided"}
         />
 
