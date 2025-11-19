@@ -1,5 +1,5 @@
 /**
- * FAQ Page
+ * Dashboard FAQ Page
  */
 
 import Link from "next/link";
@@ -14,230 +14,435 @@ import {
 } from "@/components/ui/accordion";
 import { ArrowLeft, HelpCircle } from "lucide-react";
 
-export default function FAQPage() {
+export default function FAQHelpPage() {
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/dashboard/help">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <div>
-          <Heading as="h1">Frequently Asked Questions</Heading>
-          <p className="text-muted-foreground">
-            Common questions and answers
-          </p>
-        </div>
-      </div>
-
-      {/* General Questions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <HelpCircle className="h-5 w-5" />
-            General Questions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>How do I log in to Totolaw?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Totolaw uses passwordless authentication via magic links. Enter your email address on the login page, and you'll receive an email with a secure login link. Click the link to access your dashboard. No password needed!
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-2">
-              <AccordionTrigger>What if I don&apos;t receive the login email?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                <ul className="space-y-1 ml-4">
-                  <li>• Check your spam/junk folder</li>
-                  <li>• Verify you entered the correct email address</li>
-                  <li>• Wait a few minutes and try again</li>
-                  <li>• Contact your system administrator if the problem persists</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-3">
-              <AccordionTrigger>How do I switch between organisations?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                If you belong to multiple organisations, click the organisation dropdown at the top of the sidebar. Select the organisation you want to switch to. The dashboard will reload with that organisation's data.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-4">
-              <AccordionTrigger>What does my role determine?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Your role determines what you can see and do in the system. For example:
-                <ul className="space-y-1 ml-4 mt-2">
-                  <li>• <strong>Judges</strong> can manage all aspects of cases</li>
-                  <li>• <strong>Court Clerks</strong> can create cases and schedule hearings</li>
-                  <li>• <strong>Prosecutors</strong> can view and add evidence</li>
-                  <li>• <strong>Administrators</strong> can manage users and settings</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Case Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Case Management</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="case-1">
-              <AccordionTrigger>Why can&apos;t I create a case?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                You need the "cases:create" permission to create cases. This is typically granted to Court Clerks, Court Administrators, and Judges. Contact your administrator if you need this permission.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="case-2">
-              <AccordionTrigger>How do I close a case?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                To close a case, open the case details page, click "Edit", change the status to "Closed" or "Dismissed", and save. You need the "cases:update" permission to do this.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="case-3">
-              <AccordionTrigger>Can I edit a case after it&apos;s closed?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Yes, if you have the necessary permissions. However, it's best practice to finalize all details before closing a case. If you need to reopen a case, change its status back to "Active" or "In Progress".
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="case-4">
-              <AccordionTrigger>What&apos;s the difference between case types?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                <ul className="space-y-1 ml-4">
-                  <li>• <strong>Civil:</strong> Disputes between individuals or entities</li>
-                  <li>• <strong>Criminal:</strong> Cases where the state prosecutes someone for a crime</li>
-                  <li>• <strong>Family:</strong> Matters like divorce, custody, adoption</li>
-                  <li>• <strong>Land:</strong> Property disputes and land rights</li>
-                  <li>• <strong>Traffic:</strong> Traffic violations and related matters</li>
-                  <li>• <strong>Administrative:</strong> Administrative law matters</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Hearings & Evidence */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Hearings & Evidence</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="hearing-1">
-              <AccordionTrigger>Can I schedule multiple hearings for one case?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Yes! Cases often require multiple hearings. You can schedule as many hearings as needed for each case. View all hearings on the case details page or in the hearings calendar.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="hearing-2">
-              <AccordionTrigger>How do I reschedule a hearing?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Open the hearing details page, click "Edit" or "Reschedule", update the date/time/location, and save. Make sure to notify all parties about the change.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="evidence-1">
-              <AccordionTrigger>What file types can I upload as evidence?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                You can upload most common file types including: PDF, Word documents, Excel spreadsheets, images (JPG, PNG, GIF), videos (MP4, AVI), audio files (MP3, WAV), and more. If you have trouble uploading a specific type, contact support.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="evidence-2">
-              <AccordionTrigger>Is there a file size limit for evidence?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                File size limits depend on your organisation's configuration. Typically, individual files up to 50MB are supported. For larger files (like long videos), consider compressing them or contacting your administrator.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="evidence-3">
-              <AccordionTrigger>Can I delete evidence after uploading?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Evidence can be deleted if you have the "evidence:delete" permission. However, this should be done carefully as it cannot be undone. Consider the legal implications before deleting any case-related evidence.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Security & Privacy */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Security & Privacy</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="security-1">
-              <AccordionTrigger>Is my data secure?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                Yes. Totolaw uses industry-standard security measures including:
-                <ul className="space-y-1 ml-4 mt-2">
-                  <li>• Encrypted data storage and transmission</li>
-                  <li>• Organisation-based data isolation</li>
-                  <li>• Role-based access control</li>
-                  <li>• Audit logging of all actions</li>
-                  <li>• Regular security updates</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="security-2">
-              <AccordionTrigger>Can users from other organisations see my data?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                No. Totolaw implements strict data isolation between organisations. Users can only access data from organisations they belong to. Even system administrators follow proper protocols for accessing organisation-specific data.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="security-3">
-              <AccordionTrigger>How long are my login sessions valid?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                For security reasons, login sessions expire after a period of inactivity. You'll need to log in again using a new magic link. This protects your account if you forget to log out on a shared device.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Still Have Questions */}
-      <Card className="bg-primary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle>Still Have Questions?</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              If you couldn't find the answer you're looking for, try these resources:
-            </p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Button variant="outline" asChild>
-                <Link href="/dashboard/help/getting-started">Getting Started Guide</Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/dashboard/help/troubleshooting">Troubleshooting</Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/dashboard/help/contact">Contact Support</Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/dashboard/help">Help Center</Link>
-              </Button>
+    <div className="flex-1 py-12">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          {/* Header */}
+          <div>
+            <Button variant="ghost" asChild className="mb-4">
+              <Link href="/dashboard/help">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Help
+              </Link>
+            </Button>
+            
+            <div className="space-y-2">
+              <Heading as="h1" className="text-4xl flex items-center gap-3">
+                <HelpCircle className="h-10 w-10" />
+                Frequently Asked Questions
+              </Heading>
+              <p className="text-lg text-muted-foreground">
+                Find answers to common questions about Totolaw
+              </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* General Questions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">General Questions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="what-is-totolaw">
+                  <AccordionTrigger>What is Totolaw?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
+                        It&apos;s a comprehensive case management system designed specifically for Pacific Island court systems, 
+                      enabling faster, more efficient justice delivery. It helps courts, legal professionals, and administrative 
+                      staff organize cases, schedule hearings, manage evidence, and collaborate effectively.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="who-can-use">
+                  <AccordionTrigger>Who can use Totolaw?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Totolaw is designed for:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>Court administrators and clerks</li>
+                      <li>Judges and magistrates</li>
+                      <li>Legal professionals and attorneys</li>
+                      <li>Court staff and support personnel</li>
+                    </ul>
+                    <p>
+                      Each user is assigned a role with appropriate permissions based on their responsibilities.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="cost">
+                  <AccordionTrigger>How much does Totolaw cost?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Totolaw pricing varies based on your organisation's size and needs. Contact your system administrator
+                      or reach out to our sales team for specific pricing information for your court or organisation.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="getting-started">
+                  <AccordionTrigger>How do I get started?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      To get started with Totolaw:
+                    </p>
+                    <ol className="list-decimal ml-6 space-y-1">
+                      <li>Request access from your system administrator</li>
+                      <li>Receive your invitation email</li>
+                      <li>Use the magic link to sign in securely</li>
+                      <li>Explore the dashboard and feature guides</li>
+                    </ol>
+                    <p>
+                      Check out our <Link href="/dashboard/help/getting-started" className="text-primary hover:underline">Getting Started Guide</Link> for more details.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="support">
+                  <AccordionTrigger>How do I get support?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Support options include:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>In-app documentation and guides</li>
+                      <li>Contact your system administrator for organisation-specific help</li>
+                      <li>Email support@totolaw.com for technical issues</li>
+                      <li>Browse this FAQ for common questions</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+
+          {/* Case Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Case Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="create-case">
+                  <AccordionTrigger>How do I create a new case?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Navigate to the Cases section and click "New Case". Fill in the required details including case number,
+                      title, parties, and status. Save to create the case. See our <Link href="/dashboard/help/cases" className="text-primary hover:underline">Case Management Guide</Link> for detailed instructions.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="edit-case">
+                  <AccordionTrigger>Can I edit a case after creating it?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Yes, you can edit case details at any time if you have the appropriate permissions. Open the case and 
+                      click "Edit" to update information. All changes are tracked in the case history.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="delete-case">
+                  <AccordionTrigger>Can I delete a case?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Only system administrators can permanently delete cases. If you need to remove a case, contact your 
+                      administrator. Alternatively, you can close or archive cases to remove them from active view.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="case-statuses">
+                  <AccordionTrigger>What do the different case statuses mean?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>Your organisation can define custom case statuses. Common ones include:</p>
+                    <ul className="space-y-2 ml-4">
+                      <li><strong>Open/New:</strong> Case has been filed but work hasn't started</li>
+                      <li><strong>Active/In Progress:</strong> Case is actively being worked on</li>
+                      <li><strong>Pending:</strong> Waiting for external action or information</li>
+                      <li><strong>Closed/Resolved:</strong> Case has been completed</li>
+                    </ul>
+                    <p className="mt-2">Status values are flexible and can be customized by your administrator.</p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="search-cases">
+                  <AccordionTrigger>How do I search for a specific case?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Use the Search feature in the sidebar or the search bar on the Cases page. You can search by case number,
+                      title, parties, or other details. Advanced filters help narrow down results.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+
+          {/* Hearings & Evidence */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Hearings & Evidence</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="schedule-hearing">
+                  <AccordionTrigger>How do I schedule a hearing?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Go to the Hearings section and click "New Hearing". Select the case, set the date and time, add location 
+                      details, and save. The hearing will appear on the calendar. See our <Link href="/dashboard/help/hearings" className="text-primary hover:underline">Hearings Guide</Link> for more information.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="reschedule-hearing">
+                  <AccordionTrigger>Can I reschedule a hearing?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Yes, if you have the necessary permissions. Open the hearing details and click "Edit" to change the 
+                      date, time, or location. All participants will see the updated information.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="upload-evidence">
+                  <AccordionTrigger>What types of files can I upload as evidence?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Totolaw supports various file types including:
+                    </p>
+                    <ul className="list-disc ml-6">
+                      <li>Documents: PDF, DOC, DOCX, TXT, RTF</li>
+                      <li>Images: JPG, PNG, GIF, WEBP</li>
+                      <li>Video: MP4, MOV, AVI, WEBM</li>
+                      <li>Audio: MP3, WAV, M4A, OGG</li>
+                    </ul>
+                    <p className="mt-2">
+                      Maximum file size is 100MB per file. See our <Link href="/dashboard/help/evidence" className="text-primary hover:underline">Evidence Guide</Link> for details.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="evidence-security">
+                  <AccordionTrigger>How secure is uploaded evidence?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      All evidence is encrypted both at rest and in transit using industry-standard encryption. Access is 
+                      controlled by role-based permissions, and all file access is logged for audit purposes. Only authorized
+                      users within your organisation can view evidence.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="calendar-view">
+                  <AccordionTrigger>How do I view upcoming hearings on a calendar?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Navigate to the Hearings section and select "Calendar View" (if available). You'll see all scheduled 
+                      hearings in a monthly calendar format. Click any hearing to view full details or make changes.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+
+          {/* Security & Privacy */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Security & Privacy</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="data-security">
+                  <AccordionTrigger>How is my data protected?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Totolaw protects your data in several ways:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>🔒 <strong>Encryption:</strong> All your data is scrambled so nobody can read it without permission (like a secret code)</li>
+                      <li>🔑 <strong>Email login links:</strong> No passwords to steal or forget</li>
+                      <li>🚪 <strong>Access control:</strong> People can only see what they&apos;re supposed to see for their job</li>
+                      <li>📊 <strong>Activity tracking:</strong> We keep a record of who looked at what and when</li>
+                      <li>🛡️ <strong>Regular security checks:</strong> Experts regularly test our security</li>
+                      <li>💾 <strong>Daily backups:</strong> Your data is copied to safe locations every day</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="user-roles">
+                  <AccordionTrigger>What are the different user roles?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Your "role" is like your job title - it determines what you can do in Totolaw:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li><strong>Admin</strong> (Boss) - Can do everything: add people, change settings, manage all cases</li>
+                      <li><strong>Manager/Judge</strong> (Supervisor) - Can manage cases, schedule hearings, make decisions</li>
+                      <li><strong>Staff/Clerk</strong> (Worker) - Can create cases, upload files, schedule hearings</li>
+                      <li><strong>Viewer</strong> (Guest) - Can look at cases and read documents, but can&apos;t change anything</li>
+                    </ul>
+                    <p className="mt-2">
+                      Your administrator assigns your role when they invite you. If you need to do something but the button 
+                      is missing or grayed out, you might need a different role - ask your administrator.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="magic-links">
+                  <AccordionTrigger>Why don&apos;t I need a password?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Instead of typing a password (which you might forget), Totolaw sends you a special link in your email. 
+                      Click that link, and you&apos;re in! Think of it like getting a temporary key card in your email.
+                    </p>
+                    <p className="text-sm">
+                      🔒 <strong>Security note:</strong> The link only works for a few hours and only works once, 
+                      so even if someone finds an old email, they can&apos;t use it to get into your account.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="multi-tenant">
+                  <AccordionTrigger>Can other courts see my court&apos;s cases?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      <strong>No, absolutely not.</strong> Each court has its own private space in Totolaw - like having your own 
+                      locked office. Your cases, documents, and information are completely separate from other courts. 
+                      You can only see your court&apos;s data, and other courts can only see theirs.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="data-backup">
+                  <AccordionTrigger>Is my data backed up?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Yes! Every day, Totolaw makes copies of all your data and stores them in multiple safe locations. 
+                      This means if something goes wrong (like a computer failure), we can restore your cases and documents. 
+                      Think of it like making photocopies of important papers and keeping them in different safe places.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+
+          {/* Technical Issues */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Technical Issues</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="browser-support">
+                  <AccordionTrigger>Which browsers are supported?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Totolaw works best on modern browsers:
+                    </p>
+                    <ul className="list-disc ml-6">
+                      <li>Google Chrome (recommended)</li>
+                      <li>Mozilla Firefox</li>
+                      <li>Microsoft Edge</li>
+                      <li>Safari (macOS and iOS)</li>
+                    </ul>
+                    <p className="mt-2">
+                      We recommend using the latest version of your preferred browser for the best experience.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="mobile">
+                  <AccordionTrigger>Can I use Totolaw on mobile devices?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      Yes! Totolaw is fully responsive and works on smartphones and tablets. The mobile interface is optimized
+                      for smaller screens while maintaining full functionality.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="login-issues">
+                  <AccordionTrigger>What if I can&apos;t sign in?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      If you&apos;re having trouble signing in:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>Check your email (including spam folder) for the magic link</li>
+                      <li>Make sure you&apos;re using the correct email address</li>
+                      <li>Request a new magic link if the previous one expired</li>
+                      <li>Contact your system administrator if you still can&apos;t access your account</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="slow-performance">
+                  <AccordionTrigger>Why is the app running slowly?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      If Totolaw seems slow:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>Check your internet connection</li>
+                      <li>Close unnecessary browser tabs</li>
+                      <li>Clear your browser cache</li>
+                      <li>Try using a different browser</li>
+                      <li>Contact support if the issue persists</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="error-messages">
+                  <AccordionTrigger>What should I do if I see an error message?</AccordionTrigger>
+                  <AccordionContent className="text-base space-y-2">
+                    <p>
+                      If you encounter an error:
+                    </p>
+                    <ul className="list-disc ml-6 space-y-1">
+                      <li>Take a screenshot of the error message</li>
+                      <li>Note what action you were performing</li>
+                      <li>Try refreshing the page</li>
+                      <li>Contact support with the error details if it continues</li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+
+          {/* Still Need Help */}
+          <Card className="border-primary">
+            <CardContent className="p-6 text-center space-y-4">
+              <h3 className="text-2xl font-semibold">Still Have Questions?</h3>
+              <p className="text-muted-foreground">
+                Can&apos;t find what you&apos;re looking for? Check out our other guides or contact support.
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center">
+                <Button variant="outline" asChild>
+                  <Link href="/dashboard/help/getting-started">Getting Started</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/dashboard/help/cases">Case Management</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/dashboard/help">All Guides</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
