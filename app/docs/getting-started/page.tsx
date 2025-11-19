@@ -36,6 +36,32 @@ export default function GettingStartedPage() {
               </div>
             </div>
 
+            {/* Quick Start for Busy Users */}
+            <Card className="border-green-200 bg-green-50/50">
+              <CardHeader>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <CheckCircle2 className="h-6 w-6 text-green-600" />
+                  🚀 Need to Start Right Away?
+                </CardTitle>
+                <CardDescription className="text-base">The 3 things you need to do first</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="bg-white p-4 rounded-lg border-l-4 border-l-green-600">
+                  <p className="font-semibold text-lg mb-2">1️⃣ Sign In</p>
+                  <p className="text-sm">Click the <strong>"Sign In"</strong> button → Enter your email → Check your email inbox → Click the link in the email</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg border-l-4 border-l-blue-600">
+                  <p className="font-semibold text-lg mb-2">2️⃣ Look Around</p>
+                  <p className="text-sm">After signing in, you&apos;ll see the main menu on the left side. Click on <strong>"Cases"</strong> to see all cases.</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg border-l-4 border-l-purple-600">
+                  <p className="font-semibold text-lg mb-2">3️⃣ Try Creating Something</p>
+                  <p className="text-sm">In the Cases page, click the <strong>"New Case"</strong> button to practice creating a case.</p>
+                </div>
+                <p className="text-xs text-muted-foreground pt-2">💡 That&apos;s it! Keep reading below to learn more details.</p>
+              </CardContent>
+            </Card>
+
             {/* What is Totolaw */}
             <Card>
               <CardHeader>
@@ -46,10 +72,9 @@ export default function GettingStartedPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
-                  It's a comprehensive case management system designed specifically for Pacific Island court systems, 
-                  enabling faster, more efficient justice delivery. It helps you organize cases, schedule hearings, 
-                  manage evidence, and collaborate with your team.
+                  <strong>Totolaw</strong> (pronounced "TOH-toh-law") comes from the Fijian word <strong>"Totolo"</strong> meaning "fast". 
+                  Think of it as a <strong>digital filing system for your court</strong>. Instead of keeping everything in paper folders, 
+                  you can organize cases, schedule hearings, store documents, and find information quickly on your computer or phone.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="flex items-start gap-3 p-3 rounded-lg border">
@@ -97,9 +122,10 @@ export default function GettingStartedPage() {
                       1
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-semibold text-lg">Sign In</h3>
+                      <h3 className="font-semibold text-lg">Sign In (Log In to the System)</h3>
                       <p className="text-muted-foreground">
-                        Use your email to receive a magic link and sign in securely. No passwords to remember.
+                        <strong>What to do:</strong> Enter your email address, then check your email inbox. You&apos;ll receive an email with a link to click. 
+                        That&apos;s how you get in - <strong>no password needed!</strong> (This is called a "login link" or "magic link".)
                       </p>
                     </div>
                   </div>
@@ -109,9 +135,13 @@ export default function GettingStartedPage() {
                       2
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-semibold text-lg">Explore the Dashboard</h3>
+                      <h3 className="font-semibold text-lg">Explore the Dashboard (Your Home Page)</h3>
                       <p className="text-muted-foreground">
-                        Familiarize yourself with the main navigation menu. Key sections include Cases, Hearings, Evidence, and Search.
+                        <strong>What you&apos;ll see:</strong> On the left side of your screen, there&apos;s a menu with buttons. The main ones are:
+                        <strong> Cases</strong> (📁 view all court cases), 
+                        <strong> Hearings</strong> (📅 court dates), 
+                        <strong> Documents</strong> (📄 files), and 
+                        <strong> Search</strong> (🔍 find anything). Click each one to see what&apos;s inside.
                       </p>
                     </div>
                   </div>
@@ -164,18 +194,22 @@ export default function GettingStartedPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Organisations</h4>
+                    <h4 className="font-semibold mb-1">Organisations (Your Court or Office)</h4>
                     <p className="text-sm text-muted-foreground">
-                      Totolaw is multi-tenant. Each court or legal organisation has its own space with completely isolated data.
-                      You can join organisations via invitation or by requesting to join.
+                      Think of an organisation like a separate building. Each court has its own organisation, and you can only see 
+                      the cases and information from <strong>your court</strong>. Other courts can&apos;t see your data, and you can&apos;t see theirs. 
+                      You join an organisation when someone invites you via email.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Roles & Permissions</h4>
+                    <h4 className="font-semibold mb-1">Roles & Permissions (What You Can Do)</h4>
                     <p className="text-sm text-muted-foreground">
-                      Users have different roles (Admin, Manager, Staff, Viewer) with varying levels of access.
-                      Admins can manage users and settings, while Staff can work on cases and hearings.
+                      Your "role" determines what buttons you can click. Like job titles:
+                      <br/>• <strong>Admin</strong> = Boss (can do everything, add/remove people)
+                      <br/>• <strong>Staff</strong> = Court clerk (can create cases, upload files, schedule hearings)
+                      <br/>• <strong>Viewer</strong> = Guest (can only look, can&apos;t change anything)
+                      <br/>Your administrator assigns your role when they invite you.
                     </p>
                   </div>
 

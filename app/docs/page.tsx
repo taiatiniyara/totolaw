@@ -18,6 +18,11 @@ import {
   HelpCircle,
   ArrowRight,
   Home,
+  Users,
+  Crown,
+  Briefcase,
+  UserCheck,
+  Eye,
 } from "lucide-react";
 
 export default function PublicDocsPage() {
@@ -55,6 +60,73 @@ export default function PublicDocsPage() {
               </div>
             </div>
 
+            {/* Quick Access for Common Tasks */}
+            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  ⚡ Quick Access: Common Tasks
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Jump straight to what you need to do right now
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <Link 
+                    href="/auth/login" 
+                    className="block p-4 rounded-lg bg-white border-2 border-green-300 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-base mb-1">🔑 Sign In / Log In</p>
+                        <p className="text-xs text-muted-foreground">Get into the system to start work</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-green-600" />
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    href="/docs/cases" 
+                    className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-base mb-1">📁 How to Create a Case</p>
+                        <p className="text-xs text-muted-foreground">Step-by-step guide to filing cases</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+
+                  <Link 
+                    href="/docs/evidence" 
+                    className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-base mb-1">📄 How to Upload Documents</p>
+                        <p className="text-xs text-muted-foreground">Add files to your cases</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+
+                  <Link 
+                    href="/docs/hearings" 
+                    className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-base mb-1">📅 How to Schedule Hearings</p>
+                        <p className="text-xs text-muted-foreground">Put court dates on the calendar</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Quick Start */}
             <Card>
               <CardHeader>
@@ -79,6 +151,100 @@ export default function PublicDocsPage() {
                       </div>
                       <ArrowRight className="h-5 w-5 text-muted-foreground" />
                     </div>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* User Manuals - NEW SECTION */}
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Users className="h-6 w-6 text-blue-600" />
+                  User Manuals by Role
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Step-by-step guides tailored to your role in the system
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                  <Link 
+                    href="/docs/user-manual/super-admin" 
+                    className="block p-4 rounded-lg bg-white border border-purple-200 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Crown className="h-5 w-5 text-purple-600" />
+                      <p className="font-semibold">Super Administrator</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Platform-wide system management
+                    </p>
+                  </Link>
+
+                  <Link 
+                    href="/docs/user-manual/administrator" 
+                    className="block p-4 rounded-lg bg-white border border-red-200 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Shield className="h-5 w-5 text-red-600" />
+                      <p className="font-semibold">Administrator</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Organisation-level management
+                    </p>
+                  </Link>
+
+                  <Link 
+                    href="/docs/user-manual/judge" 
+                    className="block p-4 rounded-lg bg-white border border-blue-200 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Briefcase className="h-5 w-5 text-blue-600" />
+                      <p className="font-semibold">Judge / Manager</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Case and hearing management
+                    </p>
+                  </Link>
+
+                  <Link 
+                    href="/docs/user-manual/staff" 
+                    className="block p-4 rounded-lg bg-white border border-green-200 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <UserCheck className="h-5 w-5 text-green-600" />
+                      <p className="font-semibold">Staff / Court Clerk</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Daily operations and administration
+                    </p>
+                  </Link>
+
+                  <Link 
+                    href="/docs/user-manual/viewer" 
+                    className="block p-4 rounded-lg bg-white border border-gray-200 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Eye className="h-5 w-5 text-gray-600" />
+                      <p className="font-semibold">Viewer</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Read-only case access
+                    </p>
+                  </Link>
+
+                  <Link 
+                    href="/docs/user-manual" 
+                    className="block p-4 rounded-lg bg-white border-2 border-blue-300 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <BookOpen className="h-5 w-5 text-blue-600" />
+                      <p className="font-semibold text-blue-600">View All Manuals</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Complete guide with all roles
+                    </p>
                   </Link>
                 </div>
               </CardContent>
@@ -146,9 +312,9 @@ export default function PublicDocsPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-semibold text-sm mb-1">Role-Based Access Control (RBAC)</p>
+                          <p className="font-semibold text-sm mb-1">Roles & Permissions (Who Can Do What)</p>
                           <p className="text-xs text-muted-foreground">
-                            Learn how permissions and roles work in Totolaw
+                            Understand what different people can do in the system
                           </p>
                         </div>
                         <ArrowRight className="h-4 w-4 text-muted-foreground" />
@@ -160,9 +326,9 @@ export default function PublicDocsPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-semibold text-sm mb-1">Multi-Tenant Security</p>
+                          <p className="font-semibold text-sm mb-1">Data Privacy & Security</p>
                           <p className="text-xs text-muted-foreground">
-                            How your organisation's data is isolated and secure
+                            How we keep your court&apos;s information private and safe
                           </p>
                         </div>
                         <ArrowRight className="h-4 w-4 text-muted-foreground" />
@@ -174,9 +340,9 @@ export default function PublicDocsPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-semibold text-sm mb-1">Passwordless Login</p>
+                          <p className="font-semibold text-sm mb-1">How to Sign In (No Password Needed)</p>
                           <p className="text-xs text-muted-foreground">
-                            Secure magic link authentication via email
+                            Login using a link sent to your email - no password to remember!
                           </p>
                         </div>
                         <ArrowRight className="h-4 w-4 text-muted-foreground" />
