@@ -196,7 +196,7 @@ export default function AuthenticationDocumentationPage() {
                           </div>
                           <div className="flex items-start gap-2 text-sm">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            <span>Is securely stored in our database</span>
+                            <span>Is securely protected on our servers</span>
                           </div>
                         </div>
                       </div>
@@ -277,7 +277,7 @@ export default function AuthenticationDocumentationPage() {
                       <div className="flex-1">
                         <p className="font-semibold text-lg mb-2">You're Logged In!</p>
                         <p className="text-sm text-muted-foreground mb-3">
-                          We verify the magic link is valid, create your session, and log you in automatically. 
+                          We verify the magic link is valid and log you in automatically. 
                           You're redirected to your dashboard.
                         </p>
                         <div className="bg-teal-50 border border-teal-200 p-4 rounded-lg">
@@ -319,9 +319,9 @@ export default function AuthenticationDocumentationPage() {
                     <div className="flex items-start gap-2 text-sm">
                       <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="font-semibold">No Password Database</p>
+                        <p className="font-semibold">No Passwords to Steal</p>
                         <p className="text-xs text-muted-foreground">
-                          We don't store passwords, so they can't be stolen or leaked
+                          We don't use passwords, so there's nothing to steal or leak in data breaches
                         </p>
                       </div>
                     </div>
@@ -346,9 +346,9 @@ export default function AuthenticationDocumentationPage() {
                     <div className="flex items-start gap-2 text-sm">
                       <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="font-semibold">Single-Use Tokens</p>
+                        <p className="font-semibold">Single-Use Links</p>
                         <p className="text-xs text-muted-foreground">
-                          Each link can only be used once, preventing replay attacks
+                          Each link can only be used once, preventing unauthorized reuse
                         </p>
                       </div>
                     </div>
@@ -430,12 +430,12 @@ export default function AuthenticationDocumentationPage() {
                 <Card>
                   <CardHeader>
                     <Key className="h-8 w-8 text-purple-600 mb-2" />
-                    <CardTitle className="text-base">Cryptographic Tokens</CardTitle>
+                    <CardTitle className="text-base">Secure Codes</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
                     <p>
-                      Each magic link contains a cryptographically secure random token that's impossible to 
-                      guess or forge.
+                      Each magic link contains a unique secure code that's impossible to guess or forge, 
+                      ensuring only you can use it.
                     </p>
                   </CardContent>
                 </Card>
@@ -481,11 +481,11 @@ export default function AuthenticationDocumentationPage() {
                 <Card>
                   <CardHeader>
                     <Lock className="h-8 w-8 text-red-600 mb-2" />
-                    <CardTitle className="text-base">HTTPS Only</CardTitle>
+                    <CardTitle className="text-base">Secure Connection</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
                     <p>
-                      All magic links use HTTPS encryption to prevent interception during transmission.
+                      All magic links use secure, encrypted connections to prevent interception when you click them.
                     </p>
                   </CardContent>
                 </Card>
@@ -542,9 +542,8 @@ export default function AuthenticationDocumentationPage() {
                     <CardTitle className="text-base">Is it safe to click the link on public WiFi?</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
-                    Yes! Magic links use HTTPS encryption, so they're safe to use even on public WiFi. 
-                    However, for maximum security, always ensure you're clicking the link from a trusted device 
-                    and that the URL starts with "https://".
+                    Yes! Magic links use secure encryption, so they're safe to use even on public WiFi. 
+                    However, for maximum security, always ensure you're clicking the link from a trusted device.
                   </CardContent>
                 </Card>
 
@@ -566,11 +565,11 @@ export default function AuthenticationDocumentationPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-base">How long does my session last after logging in?</CardTitle>
+                    <CardTitle className="text-base">How long do I stay logged in?</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
-                    Your session lasts for 7 days of inactivity. After that, you'll need to log in again with 
-                    a new magic link. The session is automatically refreshed every 24 hours while you're actively 
+                    You'll stay logged in for 7 days of inactivity. After that, you'll need to log in again with 
+                    a new magic link. Your login is automatically extended every 24 hours while you're actively 
                     using the system.
                   </CardContent>
                 </Card>
@@ -614,7 +613,7 @@ export default function AuthenticationDocumentationPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="border-l-4 border-red-500 pl-4 py-2">
-                      <p className="font-semibold text-sm mb-1">Error: "Invalid or expired token"</p>
+                      <p className="font-semibold text-sm mb-1">Error: "Invalid or expired link"</p>
                       <p className="text-xs text-muted-foreground mb-2">
                         The magic link has expired or been used already.
                       </p>
@@ -639,7 +638,7 @@ export default function AuthenticationDocumentationPage() {
                         Clicking the link does nothing or shows an error.
                       </p>
                       <p className="text-xs">
-                        <strong>Solution:</strong> Copy the full URL from the email and paste it into your browser's address bar.
+                        <strong>Solution:</strong> Copy the link from the email and paste it into your browser.
                       </p>
                     </div>
 
@@ -656,10 +655,10 @@ export default function AuthenticationDocumentationPage() {
                     <div className="border-l-4 border-green-500 pl-4 py-2">
                       <p className="font-semibold text-sm mb-1">Logged out unexpectedly</p>
                       <p className="text-xs text-muted-foreground mb-2">
-                        Your session ended before the 7-day expiration.
+                        You were logged out before the 7-day expiration.
                       </p>
                       <p className="text-xs">
-                        <strong>Solution:</strong> This is normal if you cleared cookies, logged out, or the session expired. Simply log in again with a new magic link.
+                        <strong>Solution:</strong> This is normal if you cleared your browser data, logged out manually, or your login expired. Simply log in again with a new magic link.
                       </p>
                     </div>
                   </div>

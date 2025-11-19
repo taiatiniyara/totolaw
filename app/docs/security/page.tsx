@@ -167,7 +167,7 @@ export default function SecurityDocumentationPage() {
                           </div>
                           <div className="flex items-start gap-2 text-sm">
                             <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded font-mono text-xs">3</span>
-                            <span className="text-muted-foreground">Database query includes: <code className="bg-background px-1 rounded">WHERE organisation_id = 'your-org-id'</code></span>
+                            <span className="text-muted-foreground">System filters data to show only your organisation's records</span>
                           </div>
                           <div className="flex items-start gap-2 text-sm">
                             <span className="bg-green-100 text-green-700 px-2 py-1 rounded font-mono text-xs">✓</span>
@@ -187,7 +187,7 @@ export default function SecurityDocumentationPage() {
                       <div>
                         <CardTitle className="text-xl">Organisation Context</CardTitle>
                         <CardDescription className="text-base">
-                          Your session always knows which organisation you're working in
+                          The system always knows which organisation you're working in
                         </CardDescription>
                       </div>
                     </div>
@@ -227,9 +227,9 @@ export default function SecurityDocumentationPage() {
                     <div className="flex items-center gap-3">
                       <Server className="h-7 w-7 text-green-600" />
                       <div>
-                        <CardTitle className="text-xl">Database-Level Security</CardTitle>
+                        <CardTitle className="text-xl">System-Level Security</CardTitle>
                         <CardDescription className="text-base">
-                          Multiple layers of protection at the database level
+                          Multiple layers of protection built into the platform
                         </CardDescription>
                       </div>
                     </div>
@@ -239,36 +239,36 @@ export default function SecurityDocumentationPage() {
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-sm">Foreign Key Constraints</p>
+                          <p className="font-semibold text-sm">Data Linking</p>
                           <p className="text-xs text-muted-foreground">
-                            Every record is linked to an organisation ID. You cannot create data without an organisation.
+                            Every record is securely linked to an organisation. You cannot create data without an organisation.
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-sm">Indexed Queries</p>
+                          <p className="font-semibold text-sm">Optimized Performance</p>
                           <p className="text-xs text-muted-foreground">
-                            Organisation ID is indexed for fast, secure filtering on every query.
+                            Fast, secure filtering ensures you only see your organisation's data.
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-sm">Cascading Deletes</p>
+                          <p className="font-semibold text-sm">Automatic Cleanup</p>
                           <p className="text-xs text-muted-foreground">
-                            If an organisation is removed, all its data is automatically cleaned up.
+                            If an organisation is removed, all its data is automatically cleaned up securely.
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-sm">No Cross-Organisation Queries</p>
+                          <p className="font-semibold text-sm">Strict Isolation</p>
                           <p className="text-xs text-muted-foreground">
-                            It's technically impossible to query data across organisations (except for Super Admins).
+                            The system prevents access to data across organisations (except for Super Admins).
                           </p>
                         </div>
                       </div>
@@ -406,15 +406,15 @@ export default function SecurityDocumentationPage() {
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div className="text-sm">
-                          <p className="font-semibold">HTTPS Encryption</p>
-                          <p className="text-muted-foreground">All data in transit is encrypted with TLS/SSL</p>
+                          <p className="font-semibold">Secure Transmission</p>
+                          <p className="text-muted-foreground">All data traveling between you and our servers is encrypted</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                         <div className="text-sm">
-                          <p className="font-semibold">Database Encryption</p>
-                          <p className="text-muted-foreground">Sensitive data is encrypted at rest in the database</p>
+                          <p className="font-semibold">Protected Storage</p>
+                          <p className="text-muted-foreground">Sensitive data is encrypted when stored on our servers</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
@@ -491,7 +491,7 @@ export default function SecurityDocumentationPage() {
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
                     The system will automatically block the request. You'll either see an "Access Denied" message or 
-                    simply won't see any data. The security is built into every database query, so it's technically 
+                    simply won't see any data. The security is built into every part of the system, so it's 
                     impossible to bypass.
                   </CardContent>
                 </Card>
@@ -604,7 +604,7 @@ export default function SecurityDocumentationPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-600 font-bold">✗</span>
-                        <span>Leave your session open on public or shared computers</span>
+                        <span>Stay logged in on public or shared computers</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-600 font-bold">✗</span>
@@ -639,7 +639,7 @@ export default function SecurityDocumentationPage() {
                       </div>
                       <div className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span><strong>Automatic Protection</strong> - Security is built into every database query</span>
+                        <span><strong>Automatic Protection</strong> - Security is built into every part of the system</span>
                       </div>
                       <div className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />

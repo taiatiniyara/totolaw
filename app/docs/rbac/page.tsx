@@ -125,28 +125,28 @@ export default function RBACDocumentationPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="mb-4 text-sm text-muted-foreground">
-                      Permissions follow the pattern: <code className="bg-muted px-2 py-1 rounded">resource:action</code>
+                      Permissions are specific abilities to perform actions in the system
                     </p>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <code className="bg-muted px-2 py-1 rounded text-xs">cases:create</code>
-                        <span className="text-muted-foreground">- Create new cases</span>
+                        <span className="font-semibold">Create Cases</span>
+                        <span className="text-muted-foreground">- Add new cases to the system</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <code className="bg-muted px-2 py-1 rounded text-xs">cases:read</code>
-                        <span className="text-muted-foreground">- View cases</span>
+                        <span className="font-semibold">View Cases</span>
+                        <span className="text-muted-foreground">- See case information</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <code className="bg-muted px-2 py-1 rounded text-xs">hearings:schedule</code>
-                        <span className="text-muted-foreground">- Schedule hearings</span>
+                        <span className="font-semibold">Schedule Hearings</span>
+                        <span className="text-muted-foreground">- Set up court hearings</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <code className="bg-muted px-2 py-1 rounded text-xs">users:manage</code>
-                        <span className="text-muted-foreground">- Manage users</span>
+                        <span className="font-semibold">Manage Users</span>
+                        <span className="text-muted-foreground">- Add and manage team members</span>
                       </div>
                     </div>
                   </CardContent>
@@ -634,7 +634,7 @@ export default function RBACDocumentationPage() {
                         <ul className="text-sm space-y-1 ml-6 text-muted-foreground">
                           <li>✓ Are you logged in?</li>
                           <li>✓ Do you belong to an organisation?</li>
-                          <li>✓ Do you have the <code className="bg-background px-1 rounded">cases:create</code> permission?</li>
+                          <li>✓ Do you have permission to create cases?</li>
                         </ul>
                       </div>
                       <div className="flex items-start gap-2 text-sm">
@@ -983,7 +983,7 @@ export default function RBACDocumentationPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-600 font-bold">✗</span>
-                        <span>Leave your session open on shared computers</span>
+                        <span>Stay logged in on shared computers</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-600 font-bold">✗</span>
@@ -1018,8 +1018,8 @@ export default function RBACDocumentationPage() {
                     <CardTitle className="text-base">Why can't I see the "Create Case" button?</CardTitle>
                   </CardHeader>
                   <CardContent className="text-sm text-muted-foreground">
-                    You don't have the <code className="bg-muted px-1 rounded">cases:create</code> permission. 
-                    This is typically included in Judge, Manager, and Staff roles, but not in Viewer roles. 
+                    You don't have permission to create cases. 
+                    This ability is typically included in Judge, Manager, and Staff roles, but not in Viewer roles. 
                     Contact your administrator if you need this access.
                   </CardContent>
                 </Card>

@@ -297,7 +297,7 @@ export default function FAQPage() {
                       </ul>
                       <p className="mt-2">
                         Your role is assigned by your organisation's administrator. Permissions are granular and can be
-                        customized for each role (e.g., cases:read, cases:create, cases:update, cases:delete).
+                        customized for each role (e.g., view cases, create cases, update cases, delete cases).
                       </p>
                     </AccordionContent>
                   </AccordionItem>

@@ -215,7 +215,7 @@ export default function CasesGuidePage() {
                   </li>
                 </ul>
                 <p className="text-sm text-muted-foreground pt-2">
-                  Note: You need appropriate permissions (cases:update) to edit cases. Admins and Managers typically have this access.
+                  Note: You need permission to edit cases. Admins and Managers typically have this access.
                 </p>
               </CardContent>
             </Card>

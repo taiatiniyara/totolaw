@@ -73,20 +73,20 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 w-full max-w-3xl">
             <div className="text-center">
-              <Heading as="h3">Multi-Tenant</Heading>
-              <div className="text-sm text-muted-foreground">Architecture</div>
+              <Heading as="h3">Multiple Courts</Heading>
+              <div className="text-sm text-muted-foreground">Secure Isolation</div>
             </div>
             <div className="text-center">
-              <Heading as="h3">Secure</Heading>
-              <div className="text-sm text-muted-foreground">Passwordless Auth</div>
+              <Heading as="h3">Simple Login</Heading>
+              <div className="text-sm text-muted-foreground">No Passwords</div>
             </div>
             <div className="text-center">
-              <Heading as="h3">RBAC</Heading>
-              <div className="text-sm text-muted-foreground">Access Control</div>
+              <Heading as="h3">Smart Access</Heading>
+              <div className="text-sm text-muted-foreground">Role-Based Control</div>
             </div>
             <div className="text-center">
-              <Heading as="h3">Cloud-Ready</Heading>
-              <div className="text-sm text-muted-foreground">Deployment</div>
+              <Heading as="h3">Always Available</Heading>
+              <div className="text-sm text-muted-foreground">Reliable Access</div>
             </div>
           </div>
           </div>
@@ -169,9 +169,9 @@ export default function Home() {
           <Card>
             <CardHeader>
               <Mail className="h-10 w-10 text-primary mb-4" />
-              <CardTitle>Magic Link Auth</CardTitle>
+              <CardTitle>Simple Login</CardTitle>
               <CardDescription>
-                Passwordless authentication via email for secure, easy access without password management
+                Log in securely with just your email - no passwords to remember or manage
               </CardDescription>
             </CardHeader>
           </Card>
@@ -181,7 +181,7 @@ export default function Home() {
               <Lock className="h-10 w-10 text-primary mb-4" />
               <CardTitle>Enterprise Security</CardTitle>
               <CardDescription>
-                CSRF protection, rate limiting, audit trails, and database-level data isolation
+                Advanced security features including activity logging and complete data isolation
               </CardDescription>
             </CardHeader>
           </Card>
@@ -191,7 +191,7 @@ export default function Home() {
               <Zap className="h-10 w-10 text-primary mb-4" />
               <CardTitle>Modern Interface</CardTitle>
               <CardDescription>
-                Fast, responsive dashboard built with Next.js 16 and mobile-friendly design
+                Fast, responsive dashboard with mobile-friendly design that works on any device
               </CardDescription>
             </CardHeader>
           </Card>
@@ -229,7 +229,7 @@ export default function Home() {
                 <div>
                   <Heading as="h3" className="mb-1">Scalable & Reliable</Heading>
                   <p className="text-muted-foreground">
-                    Built on modern technology stack that grows with your organisation
+                    Built with proven technology that grows with your organisation
                   </p>
                 </div>
               </div>
@@ -295,47 +295,6 @@ export default function Home() {
             </CardContent>
           </Card>
           </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section className="w-full py-20 bg-muted/50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-16">
-          <Heading as="h2" className="text-3xl md:text-5xl">
-            Built with Modern Technology
-          </Heading>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Leveraging the latest web technologies for performance, security, and reliability
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-          <Card className="text-center p-6">
-            <CardContent className="pt-6">
-              <div className="font-bold text-lg mb-2">Next.js 16</div>
-              <div className="text-sm text-muted-foreground">React Framework</div>
-            </CardContent>
-          </Card>
-          <Card className="text-center p-6">
-            <CardContent className="pt-6">
-              <div className="font-bold text-lg mb-2">TypeScript</div>
-              <div className="text-sm text-muted-foreground">Type Safety</div>
-            </CardContent>
-          </Card>
-          <Card className="text-center p-6">
-            <CardContent className="pt-6">
-              <div className="font-bold text-lg mb-2">PostgreSQL</div>
-              <div className="text-sm text-muted-foreground">Database</div>
-            </CardContent>
-          </Card>
-          <Card className="text-center p-6">
-            <CardContent className="pt-6">
-              <div className="font-bold text-lg mb-2">Better Auth</div>
-              <div className="text-sm text-muted-foreground">Authentication</div>
-            </CardContent>
-          </Card>
-        </div>
         </div>
       </section>
 
