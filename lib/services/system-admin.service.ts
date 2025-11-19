@@ -179,11 +179,12 @@ export async function listSuperAdmins(): Promise<SuperAdminUser[]> {
 
 export async function getSystemAdminAuditLog(limit = 100, offset = 0, userId?: string) {
   let query = db.select().from(systemAdminAuditLog).orderBy(systemAdminAuditLog.createdAt).limit(limit).offset(offset);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (userId) query = query.where(eq(systemAdminAuditLog.userId, userId)) as any;
   return await query;
 }
 
-export async function logSystemAdminAction(userId: string, action: string, entityType: string | null, entityId: string | null, description: string, metadata?: any, ipAddress?: string, userAgent?: string): Promise<void> {
+export async function logSystemAdminAction(userId: string, action: string, entityType: string | null, entityId: string | null, description: string, metadata?: unknown, ipAddress?: string, userAgent?: string): Promise<void> {
   const id = generateUUID();
   await db.insert(systemAdminAuditLog).values({
     id, userId, action, entityType, entityId, description,

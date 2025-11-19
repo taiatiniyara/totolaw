@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,8 @@ export function TranscriptViewer({
   onDeleteAnnotation,
 }: TranscriptViewerProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [firstMatchId, setFirstMatchId] = useState<string | null>(null);
+  const segmentRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [selectedSpeaker, setSelectedSpeaker] = useState<string>("all");
   const [editingSegmentId, setEditingSegmentId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
@@ -106,6 +108,32 @@ export function TranscriptViewer({
     return true;
   });
 
+  // Highlight occurrences and find first match id
+  const highlightText = (text: string, query: string) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <mark key={i} className="bg-yellow-200 rounded">
+          {part}
+        </mark>
+      ) : (
+        <span key={i}>{part}</span>
+      )
+    );
+  };
+
+  function escapeRegExp(string: string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  const jumpToFirstMatch = () => {
+    if (!firstMatchId) return;
+    const el = segmentRefs.current[firstMatchId];
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   // Get speaker name
   const getSpeakerName = (speakerId?: string) => {
     if (!speakerId) return "Unknown Speaker";
@@ -118,6 +146,17 @@ export function TranscriptViewer({
     if (!speakerId) return "";
     const speaker = speakers.find((s) => s.id === speakerId);
     return speaker?.role || "";
+    // Update first match id when search query or segments change
+    useEffect(() => {
+      if (!searchQuery) {
+        setFirstMatchId(null);
+        return;
+      }
+
+      const q = searchQuery.toLowerCase();
+      const found = segments.find((s) => s.text.toLowerCase().includes(q));
+      setFirstMatchId(found ? found.id : null);
+    }, [searchQuery, segments]);
   };
 
   // Format time
@@ -196,6 +235,15 @@ export function TranscriptViewer({
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
             Export DOCX
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={jumpToFirstMatch}
+              disabled={!firstMatchId}
+            >
+              <ChevronDown className="w-4 h-4 mr-2" />
+              Jump to Match
+            </Button>
           </Button>
         </div>
       </div>
@@ -255,6 +303,7 @@ export function TranscriptViewer({
               return (
                 <div
                   key={segment.id}
+                  ref={(el) => { segmentRefs.current[segment.id] = el; }}
                   className={`group relative p-4 rounded-lg border transition-colors ${
                     hasHighlight ? "bg-yellow-50 border-yellow-200" : "hover:bg-gray-50"
                   }`}
@@ -345,7 +394,7 @@ export function TranscriptViewer({
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm leading-relaxed">{segment.text}</p>
+                    <p className="text-sm leading-relaxed">{highlightText(segment.text, searchQuery)}</p>
                   )}
 
                   {/* Annotations */}

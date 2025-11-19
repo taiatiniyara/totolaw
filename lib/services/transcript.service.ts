@@ -46,7 +46,7 @@ export interface CreateSegmentData {
   endTime: number;
   text: string;
   confidence?: number;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 export interface UpdateSegmentData {
@@ -162,7 +162,7 @@ export class TranscriptService {
     status: string,
     userId?: string
   ): Promise<Transcript> {
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       status,
       updatedAt: new Date(),
     };

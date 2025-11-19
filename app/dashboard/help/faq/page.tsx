@@ -49,7 +49,7 @@ export default function FAQPage() {
             </AccordionItem>
 
             <AccordionItem value="item-2">
-              <AccordionTrigger>What if I don't receive the login email?</AccordionTrigger>
+              <AccordionTrigger>What if I don&apos;t receive the login email?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
                 <ul className="space-y-1 ml-4">
                   <li>• Check your spam/junk folder</li>
@@ -91,7 +91,7 @@ export default function FAQPage() {
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="case-1">
-              <AccordionTrigger>Why can't I create a case?</AccordionTrigger>
+              <AccordionTrigger>Why can&apos;t I create a case?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
                 You need the "cases:create" permission to create cases. This is typically granted to Court Clerks, Court Administrators, and Judges. Contact your administrator if you need this permission.
               </AccordionContent>
@@ -105,14 +105,14 @@ export default function FAQPage() {
             </AccordionItem>
 
             <AccordionItem value="case-3">
-              <AccordionTrigger>Can I edit a case after it's closed?</AccordionTrigger>
+              <AccordionTrigger>Can I edit a case after it&apos;s closed?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
                 Yes, if you have the necessary permissions. However, it's best practice to finalize all details before closing a case. If you need to reopen a case, change its status back to "Active" or "In Progress".
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="case-4">
-              <AccordionTrigger>What's the difference between case types?</AccordionTrigger>
+              <AccordionTrigger>What&apos;s the difference between case types?</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">
                 <ul className="space-y-1 ml-4">
                   <li>• <strong>Civil:</strong> Disputes between individuals or entities</li>

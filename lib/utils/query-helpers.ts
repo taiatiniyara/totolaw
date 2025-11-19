@@ -33,6 +33,7 @@ export function withOrgFilter<T extends PgTable>(
     return and(...additionalConditions);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const orgCondition = eq((table as any).organisationId, organisationId);
   
   if (!additionalConditions || additionalConditions.length === 0) {
@@ -54,7 +55,7 @@ export function withOrgFilter<T extends PgTable>(
  *   })
  * );
  */
-export function withOrgId<T extends Record<string, any>>(
+export function withOrgId<T extends Record<string, unknown>>(
   organisationId: string,
   values: T
 ): T & { organisationId: string } {
@@ -80,11 +81,11 @@ export function withOrgId<T extends Record<string, any>>(
  *   ])
  * );
  */
-export function withOrgIds<T extends Record<string, any>>(
+export function withOrgIds<T extends Record<string, unknown>>(
   organisationId: string,
   valuesArray: T[]
 ): Array<T & { organisationId: string }> {
-  return valuesArray.map(values => withOrgId(organisationId, values));
+  return valuesArray.map((values) => withOrgId(organisationId, values));
 }
 
 /**

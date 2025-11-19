@@ -55,7 +55,7 @@ export default function FAQPage() {
                     <AccordionContent className="text-base space-y-2">
                       <p>
                         <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
-                        It's a comprehensive case management system designed specifically for Pacific Island court systems, 
+                          It&apos;s a comprehensive case management system designed specifically for Pacific Island court systems, 
                         enabling faster, more efficient justice delivery. It helps courts, legal professionals, and administrative 
                         staff organize cases, schedule hearings, manage evidence, and collaborate effectively.
                       </p>
@@ -371,16 +371,16 @@ export default function FAQPage() {
                   </AccordionItem>
 
                   <AccordionItem value="login-issues">
-                    <AccordionTrigger>What if I can't sign in?</AccordionTrigger>
+                    <AccordionTrigger>What if I can&apos;t sign in?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        If you're having trouble signing in:
+                        If you&apos;re having trouble signing in:
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
                         <li>Check your email (including spam folder) for the magic link</li>
-                        <li>Make sure you're using the correct email address</li>
+                        <li>Make sure you&apos;re using the correct email address</li>
                         <li>Request a new magic link if the previous one expired</li>
-                        <li>Contact your system administrator if you still can't access your account</li>
+                        <li>Contact your system administrator if you still can&apos;t access your account</li>
                       </ul>
                     </AccordionContent>
                   </AccordionItem>
@@ -424,7 +424,7 @@ export default function FAQPage() {
               <CardContent className="p-6 text-center space-y-4">
                 <h3 className="text-2xl font-semibold">Still Have Questions?</h3>
                 <p className="text-muted-foreground">
-                  Can't find what you're looking for? Check out our other guides or contact support.
+                  Can&apos;t find what you&apos;re looking for? Check out our other guides or contact support.
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center">
                   <Button variant="outline" asChild>
