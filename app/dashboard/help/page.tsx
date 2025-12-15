@@ -6,49 +6,111 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import {
   BookOpen,
   FileText,
   Calendar,
   Upload,
-  Users,
-  Search,
-  Settings,
   Shield,
   HelpCircle,
-  MessageSquare,
-  ExternalLink,
+  ArrowRight,
+  Users,
+  Crown,
+  Briefcase,
+  UserCheck,
+  Eye,
+  List,
 } from "lucide-react";
 
 export default function HelpPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <Heading as="h1">Help & Documentation</Heading>
-          <p className="text-muted-foreground mt-1">
-            Learn how to use Totolaw effectively
-          </p>
-        </div>
-        <Button variant="outline" asChild>
-          <Link href="https://github.com/taiatiniyara/totolaw" target="_blank">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            GitHub Repository
-          </Link>
-        </Button>
+      <div className="space-y-4">
+        <Heading as="h1" className="text-4xl md:text-5xl">
+          Help & Documentation
+        </Heading>
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Learn how to use Totolaw effectively with our comprehensive guides
+        </p>
       </div>
+
+      {/* Quick Access for Common Tasks */}
+      <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            ⚡ Quick Access: Common Tasks
+          </CardTitle>
+          <CardDescription className="text-base">
+            Jump straight to what you need to do right now
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-3">
+            <Link 
+              href="/dashboard/cases/new" 
+              className="block p-4 rounded-lg bg-white border-2 border-green-300 hover:shadow-md transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-base mb-1">📁 How to Create a Case</p>
+                  <p className="text-xs text-muted-foreground">Step-by-step guide to filing cases</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-green-600" />
+              </div>
+            </Link>
+            
+            <Link 
+              href="/dashboard/help/evidence" 
+              className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-base mb-1">📄 How to Upload Documents</p>
+                  <p className="text-xs text-muted-foreground">Add files to your cases</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/hearings" 
+              className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-base mb-1">📅 How to Schedule Hearings</p>
+                  <p className="text-xs text-muted-foreground">Put court dates on the calendar</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/cases" 
+              className="block p-4 rounded-lg bg-white border hover:shadow-md transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-base mb-1">🔍 How to Find Cases</p>
+                  <p className="text-xs text-muted-foreground">Search and filter your cases</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Quick Start */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <BookOpen className="h-6 w-6" />
             Quick Start Guide
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-base">
             New to Totolaw? Start here to learn the basics
           </CardDescription>
         </CardHeader>
@@ -56,39 +118,109 @@ export default function HelpPage() {
           <div className="space-y-3">
             <Link 
               href="/dashboard/help/getting-started" 
-              className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              className="block p-4 rounded-lg border hover:bg-accent transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Getting Started</p>
+                  <p className="font-semibold text-lg">Getting Started</p>
                   <p className="text-sm text-muted-foreground">Learn the basics and set up your account</p>
                 </div>
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
               </div>
             </Link>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* User Manuals - NEW SECTION */}
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Users className="h-6 w-6 text-blue-600" />
+            User Manuals by Role
+          </CardTitle>
+          <CardDescription className="text-base">
+            Step-by-step guides tailored to your role in the system
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             <Link 
-              href="/dashboard/help/navigation" 
-              className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              href="/dashboard/help/user-manual/super-admin" 
+              className="block p-4 rounded-lg bg-white border border-purple-200 hover:shadow-md transition-all"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">Navigating the Dashboard</p>
-                  <p className="text-sm text-muted-foreground">Understand the layout and navigation</p>
-                </div>
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+              <div className="flex items-center gap-3 mb-2">
+                <Crown className="h-5 w-5 text-purple-600" />
+                <p className="font-semibold">Super Administrator</p>
               </div>
+              <p className="text-xs text-muted-foreground">
+                Platform-wide system management
+              </p>
             </Link>
+
             <Link 
-              href="/dashboard/help/roles-permissions" 
-              className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              href="/dashboard/help/user-manual/administrator" 
+              className="block p-4 rounded-lg bg-white border border-red-200 hover:shadow-md transition-all"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">Roles & Permissions</p>
-                  <p className="text-sm text-muted-foreground">Understand your access level and capabilities</p>
-                </div>
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+              <div className="flex items-center gap-3 mb-2">
+                <Shield className="h-5 w-5 text-red-600" />
+                <p className="font-semibold">Administrator</p>
               </div>
+              <p className="text-xs text-muted-foreground">
+                Organisation-level management
+              </p>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/user-manual/judge" 
+              className="block p-4 rounded-lg bg-white border border-blue-200 hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <Briefcase className="h-5 w-5 text-blue-600" />
+                <p className="font-semibold">Judge / Manager</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Case and hearing management
+              </p>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/user-manual/staff" 
+              className="block p-4 rounded-lg bg-white border border-green-200 hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <UserCheck className="h-5 w-5 text-green-600" />
+                <p className="font-semibold">Staff / Court Clerk</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Daily operations and administration
+              </p>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/user-manual/viewer" 
+              className="block p-4 rounded-lg bg-white border border-gray-200 hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <Eye className="h-5 w-5 text-gray-600" />
+                <p className="font-semibold">Viewer</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Read-only case access
+              </p>
+            </Link>
+
+            <Link 
+              href="/dashboard/help/user-manual" 
+              className="block p-4 rounded-lg bg-white border-2 border-blue-300 hover:shadow-md transition-all"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <BookOpen className="h-5 w-5 text-blue-600" />
+                <p className="font-semibold text-blue-600">View All Manuals</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Complete guide with all roles
+              </p>
             </Link>
           </div>
         </CardContent>
@@ -96,14 +228,14 @@ export default function HelpPage() {
 
       {/* Feature Guides */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Feature Guides</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <h2 className="text-2xl font-semibold mb-6">Core Features</h2>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card className="hover:bg-accent cursor-pointer transition-colors">
             <Link href="/dashboard/help/cases">
               <CardHeader>
-                <FileText className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Case Management</CardTitle>
-                <CardDescription>
+                <FileText className="h-10 w-10 text-primary mb-3" />
+                <CardTitle className="text-xl">Case Management</CardTitle>
+                <CardDescription className="text-base">
                   Create, track, and manage court cases
                 </CardDescription>
               </CardHeader>
@@ -113,9 +245,9 @@ export default function HelpPage() {
           <Card className="hover:bg-accent cursor-pointer transition-colors">
             <Link href="/dashboard/help/hearings">
               <CardHeader>
-                <Calendar className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Hearings</CardTitle>
-                <CardDescription>
+                <Calendar className="h-10 w-10 text-primary mb-3" />
+                <CardTitle className="text-xl">Hearings</CardTitle>
+                <CardDescription className="text-base">
                   Schedule and manage court hearings
                 </CardDescription>
               </CardHeader>
@@ -125,9 +257,9 @@ export default function HelpPage() {
           <Card className="hover:bg-accent cursor-pointer transition-colors">
             <Link href="/dashboard/help/evidence">
               <CardHeader>
-                <Upload className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Evidence & Documents</CardTitle>
-                <CardDescription>
+                <Upload className="h-10 w-10 text-primary mb-3" />
+                <CardTitle className="text-xl">Evidence & Documents</CardTitle>
+                <CardDescription className="text-base">
                   Upload and organize case evidence
                 </CardDescription>
               </CardHeader>
@@ -135,36 +267,12 @@ export default function HelpPage() {
           </Card>
 
           <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/help/search">
+            <Link href="/dashboard/help/managed-lists">
               <CardHeader>
-                <Search className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Search</CardTitle>
-                <CardDescription>
-                  Find cases, hearings, and documents
-                </CardDescription>
-              </CardHeader>
-            </Link>
-          </Card>
-
-          <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/help/users">
-              <CardHeader>
-                <Users className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">User Management</CardTitle>
-                <CardDescription>
-                  Manage users and team members
-                </CardDescription>
-              </CardHeader>
-            </Link>
-          </Card>
-
-          <Card className="hover:bg-accent cursor-pointer transition-colors">
-            <Link href="/dashboard/help/settings">
-              <CardHeader>
-                <Settings className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Settings</CardTitle>
-                <CardDescription>
-                  Configure your preferences
+                <List className="h-10 w-10 text-primary mb-3" />
+                <CardTitle className="text-xl">Managed Lists</CardTitle>
+                <CardDescription className="text-base">
+                  System-wide dropdown management
                 </CardDescription>
               </CardHeader>
             </Link>
@@ -173,27 +281,60 @@ export default function HelpPage() {
       </div>
 
       {/* Additional Resources */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Security & Privacy
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Shield className="h-6 w-6" />
+              Security & Access
             </CardTitle>
-            <CardDescription>
-              Learn about data security and access controls
+            <CardDescription className="text-base">
+              Understanding security and permissions
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <Link href="/dashboard/help/security" className="block text-sm text-primary hover:underline">
-                Security Features
+            <div className="space-y-3">
+              <Link 
+                href="/dashboard/help/rbac" 
+                className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-sm mb-1">Roles & Permissions (Who Can Do What)</p>
+                    <p className="text-xs text-muted-foreground">
+                      Understand what different people can do in the system
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                </div>
               </Link>
-              <Link href="/dashboard/help/privacy" className="block text-sm text-primary hover:underline">
-                Privacy Policy
+              <Link 
+                href="/dashboard/help/security" 
+                className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-sm mb-1">Data Privacy & Security</p>
+                    <p className="text-xs text-muted-foreground">
+                      How we keep your court&apos;s information private and safe
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                </div>
               </Link>
-              <Link href="/dashboard/help/data-retention" className="block text-sm text-primary hover:underline">
-                Data Retention
+              <Link 
+                href="/dashboard/help/authentication" 
+                className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-sm mb-1">How to Sign In (No Password Needed)</p>
+                    <p className="text-xs text-muted-foreground">
+                      Login using a link sent to your email - no password to remember!
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                </div>
               </Link>
             </div>
           </CardContent>
@@ -201,11 +342,11 @@ export default function HelpPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <HelpCircle className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <HelpCircle className="h-6 w-6" />
               Support
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-base">
               Get help when you need it
             </CardDescription>
           </CardHeader>
@@ -214,31 +355,19 @@ export default function HelpPage() {
               <Link href="/dashboard/help/faq" className="block text-sm text-primary hover:underline">
                 Frequently Asked Questions
               </Link>
-              <Link href="/dashboard/help/troubleshooting" className="block text-sm text-primary hover:underline">
-                Troubleshooting Guide
-              </Link>
-              <Link href="/dashboard/help/contact" className="block text-sm text-primary hover:underline">
-                Contact Support
-              </Link>
+              <div className="pt-2 mt-2 border-t">
+                <p className="text-sm text-muted-foreground mb-2">Need more help?</p>
+                <p className="text-xs text-muted-foreground">
+                  Contact your system administrator or email{" "}
+                  <a href="mailto:support@totolaw.org" className="text-primary hover:underline">
+                    support@totolaw.org
+                  </a>
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Tips Section */}
-      <Card className="bg-primary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Tip of the Day
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm">
-            <strong>Keyboard Shortcut:</strong> Use <kbd className="px-2 py-1 bg-background rounded border">Ctrl + K</kbd> (or <kbd className="px-2 py-1 bg-background rounded border">Cmd + K</kbd> on Mac) to quickly access the search feature from anywhere in the application.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   );
 }

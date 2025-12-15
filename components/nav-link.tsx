@@ -49,6 +49,7 @@ export function NavLink({ href, icon: iconName, children, badge }: NavLinkProps)
         "hover:bg-accent hover:text-accent-foreground",
         isActive && "bg-accent text-accent-foreground"
       )}
+      aria-current={isActive ? "page" : undefined}
     >
       <Icon className="h-4 w-4" />
       <span className="flex-1">{children}</span>

@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/common";
 import { HearingFormServer } from "../hearing-form-server";
 import { getCases } from "../../cases/actions";
 import { getCourtRooms } from "../../settings/courtrooms/actions";
+import { getManagedListOptions } from "@/app/dashboard/settings/managed-lists/actions";
 import { createHearing } from "../actions";
 
 async function handleCreateHearing(formData: FormData) {
@@ -36,6 +37,11 @@ async function handleCreateHearing(formData: FormData) {
   const nextActionRequired = formData.get("nextActionRequired") as string;
   const notes = formData.get("notes") as string;
 
+  // Validate required fields
+  if (!caseId || !scheduledDate || !scheduledTime || !actionType) {
+    throw new Error("Missing required fields");
+  }
+
   const result = await createHearing({
     caseId,
     scheduledDate: new Date(scheduledDate),
@@ -44,12 +50,12 @@ async function handleCreateHearing(formData: FormData) {
     courtRoomId: courtRoomId || undefined,
     location: location || undefined,
     actionType,
-    status: status || "SCHEDULED",
+    status: status || "scheduled",
     judgeId: judgeId || undefined,
     magistrateId: magistrateId || undefined,
     clerkId: clerkId || undefined,
     bailConsidered: bailConsidered || undefined,
-    bailDecision: bailDecision || undefined,
+    bailDecision: (bailDecision && bailDecision !== "not_decided") ? bailDecision : undefined,
     bailAmount: bailAmount ? parseFloat(bailAmount) : undefined,
     bailConditions: bailConditions || undefined,
     outcome: outcome || undefined,
@@ -81,6 +87,15 @@ export default async function NewHearingPage() {
   const courtroomsResult = await getCourtRooms();
   const courtrooms = courtroomsResult.success && courtroomsResult.data ? courtroomsResult.data : [];
 
+  // Fetch managed lists
+  const [actionTypesResult, bailDecisionsResult] = await Promise.all([
+    getManagedListOptions("action_types"),
+    getManagedListOptions("bail_decisions"),
+  ]);
+
+  const actionTypes = actionTypesResult.data || [];
+  const bailDecisions = bailDecisionsResult.data || [];
+
   return (
     <ProtectedRoute requiredPermission="hearings:create">
       <div className="space-y-6">
@@ -105,6 +120,8 @@ export default async function NewHearingPage() {
               mode="create"
               cases={cases}
               courtrooms={courtrooms}
+              actionTypes={actionTypes}
+              bailDecisions={bailDecisions}
             />
           </CardContent>
         </Card>

@@ -19,6 +19,7 @@ import {
   CheckCircle,
   XCircle,
   Plus,
+  List,
 } from "lucide-react";
 
 export default async function SystemAdminDashboard() {
@@ -134,6 +135,12 @@ export default async function SystemAdminDashboard() {
             <Button variant="outline" className="w-full justify-start">
               <Activity className="mr-2 h-4 w-4" />
               View Audit Log
+            </Button>
+          </Link>
+          <Link href="/dashboard/system-admin/managed-lists">
+            <Button variant="outline" className="w-full justify-start">
+              <List className="mr-2 h-4 w-4" />
+              Manage System Lists
             </Button>
           </Link>
         </CardContent>

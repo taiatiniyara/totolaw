@@ -1,16 +1,25 @@
 # Totolaw Scripts
 
-This directory contains utility scripts for system administration and testing.
+This directory contains utility scripts for system administration, testing, and setup.
 
 ## Available Scripts
 
 ### 1. System Admin Setup (`setup-admin.ts`)
-
 Create the initial system administrator for your Totolaw instance.
 
-### 2. Email Testing (`test-email.ts`)
+### 2. Seed Fiji Courts (`seed-fiji-courts.ts`)
+Seed the database with Fiji court hierarchy, courtrooms, and legal representatives.
 
+### 3. Email Testing (`test-email.ts`)
 Test the email notification system and verify SMTP configuration.
+
+### 4. Clear Rate Limit (`clear-rate-limit.ts`)
+Clear rate limit entries for troubleshooting login issues.
+
+### 5. Seed Managed Lists (`seed-managed-lists.ts`)
+Initialize or reset system-level managed lists (court levels, case statuses, offense types, etc.).
+
+---
 
 The `setup-admin.ts` script provides an interactive way to create the initial super administrator for your Totolaw instance.
 
@@ -67,22 +76,156 @@ Once the initial admin is created:
 - They'll receive a magic link for authentication
 - They'll have full system access to manage the entire system
 
-### Error Handling
-
-The script validates input and provides clear error messages:
-- **Invalid email**: Must be a valid email format
-- **Invalid name**: Must be at least 2 characters
-- **Database errors**: Connection or query issues
-
 ### Security Notes
 
 - ⚠️ **Run only once**: This is for initial setup only
-- ⚠️ **Database access required**: Needs valid database connection
 - ⚠️ **Super admin power**: This user will have complete system access
 
 ### Adding More Admins
 
 After the initial setup, additional super admins can be managed via the UI at `/dashboard/system-admin`
+
+---
+
+## Seed Fiji Courts Script
+
+The `seed-fiji-courts.ts` script seeds your database with the complete Fiji court system hierarchy.
+
+### Usage
+
+```bash
+tsx scripts/seed-fiji-courts.ts
+```
+
+### What It Seeds
+
+1. **Court Organisations**
+   - Fiji Court System (root)
+   - Court of Appeal
+   - High Court (Criminal & Civil Divisions)
+   - Magistrates' Courts (Suva, Nadi, Lautoka, Labasa, Nausori)
+   - Tribunals (Agricultural, Small Claims)
+
+2. **Courtrooms**
+   - HIGH COURT ROOM NO. 1, 2, 4, 10, 13
+
+3. **Legal Representatives**
+   - Director of Public Prosecutions
+   - Legal Aid Commission
+   - Attorney General's Office
+   - Common law firms
+
+### When to Use
+
+- Initial system setup for Fiji courts
+- Development/testing environment setup
+- After database reset
+
+---
+
+## Seed Managed Lists Script
+
+The `seed-managed-lists.ts` script initializes or updates system-level managed lists with default values.
+
+### Usage
+
+```bash
+npm run seed:managed-lists
+```
+
+Or manually:
+```bash
+source .env.local && npx tsx scripts/seed-managed-lists.ts
+```
+
+### What It Seeds
+
+This script creates or updates the following system-level managed lists:
+
+1. **Court Levels** - High Court, Magistrates Court, Court of Appeal, Tribunal
+2. **Case Types** - Criminal, Civil, Family, Appeal, Agricultural, Small Claims
+3. **Case Statuses** - Pending, Active, In Progress, Closed, Archived, Appealed, Dismissed
+4. **Hearing Action Types** - Mention, Trial, Bail Hearing, Sentencing, etc.
+5. **Offense Types** - Common criminal offenses in Fiji
+6. **Bail Decisions** - Not decided, Granted, Denied, Continued
+7. **Sentence Types** - Imprisonment, Fine, Community Service, etc.
+8. **Appeal Types** - Criminal Appeal, Civil Appeal, Bail Application, etc.
+
+### When to Use
+
+- **Initial setup**: After running migrations to populate default lists
+- **Updates**: When new list items are added to the system
+- **Reset**: To restore system defaults if lists were modified
+- **Development**: To ensure test environments have consistent data
+
+### Safe to Re-run
+
+This script is safe to run multiple times:
+- Existing lists will be updated with latest items
+- No data loss - only system lists are affected
+- Organization-specific customizations are preserved
+
+### Example Output
+
+```
+🌱 Seeding managed lists...
+
+Seeding: Court Levels (court_levels)
+  ✓ Created with 4 items
+
+Seeding: Case Types (case_types)
+  ✓ Created with 6 items
+
+Seeding: Case Statuses (case_statuses)
+  ✓ Created with 7 items
+
+Seeding: Hearing Action Types (action_types)
+  ✓ Created with 12 items
+
+Seeding: Common Offense Types (offense_types)
+  ✓ Created with 10 items
+
+Seeding: Bail Decisions (bail_decisions)
+  ✓ Created with 4 items
+
+Seeding: Sentence Types (sentence_types)
+  ✓ Created with 6 items
+
+Seeding: Appeal Types (appeal_types)
+  ✓ Created with 4 items
+
+✅ Successfully seeded all managed lists!
+
+✨ Done!
+```
+
+### Integration with System
+
+These managed lists are used throughout the application:
+- Case creation forms use court levels and case types
+- Hearing forms use action types
+- Criminal cases use offense types
+- Status dropdowns use case statuses
+
+See `documentation/28-managed-lists.md` for complete usage documentation.
+
+---
+
+## Clear Rate Limit Script
+
+The `clear-rate-limit.ts` script clears all rate limit entries from the database.
+
+### Usage
+
+```bash
+tsx scripts/clear-rate-limit.ts
+```
+
+### When to Use
+
+- User locked out due to too many failed login attempts
+- Testing authentication flows
+- Troubleshooting login issues
 
 ---
 

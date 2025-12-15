@@ -12,7 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
-import { getHearingById, deleteHearing } from "../actions";
+import { getHearingById, deleteHearing, getHearingTranscripts } from "../actions";
+import { HearingTranscriptSection } from "@/components/hearings/hearing-transcript-section";
 import { ArrowLeft, Edit, Trash2, Calendar, MapPin, Clock, FileText } from "lucide-react";
 import Link from "next/link";
 
@@ -52,6 +53,11 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
   }
 
   const hearing = result.data;
+  
+  // Fetch transcripts for this hearing
+  const transcriptsResult = await getHearingTranscripts(id);
+  const transcripts = transcriptsResult.success && transcriptsResult.data ? transcriptsResult.data : [];
+  
   const isPast = new Date(hearing.scheduledDate) < new Date();
   const isToday = () => {
     const today = new Date();
@@ -147,11 +153,11 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
                   <span>Status</span>
                 </div>
                 <Badge variant={
-                  hearing.status === 'COMPLETED' ? 'default' :
-                  hearing.status === 'CANCELLED' ? 'destructive' :
-                  hearing.status === 'IN_PROGRESS' ? 'secondary' : 'outline'
+                  hearing.status === 'completed' ? 'default' :
+                  hearing.status === 'cancelled' ? 'destructive' :
+                  hearing.status === 'in_progress' ? 'secondary' : 'outline'
                 }>
-                  {hearing.status.replace(/_/g, ' ')}
+                  {hearing.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </Badge>
               </div>
 
@@ -200,17 +206,17 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-6 md:grid-cols-2">
-                {hearing.bailDecision && (
+                {hearing.bailDecision && hearing.bailDecision !== 'not_decided' && (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <FileText className="h-4 w-4" />
                       <span>Bail Decision</span>
                     </div>
                     <Badge variant={
-                      hearing.bailDecision === 'GRANTED' ? 'default' :
-                      hearing.bailDecision === 'DENIED' ? 'destructive' : 'outline'
+                      hearing.bailDecision === 'granted' ? 'default' :
+                      hearing.bailDecision === 'denied' ? 'destructive' : 'outline'
                     }>
-                      {hearing.bailDecision.replace(/_/g, ' ')}
+                      {hearing.bailDecision.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </Badge>
                   </div>
                 )}
@@ -236,6 +242,12 @@ export default async function HearingDetailsPage({ params }: HearingPageProps) {
             </CardContent>
           </Card>
         )}
+
+        {/* Hearing Transcripts */}
+        <HearingTranscriptSection 
+          hearingId={id}
+          transcripts={transcripts}
+        />
 
         {/* Outcome & Next Actions */}
         {(hearing.outcome || hearing.nextActionRequired) && (

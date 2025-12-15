@@ -55,7 +55,7 @@ export default function FAQPage() {
                     <AccordionContent className="text-base space-y-2">
                       <p>
                         <strong>Totolaw</strong> comes from the Fijian word <strong>"Totolo"</strong> meaning "fast" or "quick". 
-                        It's a comprehensive case management system designed specifically for Pacific Island court systems, 
+                          It&apos;s a comprehensive case management system designed specifically for Pacific Island court systems, 
                         enabling faster, more efficient justice delivery. It helps courts, legal professionals, and administrative 
                         staff organize cases, schedule hearings, manage evidence, and collaborate effectively.
                       </p>
@@ -270,15 +270,15 @@ export default function FAQPage() {
                     <AccordionTrigger>How is my data protected?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Totolaw uses multiple layers of security:
+                        Totolaw protects your data in several ways:
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
-                        <li>End-to-end encryption for all data</li>
-                        <li>Secure authentication with magic links</li>
-                        <li>Role-based access control</li>
-                        <li>Regular security audits</li>
-                        <li>Comprehensive audit logging</li>
-                        <li>SOC 2 compliant infrastructure</li>
+                        <li>🔒 <strong>Encryption:</strong> All your data is scrambled so nobody can read it without permission (like a secret code)</li>
+                        <li>🔑 <strong>Email login links:</strong> No passwords to steal or forget</li>
+                        <li>🚪 <strong>Access control:</strong> People can only see what they&apos;re supposed to see for their job</li>
+                        <li>📊 <strong>Activity tracking:</strong> We keep a record of who looked at what and when</li>
+                        <li>🛡️ <strong>Regular security checks:</strong> Experts regularly test our security</li>
+                        <li>💾 <strong>Daily backups:</strong> Your data is copied to safe locations every day</li>
                       </ul>
                     </AccordionContent>
                   </AccordionItem>
@@ -287,37 +287,42 @@ export default function FAQPage() {
                     <AccordionTrigger>What are the different user roles?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Each organisation defines its own roles with specific permissions. Common roles include:
+                        Your "role" is like your job title - it determines what you can do in Totolaw:
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
-                        <li><strong>Admin:</strong> Full access to all features including user management and settings</li>
-                        <li><strong>Manager:</strong> Can manage cases, hearings, and evidence</li>
-                        <li><strong>Staff:</strong> Can create and edit cases, hearings, and upload evidence</li>
-                        <li><strong>Viewer:</strong> Read-only access to view cases and information</li>
+                        <li><strong>Admin</strong> (Boss) - Can do everything: add people, change settings, manage all cases</li>
+                        <li><strong>Manager/Judge</strong> (Supervisor) - Can manage cases, schedule hearings, make decisions</li>
+                        <li><strong>Staff/Clerk</strong> (Worker) - Can create cases, upload files, schedule hearings</li>
+                        <li><strong>Viewer</strong> (Guest) - Can look at cases and read documents, but can&apos;t change anything</li>
                       </ul>
                       <p className="mt-2">
-                        Your role is assigned by your organisation's administrator. Permissions are granular and can be
-                        customized for each role (e.g., cases:read, cases:create, cases:update, cases:delete).
+                        Your administrator assigns your role when they invite you. If you need to do something but the button 
+                        is missing or grayed out, you might need a different role - ask your administrator.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
 
                   <AccordionItem value="magic-links">
-                    <AccordionTrigger>What are magic links and how do they work?</AccordionTrigger>
+                    <AccordionTrigger>Why don&apos;t I need a password?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Magic links are a passwordless authentication method. Instead of remembering a password, you receive
-                        a secure link via email. Click the link to sign in instantly. Links expire after a short time for security.
+                        Instead of typing a password (which you might forget), Totolaw sends you a special link in your email. 
+                        Click that link, and you&apos;re in! Think of it like getting a temporary key card in your email.
+                      </p>
+                      <p className="text-sm">
+                        🔒 <strong>Security note:</strong> The link only works for a few hours and only works once, 
+                        so even if someone finds an old email, they can&apos;t use it to get into your account.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
 
                   <AccordionItem value="multi-tenant">
-                    <AccordionTrigger>What does "multi-tenant" mean?</AccordionTrigger>
+                    <AccordionTrigger>Can other courts see my court&apos;s cases?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Multi-tenant means each court or organisation has its own isolated space within Totolaw. Your data is
-                        completely separate from other organisations. You can only see cases and information from your own organisation.
+                        <strong>No, absolutely not.</strong> Each court has its own private space in Totolaw - like having your own 
+                        locked office. Your cases, documents, and information are completely separate from other courts. 
+                        You can only see your court&apos;s data, and other courts can only see theirs.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -326,8 +331,9 @@ export default function FAQPage() {
                     <AccordionTrigger>Is my data backed up?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        Yes, all data is automatically backed up daily. Multiple backup copies are stored in geographically
-                        distributed locations to ensure data durability and disaster recovery capabilities.
+                        Yes! Every day, Totolaw makes copies of all your data and stores them in multiple safe locations. 
+                        This means if something goes wrong (like a computer failure), we can restore your cases and documents. 
+                        Think of it like making photocopies of important papers and keeping them in different safe places.
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -371,16 +377,16 @@ export default function FAQPage() {
                   </AccordionItem>
 
                   <AccordionItem value="login-issues">
-                    <AccordionTrigger>What if I can't sign in?</AccordionTrigger>
+                    <AccordionTrigger>What if I can&apos;t sign in?</AccordionTrigger>
                     <AccordionContent className="text-base space-y-2">
                       <p>
-                        If you're having trouble signing in:
+                        If you&apos;re having trouble signing in:
                       </p>
                       <ul className="list-disc ml-6 space-y-1">
                         <li>Check your email (including spam folder) for the magic link</li>
-                        <li>Make sure you're using the correct email address</li>
+                        <li>Make sure you&apos;re using the correct email address</li>
                         <li>Request a new magic link if the previous one expired</li>
-                        <li>Contact your system administrator if you still can't access your account</li>
+                        <li>Contact your system administrator if you still can&apos;t access your account</li>
                       </ul>
                     </AccordionContent>
                   </AccordionItem>
@@ -424,7 +430,7 @@ export default function FAQPage() {
               <CardContent className="p-6 text-center space-y-4">
                 <h3 className="text-2xl font-semibold">Still Have Questions?</h3>
                 <p className="text-muted-foreground">
-                  Can't find what you're looking for? Check out our other guides or contact support.
+                  Can&apos;t find what you&apos;re looking for? Check out our other guides or contact support.
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center">
                   <Button variant="outline" asChild>

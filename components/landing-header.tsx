@@ -38,37 +38,45 @@ export function LandingHeader({ variant = "home" }: LandingHeaderProps) {
           <div className="flex items-center">
             <Logo width={140} height={45} className="h-10" />
           </div>
-          <nav className="hidden md:flex items-center gap-6">
-            {variant === "home" ? (
-              <>
-                <a href="/organisations" className="text-sm font-medium hover:text-primary transition-colors">
-                  Organisations
-                </a>
-                <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
-                  Docs
-                </a>
-                <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
-                  Github
-                </a>
-              </>
-            ) : (
-              <>
-                <a href="/" className="text-sm font-medium hover:text-primary transition-colors">
-                  Home
-                </a>
-                <a href="/organisations" className="text-sm font-medium hover:text-primary transition-colors">
-                  Organisations
-                </a>
-                <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
-                  Docs
-                </a>
-                <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
-                  Github
-                </a>
-              </>
-            )}
-            {!isChecking && (
-              isLoggedIn ? (
+
+          {/* If still checking auth, show a compact skeleton CTA to avoid layout shift */}
+          {isChecking ? (
+            <div className="flex items-center gap-4">
+              <div className="hidden md:block h-8 w-28 rounded-md bg-muted animate-pulse"></div>
+              <div className="h-8 w-20 rounded-md bg-muted animate-pulse md:hidden"></div>
+            </div>
+          ) : (
+            <nav className="hidden md:flex items-center gap-6">
+              {variant === "home" ? (
+                <>
+                  <a href="/organisations" className="text-sm font-medium hover:text-primary transition-colors">
+                    Organisations
+                  </a>
+                  <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
+                    Docs
+                  </a>
+                  <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
+                    Github
+                  </a>
+                </>
+              ) : (
+                <>
+                  <a href="/" className="text-sm font-medium hover:text-primary transition-colors">
+                    Home
+                  </a>
+                  <a href="/organisations" className="text-sm font-medium hover:text-primary transition-colors">
+                    Organisations
+                  </a>
+                  <a href="/docs" className="text-sm font-medium hover:text-primary transition-colors">
+                    Docs
+                  </a>
+                  <a target="_blank" href="https://github.com/taiatiniyara/totolaw" className="text-sm font-medium hover:text-primary transition-colors">
+                    Github
+                  </a>
+                </>
+              )}
+
+              {isLoggedIn ? (
                 <Button onClick={() => router.push("/dashboard")} variant="default">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Go to Dashboard
@@ -77,9 +85,10 @@ export function LandingHeader({ variant = "home" }: LandingHeaderProps) {
                 <Button onClick={() => router.push("/auth/login")} variant="default">
                   Sign In
                 </Button>
-              )
-            )}
-          </nav>
+              )}
+            </nav>
+          )}
+
           {!isChecking && (
             <Button
               onClick={() => router.push(isLoggedIn ? "/dashboard" : "/auth/login")}

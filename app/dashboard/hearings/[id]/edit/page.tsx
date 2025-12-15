@@ -53,7 +53,7 @@ async function handleUpdateHearing(hearingId: string, formData: FormData) {
     magistrateId: magistrateId || undefined,
     clerkId: clerkId || undefined,
     bailConsidered: bailConsidered || undefined,
-    bailDecision: bailDecision || undefined,
+    bailDecision: (bailDecision && bailDecision !== "not_decided") ? bailDecision : undefined,
     bailAmount: bailAmount ? parseFloat(bailAmount) : undefined,
     bailConditions: bailConditions || undefined,
     outcome: outcome || undefined,

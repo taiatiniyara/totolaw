@@ -94,7 +94,7 @@ export default function CasesGuidePage() {
                     <div>
                       <h4 className="font-semibold">Navigate to Cases</h4>
                       <p className="text-sm text-muted-foreground">
-                        Click "Cases" in the sidebar menu to open the cases page
+                        👉 Look at the <strong>left side of your screen</strong>. You&apos;ll see a menu. Click the button labeled <strong>"Cases"</strong> 📁
                       </p>
                     </div>
                   </div>
@@ -106,7 +106,7 @@ export default function CasesGuidePage() {
                     <div>
                       <h4 className="font-semibold">Click "New Case"</h4>
                       <p className="text-sm text-muted-foreground">
-                        Look for the "New Case" button in the top right corner
+                        👉 Look at the <strong>top right corner</strong> of the page. You&apos;ll see a button that says <strong>"New Case"</strong> or <strong>"Create Case"</strong>. Click it.
                       </p>
                     </div>
                   </div>
@@ -161,23 +161,26 @@ export default function CasesGuidePage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Cases List</h4>
+                    <h4 className="font-semibold mb-1">Cases List (Your Case Files)</h4>
                     <p className="text-sm text-muted-foreground">
-                      The main Cases page shows all cases you have access to. You can sort, filter, and search through cases.
+                      When you click "Cases" in the menu, you&apos;ll see a list of all the court cases you can access. 
+                      You can click on column headers to sort (organize) them, or use the search box to find a specific case.
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Case Details</h4>
+                    <h4 className="font-semibold mb-1">Case Details (The Full Case File)</h4>
                     <p className="text-sm text-muted-foreground">
-                      Click on any case to view its full details, including parties, hearings, evidence, and history.
+                      Click on any case to open it and see everything: who&apos;s involved (parties), scheduled court dates (hearings), 
+                      uploaded documents (evidence), and what&apos;s happened so far (history).
                     </p>
                   </div>
 
                   <div className="p-4 rounded-lg border">
-                    <h4 className="font-semibold mb-1">Status Indicators</h4>
+                    <h4 className="font-semibold mb-1">Status Indicators (Color Labels)</h4>
                     <p className="text-sm text-muted-foreground">
-                      Cases are color-coded by status to help you quickly identify their current state.
+                      🟢🔵🟡 Cases have colored labels or badges to show their status at a glance. For example, 
+                      a green badge might mean "Closed" and a yellow one might mean "Pending". Your court decides what colors mean what.
                     </p>
                   </div>
                 </div>
@@ -215,7 +218,7 @@ export default function CasesGuidePage() {
                   </li>
                 </ul>
                 <p className="text-sm text-muted-foreground pt-2">
-                  Note: You need appropriate permissions (cases:update) to edit cases. Admins and Managers typically have this access.
+                  Note: You need permission to edit cases. Admins and Managers typically have this access.
                 </p>
               </CardContent>
             </Card>

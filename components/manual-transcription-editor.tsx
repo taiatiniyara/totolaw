@@ -69,6 +69,9 @@ export function ManualTranscriptionEditor({
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   
@@ -82,6 +85,7 @@ export function ManualTranscriptionEditor({
       return count + entry.text.trim().split(/\s+/).filter(Boolean).length;
     }, 0);
     setWordCount(words);
+    setIsDirty(true);
   }, [entries]);
 
   // Auto-save functionality
@@ -93,10 +97,17 @@ export function ManualTranscriptionEditor({
       }
 
       // Set new timer for auto-save after 5 seconds of inactivity
-      autoSaveTimerRef.current = setTimeout(() => {
-        onAutoSave(entries).catch((error) => {
+      autoSaveTimerRef.current = setTimeout(async () => {
+        setIsAutoSaving(true);
+        try {
+          await onAutoSave(entries);
+          setLastSavedAt(Date.now());
+          setIsDirty(false);
+        } catch (error) {
           console.error("Auto-save failed:", error);
-        });
+        } finally {
+          setIsAutoSaving(false);
+        }
       }, 5000);
     }
 
@@ -106,6 +117,20 @@ export function ManualTranscriptionEditor({
       }
     };
   }, [entries, onAutoSave]);
+
+  // Warn on navigation when there are unsaved changes
+  useEffect(() => {
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => window.removeEventListener("beforeunload", beforeUnload);
+  }, [isDirty]);
 
   // Timer for elapsed time
   useEffect(() => {
@@ -170,6 +195,8 @@ export function ManualTranscriptionEditor({
 
   // Delete entry
   const deleteEntry = (entryId: string) => {
+    const ok = window.confirm("Delete this transcript entry? This action cannot be undone.");
+    if (!ok) return;
     setEntries((prev) => prev.filter((entry) => entry.id !== entryId));
     toast.success("Entry deleted");
   };
@@ -197,6 +224,8 @@ export function ManualTranscriptionEditor({
     try {
       await onSave?.(entries);
       toast.success("Transcript saved successfully");
+      setLastSavedAt(Date.now());
+      setIsDirty(false);
     } catch (error) {
       console.error("Error saving transcript:", error);
       toast.error("Failed to save transcript");
@@ -244,6 +273,18 @@ export function ManualTranscriptionEditor({
               <div className="text-sm text-gray-600">Entries</div>
               <div className="text-2xl font-bold text-blue-600">
                 {entries.length}
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-600">Save Status</div>
+              <div className="text-sm text-gray-700">
+                {isAutoSaving ? (
+                  <span className="text-xs text-muted-foreground">Autosaving...</span>
+                ) : lastSavedAt ? (
+                  <span className="text-xs text-muted-foreground">Last saved {new Date(lastSavedAt).toLocaleTimeString()}</span>
+                ) : (
+                  <span className="text-xs text-muted-foreground">Not saved</span>
+                )}
               </div>
             </div>
           </div>
@@ -369,6 +410,25 @@ export function ManualTranscriptionEditor({
               <Save className="w-4 h-4 mr-2" />
               {isSaving ? "Saving..." : "Save All (Ctrl+S)"}
             </Button>
+          </div>
+
+          {/* Sticky actions for easier access when scrolling */}
+          <div className="sticky bottom-0 bg-background/80 backdrop-blur p-4 border-t -mx-6 lg:hidden">
+            <div className="flex gap-2">
+              <Button onClick={addEntry} size="lg" className="flex-1">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Entry
+              </Button>
+              <Button
+                onClick={handleSave}
+                variant="outline"
+                size="lg"
+                disabled={isSaving || entries.length === 0}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? "Saving..." : "Save All"}
+              </Button>
+            </div>
           </div>
         </div>
       </Card>

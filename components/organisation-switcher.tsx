@@ -10,6 +10,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Building2, Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { switchOrganisation } from "@/app/dashboard/actions";
+import { toast } from "sonner";
 
 interface Organisation {
   id: string;
@@ -40,6 +42,9 @@ export function OrganisationSwitcher({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  // no-op: keep local open state controlled by user interaction
 
   const currentOrg = organisations.find(
     (org) => org.id === currentOrganisationId
@@ -57,9 +62,10 @@ export function OrganisationSwitcher({
       if (result.success) {
         setIsOpen(false);
         router.refresh();
+        toast.success("Organisation switched");
       } else {
         console.error("Failed to switch organisation:", result.error);
-        // You could show a toast notification here
+        toast.error(result.error || "Failed to switch organisation");
       }
     });
   };
@@ -88,9 +94,21 @@ export function OrganisationSwitcher({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[300px]">
+        <div className="p-3">
+          <Input
+            placeholder="Search organisations..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="mb-2"
+          />
+        </div>
         <DropdownMenuLabel>Switch Organisation</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {organisations.map((org) => {
+        {organisations
+          .filter((o) =>
+            `${o.name} ${o.code} ${o.type}`.toLowerCase().includes(query.toLowerCase())
+          )
+          .map((org) => {
           const isActive = org.id === currentOrganisationId;
           
           return (
@@ -111,7 +129,7 @@ export function OrganisationSwitcher({
               </div>
             </DropdownMenuItem>
           );
-        })}
+          })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

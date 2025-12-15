@@ -434,3 +434,56 @@ export async function deleteHearing(hearingId: string): Promise<ActionResult> {
     return { success: false, error: "Failed to delete hearing" };
   }
 }
+
+/**
+ * Get transcripts for a hearing
+ */
+export async function getHearingTranscripts(hearingId: string): Promise<ActionResult<Array<{
+  id: string;
+  title: string;
+  status: string;
+  createdAt: Date;
+  completedAt: Date | null;
+  segmentCount: number;
+}>>> {
+  try {
+    const session = await auth.api.getSession({ headers: await import("next/headers").then(m => m.headers()) });
+    if (!session?.user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const context = await getUserTenantContext(session.user.id);
+    if (!context?.organisationId) {
+      return { success: false, error: "No organisation context" };
+    }
+
+    // Import transcript schema
+    const { transcripts, transcriptSegments } = await import("@/lib/drizzle/schema/transcript-schema");
+    const { sql } = await import("drizzle-orm");
+
+    // Get transcripts with segment counts
+    const results = await db
+      .select({
+        id: transcripts.id,
+        title: transcripts.title,
+        status: transcripts.status,
+        createdAt: transcripts.createdAt,
+        completedAt: transcripts.completedAt,
+        segmentCount: sql<number>`count(${transcriptSegments.id})::int`,
+      })
+      .from(transcripts)
+      .leftJoin(transcriptSegments, eq(transcripts.id, transcriptSegments.transcriptId))
+      .where(
+        withOrgFilter(context.organisationId, transcripts, [
+          eq(transcripts.hearingId, hearingId)
+        ])
+      )
+      .groupBy(transcripts.id, transcripts.title, transcripts.status, transcripts.createdAt, transcripts.completedAt)
+      .orderBy(desc(transcripts.createdAt));
+
+    return { success: true, data: results };
+  } catch (error) {
+    console.error("Error fetching hearing transcripts:", error);
+    return { success: false, error: "Failed to fetch transcripts" };
+  }
+}

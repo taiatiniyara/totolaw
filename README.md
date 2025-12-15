@@ -6,14 +6,17 @@ Totolaw is a modern, secure web application designed to streamline court case ma
 
 ## 🌴 About
 
-**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping the Pacific achieve more efficient execution of justice.
+**Totolaw** is derived from the Fijian word **"Totolo"** which means **"fast"** or **"quick"**. This platform embodies that spirit by helping Pacific Island nations achieve more efficient execution of justice.
 
 Purpose-built to serve the unique needs of Pacific Island court systems, Totolaw provides:
 
-- **Multi-Tenant Architecture** - Separate organisations for each court system (Fiji, Samoa, Tonga, Vanuatu)
-- **Role-Based Access Control** - Granular permissions for judges, magistrates, clerks, prosecutors, and administrators
+- **Multi-Tenant Architecture** - Separate organisations for each court system
+- **Court Hierarchy Support** - Court of Appeal, High Court, Magistrates Courts, and Tribunals
+- **Role-Based Access Control** - Granular permissions for judges, magistrates, clerks, and administrators
 - **Secure Authentication** - Passwordless magic link authentication for easy, secure access
-- **Case Management** - Comprehensive tracking of legal cases, hearings, evidence, and proceedings
+- **Comprehensive Case Management** - Full lifecycle tracking with parties, offences, and legal representatives
+- **Hearing Management** - Daily cause lists, courtroom scheduling, and action type tracking
+- **Evidence & Document Management** - Secure storage and organization of case materials
 - **Data Isolation** - Each organisation's data is completely isolated and secure
 - **User-Friendly Interface** - Modern, responsive dashboard built with shadcn/ui components
 - **Scalable Architecture** - Built on Next.js 16 with PostgreSQL for reliability
@@ -65,12 +68,20 @@ For administrators:
 ## ✨ Key Features
 
 ### Multi-Tenant & RBAC
-- 🏢 Organisation-based isolation (Fiji, Samoa, Tonga, Vanuatu)
+- 🏢 Organisation-based isolation for court systems
 - 🔐 Role-based access control with granular permissions
 - 👥 Users can belong to multiple organisations
 - 🔄 Easy organisation switching
 - 📝 Complete audit trail for compliance
 - 🛡️ **System admins have omnipotent access** - Full access to all organisations without membership
+
+### Court System Support
+- ⚖️ Court hierarchy (Court of Appeal, High Court, Magistrates, Tribunals)
+- 📋 Case number generation (HAC, HBC, HAA, ABU formats)
+- 🏛️ Courtroom management and scheduling
+- 👨‍⚖️ Judicial titles and designations
+- 📅 Daily cause lists with PDF export
+- 👔 Legal representatives directory
 
 ### Authentication & Security
 - 🔐 Passwordless magic link authentication
@@ -81,23 +92,29 @@ For administrators:
 
 ### Case Management
 - 📁 Comprehensive case lifecycle tracking
+- 👥 Case parties (prosecution/defense, plaintiff/defendant)
 - ⚖️ Hearings, evidence, verdicts, sentences, and appeals
 - 🔄 Case status tracking and workflows
-- 👨‍⚖️ Judge and attorney assignments
+- 👨‍⚖️ Judge and clerk assignments
 - 📄 Document and evidence management
 - 🔍 Global search across cases, hearings, and evidence
-- 📝 Court transcription with manual and automated options
+- 📝 Court transcription editor
 - 📅 Calendar view for upcoming hearings
-- 📊 Case statistics and analytics on dashboard
+
+### Hearing Management
+- 📋 Multiple action types (MENTION, TRIAL, HEARING, etc.)
+- 🏛️ Courtroom assignment
+- ⚖️ Bail tracking and conditions
+- 📝 Minutes and outcomes
+- 🔗 Transcript linking
 
 ### User Management
 - 👥 **Admin-Initiated Invitations** - Admins invite users via email with role assignment
 - 🚪 **User-Initiated Join Requests** - Users browse and request to join organisations
 - ✅ Approval workflow with role assignment
-- ✉️ Email notifications for all invitation and request actions
-- 📋 Invitation and request management dashboards
-- 🔐 Token-based secure invitation system
-- ⏰ Automatic expiration and duplicate prevention
+- ✉️ Email notifications for all actions
+- 📋 Management dashboards
+- 🔐 Secure token-based system
 
 ### User Experience
 - 🎨 Modern, responsive dashboard with statistics
@@ -107,7 +124,6 @@ For administrators:
 - 🌐 Organisation switcher in navigation
 - 📊 Real-time search with debouncing
 - 💬 Help documentation built into dashboard
-- 🎯 Intuitive navigation with permission-based access
 
 ## 🔧 Configuration
 
@@ -121,16 +137,24 @@ Key configuration files:
 ## 📦 Scripts
 
 ```bash
+# Development
 npm run dev          # Start development server (port 3441)
 npm run build        # Build for production
 npm start            # Start production server (port 3440)
 npm run lint         # Run ESLint
+
+# Database
 npm run db-push      # Push database schema changes
 npm run db-view      # Open Drizzle Studio to view/edit database
+
+# Utilities
+npm run setup-admin  # Interactive admin setup script
 npm run deploy       # Build and deploy with PM2
 
-# Admin Management
-npm run setup-admin  # Interactive admin setup script
+# Additional scripts in /scripts directory:
+tsx scripts/seed-fiji-courts.ts     # Seed Fiji court system
+tsx scripts/test-email.ts <email>   # Test email notifications
+tsx scripts/clear-rate-limit.ts     # Clear rate limits
 ```
 
 ## 🌐 Environment Variables

@@ -1,400 +1,350 @@
 /**
- * Case Management Guide
+ * Dashboard Cases Guide
  */
 
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
-import { Badge } from "@/components/ui/badge";
-import {
-  ArrowLeft,
-  FileText,
-  Plus,
-  Edit,
-  Eye,
-  Trash2,
-  Search,
-  Calendar,
-  Upload,
-  User,
-  Info,
-} from "lucide-react";
+import { ArrowLeft, FileText, Plus, Eye, Edit, CheckCircle2 } from "lucide-react";
 
 export default function CasesHelpPage() {
   return (
-    <div className="space-y-6 max-w-4xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/dashboard/help">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <div>
-          <Heading as="h1">Case Management Guide</Heading>
-          <p className="text-muted-foreground">
-            Learn how to create, track, and manage court cases
-          </p>
+    <div className="flex-1 py-12">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          {/* Header */}
+          <div>
+            <Button variant="ghost" asChild className="mb-4">
+              <Link href="/dashboard/help">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Help
+              </Link>
+            </Button>
+            
+            <div className="space-y-2">
+              <Heading as="h1" className="text-4xl flex items-center gap-3">
+                <FileText className="h-10 w-10" />
+                Case Management
+              </Heading>
+              <p className="text-lg text-muted-foreground">
+                Learn how to create, manage, and track court cases
+              </p>
+            </div>
+          </div>
+
+          {/* Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">What Are Cases?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                Cases are the central unit of work in Totolaw. Each case represents a legal matter tracked within your organisation.
+                Cases contain:
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Title and case type</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Current status</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Assignment tracking</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Related hearings</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Linked evidence files</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span>Creation and update dates</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Creating Cases */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Plus className="h-6 w-6" />
+                Creating a New Case
+              </CardTitle>
+              <CardDescription>Step-by-step guide to creating a case</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Navigate to Cases</h4>
+                    <p className="text-sm text-muted-foreground">
+                      👉 Look at the <strong>left side of your screen</strong>. You&apos;ll see a menu. Click the button labeled <strong>"Cases"</strong> 📁
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    2
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Click "New Case"</h4>
+                    <p className="text-sm text-muted-foreground">
+                      👉 Look at the <strong>top right corner</strong> of the page. You&apos;ll see a button that says <strong>"New Case"</strong> or <strong>"Create Case"</strong>. Click it.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    3
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Fill in Case Details</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Enter the case title, select the case type (Civil, Criminal, etc.), and set the status
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    4
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Assign the Case (Optional)</h4>
+                    <p className="text-sm text-muted-foreground">
+                      You can assign the case to a specific user in your organisation for tracking
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    5
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Save</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Click "Save" to create the case. You can always edit it later.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Viewing Cases */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Eye className="h-6 w-6" />
+                Viewing Cases
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="p-4 rounded-lg border">
+                  <h4 className="font-semibold mb-1">Cases List (Your Case Files)</h4>
+                  <p className="text-sm text-muted-foreground">
+                    When you click "Cases" in the menu, you&apos;ll see a list of all the court cases you can access. 
+                    You can click on column headers to sort (organize) them, or use the search box to find a specific case.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg border">
+                  <h4 className="font-semibold mb-1">Case Details (The Full Case File)</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Click on any case to open it and see everything: who&apos;s involved (parties), scheduled court dates (hearings), 
+                    uploaded documents (evidence), and what&apos;s happened so far (history).
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg border">
+                  <h4 className="font-semibold mb-1">Status Indicators (Color Labels)</h4>
+                  <p className="text-sm text-muted-foreground">
+                    🟢🔵🟡 Cases have colored labels or badges to show their status at a glance. For example, 
+                    a green badge might mean "Closed" and a yellow one might mean "Pending". Your court decides what colors mean what.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Editing Cases */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Edit className="h-6 w-6" />
+                Editing Cases
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                To edit a case, open the case details page and click the "Edit" button (if you have permission). You can update:
+              </p>
+              <ul className="space-y-2 ml-6">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Case title</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Case type (Civil, Criminal, Family, etc.)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Case status (Open, Active, Pending, Closed)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Assignment (who is responsible for the case)</span>
+                </li>
+              </ul>
+              <p className="text-sm text-muted-foreground pt-2">
+                Note: You need permission to edit cases. Admins and Managers typically have this access.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Common Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Working with Cases</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="p-4 rounded-lg border space-y-2">
+                  <FileText className="h-6 w-6 text-primary" />
+                  <h4 className="font-semibold">View Case Details</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Click any case to see full details including type, status, dates, and assignments
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg border space-y-2">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                  <h4 className="font-semibold">Update Status</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Change case status to track progress (Open, Active, Pending, Closed)
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg border space-y-2">
+                  <FileText className="h-6 w-6 text-primary" />
+                  <h4 className="font-semibold">Link Evidence</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Upload evidence files and link them to specific cases
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg border space-y-2">
+                  <FileText className="h-6 w-6 text-primary" />
+                  <h4 className="font-semibold">Schedule Hearings</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Create and schedule hearings linked to the case
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Case Status Guide */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Understanding Case Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground mb-3">
+                Case status helps track where each case is in its lifecycle. Common statuses include:
+              </p>
+              <div className="p-3 rounded-lg border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-950">
+                <p className="font-semibold">Open / New</p>
+                <p className="text-sm">Case has been filed but work hasn't started yet</p>
+              </div>
+              <div className="p-3 rounded-lg border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950">
+                <p className="font-semibold">Active / In Progress</p>
+                <p className="text-sm">Case is actively being worked on with hearings and evidence collection</p>
+              </div>
+              <div className="p-3 rounded-lg border-l-4 border-l-purple-500 bg-purple-50 dark:bg-purple-950">
+                <p className="font-semibold">Pending</p>
+                <p className="text-sm">Awaiting external action, information, or next steps</p>
+              </div>
+              <div className="p-3 rounded-lg border-l-4 border-l-green-500 bg-green-50 dark:bg-green-950">
+                <p className="font-semibold">Closed / Resolved</p>
+                <p className="text-sm">Case has been completed and is no longer active</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Best Practices */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Best Practices</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Use clear, descriptive case titles (e.g., "State v. Smith - Theft Case")</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Select the correct case type (Civil, Criminal, Family, etc.) for better organization</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Update case status regularly to reflect progress</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Assign cases to the appropriate staff member for accountability</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Link all evidence files to cases for easy access</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Use search to find existing cases before creating duplicates</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Related Guides */}
+          <Card className="border-primary">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Related Guides</h3>
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="outline" asChild>
+                    <Link href="/dashboard/help/hearings">Hearings</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link href="/dashboard/help/evidence">Evidence</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link href="/dashboard/help/search">Search</Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      {/* Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            What is Case Management?
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm mb-4">
-            The Case Management feature allows you to track legal matters from filing through resolution. Each case contains important information like case number, parties involved, type, status, hearings, and evidence.
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="border rounded-lg p-3">
-              <strong className="text-sm">Case Types:</strong>
-              <p className="text-sm text-muted-foreground mt-1">
-                Civil, Criminal, Family, Land, Traffic, Administrative
-              </p>
-            </div>
-            <div className="border rounded-lg p-3">
-              <strong className="text-sm">Case Statuses:</strong>
-              <p className="text-sm text-muted-foreground mt-1">
-                Pending, Active, In Progress, Closed, Dismissed
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Creating a Case */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="h-5 w-5" />
-            Creating a New Case
-          </CardTitle>
-          <CardDescription>Step-by-step guide to creating a case</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold flex-shrink-0">
-              1
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold mb-1">Navigate to Cases</p>
-              <p className="text-sm text-muted-foreground">
-                Click <strong>Cases</strong> in the sidebar menu
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold flex-shrink-0">
-              2
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold mb-1">Click "Create Case"</p>
-              <p className="text-sm text-muted-foreground">
-                Look for the button in the top right corner
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold flex-shrink-0">
-              3
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold mb-1">Fill in Required Information</p>
-              <div className="text-sm text-muted-foreground space-y-1 mt-2">
-                <p>• <strong>Case Number:</strong> Unique identifier (e.g., CIVIL-2024-001)</p>
-                <p>• <strong>Title:</strong> Brief description of the case</p>
-                <p>• <strong>Type:</strong> Select case category</p>
-                <p>• <strong>Status:</strong> Current case status</p>
-                <p>• <strong>Description:</strong> Detailed case information</p>
-                <p>• <strong>Plaintiff:</strong> Person/entity filing the case</p>
-                <p>• <strong>Defendant:</strong> Person/entity being sued</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold flex-shrink-0">
-              4
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold mb-1">Submit the Form</p>
-              <p className="text-sm text-muted-foreground">
-                Click <strong>Create Case</strong> to save. You'll be redirected to the case details page.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-            <p className="text-sm flex items-start gap-2">
-              <Info className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-              <span><strong>Tip:</strong> Make sure the case number follows your organisation's format. It should be unique within your organisation.</span>
-            </p>
-          </div>
-
-          <Button asChild className="w-full sm:w-auto">
-            <Link href="/dashboard/cases/new">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Your First Case
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Viewing Cases */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Eye className="h-5 w-5" />
-            Viewing and Managing Cases
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Cases List
-              </h4>
-              <p className="text-sm text-muted-foreground mb-2">
-                The cases list shows all cases you have access to. Each case displays:
-              </p>
-              <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                <li>• Case number and title</li>
-                <li>• Case type and status (with colored badges)</li>
-                <li>• Plaintiff and defendant names</li>
-                <li>• Date created</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center gap-2">
-                <Search className="h-4 w-4" />
-                Finding Cases
-              </h4>
-              <p className="text-sm text-muted-foreground mb-2">
-                You can find cases using:
-              </p>
-              <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-                <li>• <strong>Search:</strong> Type case number, title, or party names</li>
-                <li>• <strong>Filter:</strong> Filter by type or status</li>
-                <li>• <strong>Sort:</strong> Order by date, case number, or title</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Case Details Page
-              </h4>
-              <p className="text-sm text-muted-foreground mb-2">
-                Click on any case to view its details. The details page shows:
-              </p>
-              <div className="grid gap-2 sm:grid-cols-2 text-sm">
-                <div className="border rounded p-2">
-                  <strong>Case Information:</strong>
-                  <p className="text-muted-foreground text-xs">Number, type, status, dates, parties</p>
-                </div>
-                <div className="border rounded p-2">
-                  <strong>Hearings:</strong>
-                  <p className="text-muted-foreground text-xs">All scheduled hearings</p>
-                </div>
-                <div className="border rounded p-2">
-                  <strong>Evidence:</strong>
-                  <p className="text-muted-foreground text-xs">Uploaded documents and files</p>
-                </div>
-                <div className="border rounded p-2">
-                  <strong>Quick Actions:</strong>
-                  <p className="text-muted-foreground text-xs">Edit, schedule hearing, upload evidence</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Updating Cases */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Edit className="h-5 w-5" />
-            Editing a Case
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3 text-sm">
-            <p>To update case information:</p>
-            <ol className="space-y-2 ml-4">
-              <li>1. Open the case details page</li>
-              <li>2. Click the <strong>Edit</strong> button (top right)</li>
-              <li>3. Modify the information you need to change</li>
-              <li>4. Click <strong>Save Changes</strong></li>
-            </ol>
-            <div className="p-3 bg-muted/50 rounded-lg">
-              <p className="text-muted-foreground">
-                <strong>Common Updates:</strong> Changing case status (e.g., from Pending to Active, or Active to Closed), updating description as case progresses, or correcting party information.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Case Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Common Case Actions</CardTitle>
-          <CardDescription>What you can do with a case</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="border rounded-lg p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="h-4 w-4 text-primary" />
-                <strong className="text-sm">Schedule Hearing</strong>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Create a hearing for this case from the case details page
-              </p>
-              <Button size="sm" variant="outline" className="mt-2 w-full" asChild>
-                <Link href="/dashboard/help/hearings">Learn More</Link>
-              </Button>
-            </div>
-
-            <div className="border rounded-lg p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Upload className="h-4 w-4 text-primary" />
-                <strong className="text-sm">Upload Evidence</strong>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Add documents, photos, and files related to the case
-              </p>
-              <Button size="sm" variant="outline" className="mt-2 w-full" asChild>
-                <Link href="/dashboard/help/evidence">Learn More</Link>
-              </Button>
-            </div>
-
-            <div className="border rounded-lg p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <User className="h-4 w-4 text-primary" />
-                <strong className="text-sm">Assign Case</strong>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Assign case to a specific judge or court officer
-              </p>
-            </div>
-
-            <div className="border rounded-lg p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Trash2 className="h-4 w-4 text-destructive" />
-                <strong className="text-sm">Delete Case</strong>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Remove case (requires special permission, cannot be undone)
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Case Status Guide */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Understanding Case Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 p-2 border rounded">
-              <Badge>Pending</Badge>
-              <span className="text-sm text-muted-foreground">Case filed but not yet active</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 border rounded">
-              <Badge>Active</Badge>
-              <span className="text-sm text-muted-foreground">Case is currently being processed</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 border rounded">
-              <Badge>In Progress</Badge>
-              <span className="text-sm text-muted-foreground">Hearings ongoing, actively working</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 border rounded">
-              <Badge variant="secondary">Closed</Badge>
-              <span className="text-sm text-muted-foreground">Case resolved and finalized</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 border rounded">
-              <Badge variant="destructive">Dismissed</Badge>
-              <span className="text-sm text-muted-foreground">Case dismissed by court</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Tips */}
-      <Card className="bg-primary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle>Best Practices</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm">
-            <li className="flex items-start gap-2">
-              <span className="text-primary font-bold">✓</span>
-              <span>Use consistent case numbering format across your organisation</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary font-bold">✓</span>
-              <span>Keep case descriptions detailed and up-to-date</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary font-bold">✓</span>
-              <span>Update case status as it progresses through the system</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary font-bold">✓</span>
-              <span>Attach relevant documents and evidence as early as possible</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary font-bold">✓</span>
-              <span>Schedule hearings promptly to keep cases moving</span>
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* Related Help */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Related Topics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Button variant="outline" asChild>
-              <Link href="/dashboard/help/hearings">
-                Scheduling Hearings
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard/help/evidence">
-                Managing Evidence
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard/help/search">
-                Searching Cases
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard/help/roles-permissions">
-                Permissions Guide
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

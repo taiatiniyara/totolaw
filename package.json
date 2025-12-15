@@ -12,6 +12,7 @@
     "deploy": "tsc --noEmit && next build && pm2 restart totolaw --update-env && git add . && git commit -m 'deploy' && git push",
     "setup-admin": "tsx scripts/setup-admin.ts",
     "test-email": "tsx scripts/test-email.ts",
+    "seed:managed-lists": "source .env.local && tsx scripts/seed-managed-lists.ts",
     "check-errors": "tsc --noEmit",
     "push": "git add . && git commit -m 'latestUpdate' && git push"
   },

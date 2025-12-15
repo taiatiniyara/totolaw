@@ -50,7 +50,7 @@ export const auth = betterAuth({
       },
       rateLimit: {
         window: 15 * 60 * 1000, // 15 minutes
-        max: 5, // limit each email to 5 requests per windowMs
+        max: 10, // limit each email to 10 requests per windowMs (increased from 5)
       },
     }),
     nextCookies(),

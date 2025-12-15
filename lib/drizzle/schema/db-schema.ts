@@ -400,22 +400,40 @@ export type NewDailyCauseList = typeof dailyCauseLists.$inferInsert;
 
 interface ManagedListItem {
   id: string;
-  name: string;
-  details?: string;
+  value: string; // The code/key used in the system (e.g., "high_court", "PENDING")
+  label: string; // Display name (e.g., "High Court", "Pending")
+  description?: string;
+  sortOrder?: number;
+  isActive?: boolean;
 }
 
 export const managedLists = pgTable("managed_lists", {
   id: text().primaryKey(),
   organisationId: text("organisation_id")
-    .references(() => organisations.id, { onDelete: "cascade" })
-    .notNull(),
-  name: varchar("name", { length: 100 }).notNull(),
+    .references(() => organisations.id, { onDelete: "cascade" }),
+  
+  // List identification
+  category: varchar("category", { length: 100 }).notNull(), // court_levels, case_statuses, action_types, offense_types, etc.
+  name: varchar("name", { length: 100 }).notNull(), // Display name for the list
   description: text("description"),
-  list: json("list").notNull().$type<ManagedListItem[]>(), // Storing as JSON array
+  
+  // List items stored as JSON array
+  items: json("items").notNull().$type<ManagedListItem[]>(),
+  
+  // System vs custom lists
+  isSystem: boolean("is_system").default(false).notNull(), // System lists can't be deleted
+  
+  // Audit
   createdBy: text("created_by").references(() => user.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 }, (table) => ({
   orgIdx: index("managed_list_org_idx").on(table.organisationId),
+  categoryIdx: index("managed_list_category_idx").on(table.category),
+  systemIdx: index("managed_list_system_idx").on(table.isSystem),
 }));
 export type ManagedList = typeof managedLists.$inferSelect;
 export type NewManagedList = typeof managedLists.$inferInsert;
